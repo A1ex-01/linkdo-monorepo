@@ -11,14 +11,14 @@ importers:
   apps/admin:
     dependencies:
       '@ant-design/icons':
-        specifier: ^5.0.1
+        specifier: 5.6.1
         version: 5.6.1(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       '@ant-design/pro-components':
-        specifier: ^2.4.4
+        specifier: 2.8.10
         version: 2.8.10(antd@5.29.3(date-fns@2.30.0)(moment@2.30.1)(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(rc-field-form@2.7.1(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       '@umijs/max':
         specifier: ^4.6.57
-        version: 4.6.57(@babel/core@7.29.7)(@types/node@25.9.1)(@types/react-dom@18.3.7(@types/react@18.3.29))(@types/react@18.3.29)(dva@2.5.0-beta.2(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(lightningcss@1.32.0)(prettier@2.8.8)(rc-field-form@2.7.1(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(rollup@3.30.0)(sass@1.54.0)(styled-jsx@5.1.6(@babel/core@7.29.7)(react@19.2.6))(terser@5.48.0)(type-fest@1.4.0)(typescript@5.9.3)(webpack@5.107.2(lightningcss@1.32.0)(postcss@8.5.15))
+        version: 4.6.57(@babel/core@7.29.7)(@types/node@25.9.1)(@types/react-dom@19.1.5(@types/react@19.1.5))(@types/react@19.1.5)(dva@2.5.0-beta.2(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(lightningcss@1.32.0)(prettier@2.8.8)(rc-field-form@2.7.1(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(rollup@3.30.0)(sass@1.54.0)(styled-jsx@5.1.6(@babel/core@7.29.7)(react@19.2.6))(terser@5.48.0)(type-fest@1.4.0)(typescript@5.9.3)(webpack@5.107.2(lightningcss@1.32.0)(postcss@8.5.15))
       antd:
         specifier: ^5.4.0
         version: 5.29.3(date-fns@2.30.0)(moment@2.30.1)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
@@ -27,11 +27,11 @@ importers:
         version: 1.11.21
     devDependencies:
       '@types/react':
-        specifier: ^18.0.33
-        version: 18.3.29
+        specifier: ^19.1.5
+        version: 19.1.5
       '@types/react-dom':
-        specifier: ^18.0.11
-        version: 18.3.7(@types/react@18.3.29)
+        specifier: ^19.1.5
+        version: 19.1.5(@types/react@19.1.5)
       husky:
         specifier: ^9
         version: 9.1.7
@@ -3596,16 +3596,13 @@ packages:
   '@types/parse-json@4.0.2':
     resolution: {integrity: sha512-dISoDXWWQwUquiKsyZ4Ng+HX2KsPL7LyHKHQwgGFEA3IaKac4Obd+h2a/a6waisAoepJlBcx9paWqjA8/HVjCw==}
 
-  '@types/prop-types@15.7.15':
-    resolution: {integrity: sha512-F6bEyamV9jKGAFBEmlQnesRPGOQqS2+Uwi0Em15xenOxHaf2hv6L8YCVn3rPdPJOiJfPiCnLIRyvwVaqMY3MIw==}
-
   '@types/qs@6.15.1':
     resolution: {integrity: sha512-GZHUBZR9hckSUhrxmp1nG6NwdpM9fCunJwyThLW1X3AyHgd9IlHb6VANpQQqDr2o/qQp6McZ3y/IA2rVzKzSbw==}
 
-  '@types/react-dom@18.3.7':
-    resolution: {integrity: sha512-MEe3UeoENYVFXzoXEWsvcpg6ZvlrFNlOQ7EOsvhI3CfAXwzPfO8Qwuxd40nepsYKqyyVQnTdEfv68q91yLcKrQ==}
+  '@types/react-dom@19.1.5':
+    resolution: {integrity: sha512-CMCjrWucUBZvohgZxkjd6S9h0nZxXjzus6yDfUb+xLxYM7VvjKNH1tQrE9GWLql1XoOP4/Ds3bwFqShHUYraGg==}
     peerDependencies:
-      '@types/react': ^18.0.0
+      '@types/react': ^19.0.0
 
   '@types/react-dom@19.2.3':
     resolution: {integrity: sha512-jp2L/eY6fn+KgVVQAOqYItbF0VY/YApe5Mz2F0aykSO8gx31bYCZyvSeYxCHKvzHG5eZjc+zyaS5BrBWya2+kQ==}
@@ -3621,8 +3618,8 @@ packages:
   '@types/react-router@5.1.20':
     resolution: {integrity: sha512-jGjmu/ZqS7FjSH6owMcD5qpq19+1RS9DeVRqfl1FeBMxTDQAGwlMWOcs52NDoXaNKyG3d1cYQFMs9rCrb88o9Q==}
 
-  '@types/react@18.3.29':
-    resolution: {integrity: sha512-ch0qJdr2JY0r04NXSprbK6TXOgnaJ1Tz23fm5W+z0/CBah6BSBc3n96h7K9GOtwh0HrilNWHIBzE1Ko4Dcw/Wg==}
+  '@types/react@19.1.5':
+    resolution: {integrity: sha512-piErsCVVbpMMT2r7wbawdZsq4xMvIAhQuac2gedQHysu1TZYEigE6pnFfgZT+/jQnrRuF5r+SHzuehFjfRjr4g==}
 
   '@types/react@19.2.15':
     resolution: {integrity: sha512-eRwcGNHve+E8qtEQSSRl6urh+rFop4v8gm6O8rGv25CodbvFdLjA1vVQ1KkiFE0w0UPOnb8tDiFKL5lp0rtY5Q==}
@@ -12301,23 +12298,23 @@ snapshots:
       '@floating-ui/core': 1.7.5
       '@floating-ui/utils': 0.2.11
 
-  '@floating-ui/react-dom-interactions@0.3.1(@types/react@18.3.29)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
+  '@floating-ui/react-dom-interactions@0.3.1(@types/react@19.1.5)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
-      '@floating-ui/react-dom': 0.6.3(@types/react@18.3.29)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@floating-ui/react-dom': 0.6.3(@types/react@19.1.5)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       aria-hidden: 1.2.6
       point-in-polygon: 1.1.0
-      use-isomorphic-layout-effect: 1.2.1(@types/react@18.3.29)(react@18.3.1)
+      use-isomorphic-layout-effect: 1.2.1(@types/react@19.1.5)(react@18.3.1)
     transitivePeerDependencies:
       - '@types/react'
       - react
       - react-dom
 
-  '@floating-ui/react-dom@0.6.3(@types/react@18.3.29)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
+  '@floating-ui/react-dom@0.6.3(@types/react@19.1.5)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
       '@floating-ui/dom': 0.4.5
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
-      use-isomorphic-layout-effect: 1.2.1(@types/react@18.3.29)(react@18.3.1)
+      use-isomorphic-layout-effect: 1.2.1(@types/react@19.1.5)(react@18.3.1)
     transitivePeerDependencies:
       - '@types/react'
 
@@ -14151,11 +14148,11 @@ snapshots:
 
   '@types/history@5.0.0':
     dependencies:
-      history: 4.10.1
+      history: 5.3.0
 
-  '@types/hoist-non-react-statics@3.3.7(@types/react@18.3.29)':
+  '@types/hoist-non-react-statics@3.3.7(@types/react@19.1.5)':
     dependencies:
-      '@types/react': 18.3.29
+      '@types/react': 19.1.5
       hoist-non-react-statics: 3.3.2
 
   '@types/html-minifier-terser@6.1.0': {}
@@ -14211,13 +14208,11 @@ snapshots:
 
   '@types/parse-json@4.0.2': {}
 
-  '@types/prop-types@15.7.15': {}
-
   '@types/qs@6.15.1': {}
 
-  '@types/react-dom@18.3.7(@types/react@18.3.29)':
+  '@types/react-dom@19.1.5(@types/react@19.1.5)':
     dependencies:
-      '@types/react': 18.3.29
+      '@types/react': 19.1.5
 
   '@types/react-dom@19.2.3(@types/react@19.2.15)':
     dependencies:
@@ -14234,16 +14229,15 @@ snapshots:
       '@types/history': 4.7.11
       '@types/react': 19.2.15
       '@types/react-router': 5.1.20
-      redux: 3.7.2
+      redux: 5.0.1
 
   '@types/react-router@5.1.20':
     dependencies:
       '@types/history': 4.7.11
       '@types/react': 19.2.15
 
-  '@types/react@18.3.29':
+  '@types/react@19.1.5':
     dependencies:
-      '@types/prop-types': 15.7.15
       csstype: 3.2.3
 
   '@types/react@19.2.15':
@@ -14756,14 +14750,14 @@ snapshots:
       - typescript
       - webpack
 
-  '@umijs/max@4.6.57(@babel/core@7.29.7)(@types/node@25.9.1)(@types/react-dom@18.3.7(@types/react@18.3.29))(@types/react@18.3.29)(dva@2.5.0-beta.2(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(lightningcss@1.32.0)(prettier@2.8.8)(rc-field-form@2.7.1(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(rollup@3.30.0)(sass@1.54.0)(styled-jsx@5.1.6(@babel/core@7.29.7)(react@19.2.6))(terser@5.48.0)(type-fest@1.4.0)(typescript@5.9.3)(webpack@5.107.2(lightningcss@1.32.0)(postcss@8.5.15))':
+  '@umijs/max@4.6.57(@babel/core@7.29.7)(@types/node@25.9.1)(@types/react-dom@19.1.5(@types/react@19.1.5))(@types/react@19.1.5)(dva@2.5.0-beta.2(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(lightningcss@1.32.0)(prettier@2.8.8)(rc-field-form@2.7.1(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(rollup@3.30.0)(sass@1.54.0)(styled-jsx@5.1.6(@babel/core@7.29.7)(react@19.2.6))(terser@5.48.0)(type-fest@1.4.0)(typescript@5.9.3)(webpack@5.107.2(lightningcss@1.32.0)(postcss@8.5.15))':
     dependencies:
       '@umijs/lint': 4.6.57(eslint@8.35.0)(stylelint@14.8.2)(typescript@5.9.3)
-      '@umijs/plugins': 4.6.57(@babel/core@7.29.7)(@types/react-dom@18.3.7(@types/react@18.3.29))(@types/react@18.3.29)(antd@4.24.16(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(dva@2.5.0-beta.2(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(rc-field-form@2.7.1(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
+      '@umijs/plugins': 4.6.57(@babel/core@7.29.7)(@types/react-dom@19.1.5(@types/react@19.1.5))(@types/react@19.1.5)(antd@4.24.16(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(dva@2.5.0-beta.2(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(rc-field-form@2.7.1(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       antd: 4.24.16(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       eslint: 8.35.0
       stylelint: 14.8.2
-      umi: 4.6.57(@babel/core@7.29.7)(@types/node@25.9.1)(@types/react@18.3.29)(eslint@8.35.0)(lightningcss@1.32.0)(prettier@2.8.8)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(rollup@3.30.0)(sass@1.54.0)(styled-jsx@5.1.6(@babel/core@7.29.7)(react@19.2.6))(stylelint@14.8.2)(terser@5.48.0)(type-fest@1.4.0)(typescript@5.9.3)(webpack@5.107.2(lightningcss@1.32.0)(postcss@8.5.15))
+      umi: 4.6.57(@babel/core@7.29.7)(@types/node@25.9.1)(@types/react@19.1.5)(eslint@8.35.0)(lightningcss@1.32.0)(prettier@2.8.8)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(rollup@3.30.0)(sass@1.54.0)(styled-jsx@5.1.6(@babel/core@7.29.7)(react@19.2.6))(stylelint@14.8.2)(terser@5.48.0)(type-fest@1.4.0)(typescript@5.9.3)(webpack@5.107.2(lightningcss@1.32.0)(postcss@8.5.15))
     transitivePeerDependencies:
       - '@babel/core'
       - '@rspack/core'
@@ -14821,7 +14815,7 @@ snapshots:
     dependencies:
       tsx: 3.12.2
 
-  '@umijs/plugins@4.6.57(@babel/core@7.29.7)(@types/react-dom@18.3.7(@types/react@18.3.29))(@types/react@18.3.29)(antd@4.24.16(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(dva@2.5.0-beta.2(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(rc-field-form@2.7.1(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(react-dom@19.2.6(react@19.2.6))(react@19.2.6)':
+  '@umijs/plugins@4.6.57(@babel/core@7.29.7)(@types/react-dom@19.1.5(@types/react@19.1.5))(@types/react@19.1.5)(antd@4.24.16(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(dva@2.5.0-beta.2(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(rc-field-form@2.7.1(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(react-dom@19.2.6(react@19.2.6))(react@19.2.6)':
     dependencies:
       '@ahooksjs/use-request': 2.8.15(react@19.2.6)
       '@ant-design/antd-theme-variable': 1.0.0
@@ -14832,7 +14826,7 @@ snapshots:
       '@tanstack/react-query': 4.44.0(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       '@tanstack/react-query-devtools': 4.44.0(@tanstack/react-query@4.44.0(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       '@umijs/bundler-utils': 4.6.57
-      '@umijs/valtio': 1.0.4(@types/react@18.3.29)(react@19.2.6)
+      '@umijs/valtio': 1.0.4(@types/react@19.1.5)(react@19.2.6)
       antd-dayjs-webpack-plugin: 1.0.6(dayjs@1.11.21)
       axios: 0.27.2
       babel-plugin-import: 1.13.8
@@ -14847,8 +14841,8 @@ snapshots:
       lodash: 4.18.1
       moment: 2.30.1
       qiankun: 2.10.16
-      react-intl: 3.12.1(@types/react@18.3.29)(react@19.2.6)
-      react-redux: 8.1.3(@types/react-dom@18.3.7(@types/react@18.3.29))(@types/react@18.3.29)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(redux@4.2.1)
+      react-intl: 3.12.1(@types/react@19.1.5)(react@19.2.6)
+      react-redux: 8.1.3(@types/react-dom@19.1.5(@types/react@19.1.5))(@types/react@19.1.5)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(redux@4.2.1)
       redux: 4.2.1
       styled-components: 6.1.1(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       tslib: 2.8.1
@@ -14866,7 +14860,7 @@ snapshots:
       - react-native
       - supports-color
 
-  '@umijs/preset-umi@4.6.57(@types/node@25.9.1)(@types/react@18.3.29)(lightningcss@1.32.0)(rollup@3.30.0)(sass@1.54.0)(styled-jsx@5.1.6(@babel/core@7.29.7)(react@19.2.6))(terser@5.48.0)(type-fest@1.4.0)(typescript@5.9.3)(webpack@5.107.2(lightningcss@1.32.0)(postcss@8.5.15))':
+  '@umijs/preset-umi@4.6.57(@types/node@25.9.1)(@types/react@19.1.5)(lightningcss@1.32.0)(rollup@3.30.0)(sass@1.54.0)(styled-jsx@5.1.6(@babel/core@7.29.7)(react@19.2.6))(terser@5.48.0)(type-fest@1.4.0)(typescript@5.9.3)(webpack@5.107.2(lightningcss@1.32.0)(postcss@8.5.15))':
     dependencies:
       '@iconify/utils': 2.1.1
       '@stagewise/toolbar': 0.6.2
@@ -14892,7 +14886,7 @@ snapshots:
       '@umijs/zod2ts': 4.6.57
       babel-plugin-dynamic-import-node: 2.3.3
       babel-plugin-react-compiler: 0.0.0-experimental-c23de8d-20240515
-      click-to-react-component: 1.1.3(@types/react@18.3.29)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      click-to-react-component: 1.1.3(@types/react@19.1.5)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       core-js: 3.34.0
       current-script-polyfill: 1.0.0
       enhanced-resolve: 5.9.3
@@ -15006,9 +15000,9 @@ snapshots:
       chokidar: 3.5.3
       pino: 7.11.0
 
-  '@umijs/valtio@1.0.4(@types/react@18.3.29)(react@19.2.6)':
+  '@umijs/valtio@1.0.4(@types/react@19.1.5)(react@19.2.6)':
     dependencies:
-      valtio: 1.11.2(@types/react@18.3.29)(react@19.2.6)
+      valtio: 1.11.2(@types/react@19.1.5)(react@19.2.6)
     transitivePeerDependencies:
       - '@types/react'
       - react
@@ -16107,9 +16101,9 @@ snapshots:
 
   cli-width@4.1.0: {}
 
-  click-to-react-component@1.1.3(@types/react@18.3.29)(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
+  click-to-react-component@1.1.3(@types/react@19.1.5)(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
     dependencies:
-      '@floating-ui/react-dom-interactions': 0.3.1(@types/react@18.3.29)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@floating-ui/react-dom-interactions': 0.3.1(@types/react@19.1.5)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       htm: 3.1.1
       react: 18.3.1
       react-merge-refs: 1.1.0
@@ -21029,14 +21023,14 @@ snapshots:
       react: 19.2.6
       react-dom: 19.2.6(react@19.2.6)
 
-  react-intl@3.12.1(@types/react@18.3.29)(react@19.2.6):
+  react-intl@3.12.1(@types/react@19.1.5)(react@19.2.6):
     dependencies:
       '@formatjs/intl-displaynames': 1.2.10
       '@formatjs/intl-listformat': 1.4.8
       '@formatjs/intl-relativetimeformat': 4.5.16
       '@formatjs/intl-unified-numberformat': 3.3.7
       '@formatjs/intl-utils': 2.3.0
-      '@types/hoist-non-react-statics': 3.3.7(@types/react@18.3.29)
+      '@types/hoist-non-react-statics': 3.3.7(@types/react@19.1.5)
       '@types/invariant': 2.2.37
       hoist-non-react-statics: 3.3.2
       intl-format-cache: 4.3.1
@@ -21087,18 +21081,18 @@ snapshots:
       react-lifecycles-compat: 3.0.4
       redux: 3.7.2
 
-  react-redux@8.1.3(@types/react-dom@18.3.7(@types/react@18.3.29))(@types/react@18.3.29)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(redux@4.2.1):
+  react-redux@8.1.3(@types/react-dom@19.1.5(@types/react@19.1.5))(@types/react@19.1.5)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(redux@4.2.1):
     dependencies:
       '@babel/runtime': 7.29.7
-      '@types/hoist-non-react-statics': 3.3.7(@types/react@18.3.29)
+      '@types/hoist-non-react-statics': 3.3.7(@types/react@19.1.5)
       '@types/use-sync-external-store': 0.0.3
       hoist-non-react-statics: 3.3.2
       react: 19.2.6
       react-is: 18.3.1
       use-sync-external-store: 1.6.0(react@19.2.6)
     optionalDependencies:
-      '@types/react': 18.3.29
-      '@types/react-dom': 18.3.7(@types/react@18.3.29)
+      '@types/react': 19.1.5
+      '@types/react-dom': 19.1.5(@types/react@19.1.5)
       react-dom: 19.2.6(react@19.2.6)
       redux: 4.2.1
 
@@ -22512,14 +22506,14 @@ snapshots:
 
   typescript@6.0.3: {}
 
-  umi@4.6.57(@babel/core@7.29.7)(@types/node@25.9.1)(@types/react@18.3.29)(eslint@8.35.0)(lightningcss@1.32.0)(prettier@2.8.8)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(rollup@3.30.0)(sass@1.54.0)(styled-jsx@5.1.6(@babel/core@7.29.7)(react@19.2.6))(stylelint@14.8.2)(terser@5.48.0)(type-fest@1.4.0)(typescript@5.9.3)(webpack@5.107.2(lightningcss@1.32.0)(postcss@8.5.15)):
+  umi@4.6.57(@babel/core@7.29.7)(@types/node@25.9.1)(@types/react@19.1.5)(eslint@8.35.0)(lightningcss@1.32.0)(prettier@2.8.8)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(rollup@3.30.0)(sass@1.54.0)(styled-jsx@5.1.6(@babel/core@7.29.7)(react@19.2.6))(stylelint@14.8.2)(terser@5.48.0)(type-fest@1.4.0)(typescript@5.9.3)(webpack@5.107.2(lightningcss@1.32.0)(postcss@8.5.15)):
     dependencies:
       '@babel/runtime': 7.23.6
       '@umijs/bundler-utils': 4.6.57
       '@umijs/bundler-webpack': 4.6.57(type-fest@1.4.0)(typescript@5.9.3)(webpack@5.107.2(lightningcss@1.32.0)(postcss@8.5.15))
       '@umijs/core': 4.6.57
       '@umijs/lint': 4.6.57(eslint@8.35.0)(stylelint@14.8.2)(typescript@5.9.3)
-      '@umijs/preset-umi': 4.6.57(@types/node@25.9.1)(@types/react@18.3.29)(lightningcss@1.32.0)(rollup@3.30.0)(sass@1.54.0)(styled-jsx@5.1.6(@babel/core@7.29.7)(react@19.2.6))(terser@5.48.0)(type-fest@1.4.0)(typescript@5.9.3)(webpack@5.107.2(lightningcss@1.32.0)(postcss@8.5.15))
+      '@umijs/preset-umi': 4.6.57(@types/node@25.9.1)(@types/react@19.1.5)(lightningcss@1.32.0)(rollup@3.30.0)(sass@1.54.0)(styled-jsx@5.1.6(@babel/core@7.29.7)(react@19.2.6))(terser@5.48.0)(type-fest@1.4.0)(typescript@5.9.3)(webpack@5.107.2(lightningcss@1.32.0)(postcss@8.5.15))
       '@umijs/renderer-react': 4.6.57(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       '@umijs/server': 4.6.57
       '@umijs/test': 4.6.57(@babel/core@7.29.7)
@@ -22676,11 +22670,11 @@ snapshots:
     optionalDependencies:
       '@types/react': 19.2.15
 
-  use-isomorphic-layout-effect@1.2.1(@types/react@18.3.29)(react@18.3.1):
+  use-isomorphic-layout-effect@1.2.1(@types/react@19.1.5)(react@18.3.1):
     dependencies:
       react: 18.3.1
     optionalDependencies:
-      '@types/react': 18.3.29
+      '@types/react': 19.1.5
 
   use-sidecar@1.1.3(@types/react@19.2.15)(react@19.2.6):
     dependencies:
@@ -22729,12 +22723,12 @@ snapshots:
 
   validate-npm-package-name@7.0.2: {}
 
-  valtio@1.11.2(@types/react@18.3.29)(react@19.2.6):
+  valtio@1.11.2(@types/react@19.1.5)(react@19.2.6):
     dependencies:
       proxy-compare: 2.5.1
       use-sync-external-store: 1.2.0(react@19.2.6)
     optionalDependencies:
-      '@types/react': 18.3.29
+      '@types/react': 19.1.5
       react: 19.2.6
 
   value-equal@1.0.1: {}

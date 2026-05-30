@@ -121,8 +121,9 @@ const LoginPage: React.FC = () => {
             captchaProps={{ size: 'large', loading: sending }}
             countDown={60}
             phoneName="email"
-            onGetCaptcha={async (email: string) => {
-              return handleSendCode(email);
+            onGetCaptcha={async (email) => {
+              handleSendCode(email);
+              return;
             }}
             rules={[
               { required: true, message: '请输入验证码' },
