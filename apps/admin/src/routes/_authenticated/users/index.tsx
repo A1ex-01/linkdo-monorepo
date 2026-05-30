@@ -1,14 +1,14 @@
+import { useState, useEffect } from 'react'
 import z from 'zod'
 import { createFileRoute, getRouteApi } from '@tanstack/react-router'
+import { adminService, type User } from '@/services/admin'
+import { toast } from 'sonner'
 import { ConfigDrawer } from '@/components/config-drawer'
 import { Header } from '@/components/layout/header'
 import { Main } from '@/components/layout/main'
 import { ProfileDropdown } from '@/components/profile-dropdown'
 import { Search } from '@/components/search'
 import { ThemeSwitch } from '@/components/theme-switch'
-import { users } from './_components/data/users'
-import { UsersDialogs } from './_components/users-dialogs'
-import { UsersPrimaryButtons } from './_components/users-primary-buttons'
 import { UsersProvider } from './_components/users-provider'
 import { UsersTable } from './_components/users-table'
 
@@ -17,6 +17,43 @@ const route = getRouteApi('/_authenticated/users/')
 export function Users() {
   const search = route.useSearch()
   const navigate = route.useNavigate()
+
+  const [data, setData] = useState<User[]>([])
+  const [total, setTotal] = useState(0)
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    const page = typeof search.page === 'number' ? search.page : 1
+    const pageSize = typeof search.pageSize === 'number' ? search.pageSize : 10
+    const keyword = search.username || ''
+    let cancelled = false
+    queueMicrotask(() => {
+      if (cancelled) return
+      setLoading(true)
+    })
+    adminService
+      .listUsers({ current: page, pageSize, keyword: keyword || undefined })
+      .then((res) => {
+        if (cancelled) return
+        if (res.success && res.data) {
+          setData(res.data.list)
+          setTotal(res.data.total)
+        } else {
+          toast.error(res.error || 'Failed to fetch users')
+        }
+      })
+      .catch(() => {
+        if (cancelled) return
+        toast.error('Failed to fetch users')
+      })
+      .finally(() => {
+        if (cancelled) return
+        setLoading(false)
+      })
+    return () => {
+      cancelled = true
+    }
+  }, [search.page, search.pageSize, search.username])
 
   return (
     <UsersProvider>
@@ -32,15 +69,18 @@ export function Users() {
           <div>
             <h2 className='text-2xl font-bold tracking-tight'>User List</h2>
             <p className='text-muted-foreground'>
-              Manage your users and their roles here.
+              {loading ? 'Loading...' : `${total} users total`}
             </p>
           </div>
-          <UsersPrimaryButtons />
         </div>
-        <UsersTable data={users} search={search} navigate={navigate} />
+        <UsersTable
+          data={data}
+          loading={loading}
+          search={search}
+          navigate={navigate}
+          total={total}
+        />
       </Main>
-
-      <UsersDialogs />
     </UsersProvider>
   )
 }
@@ -48,20 +88,6 @@ export function Users() {
 const usersSearchSchema = z.object({
   page: z.number().optional().catch(1),
   pageSize: z.number().optional().catch(10),
-  // Facet filters
-  status: z
-    .array(
-      z.union([
-        z.literal('active'),
-        z.literal('inactive'),
-        z.literal('invited'),
-        z.literal('suspended'),
-      ])
-    )
-    .optional()
-    .catch([]),
-
-  // Per-column text filter (example for username)
   username: z.string().optional().catch(''),
 })
 

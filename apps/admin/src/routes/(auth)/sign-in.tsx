@@ -17,8 +17,9 @@ export function SignIn() {
           <div className='flex flex-col space-y-2 text-start'>
             <h2 className='text-lg font-semibold tracking-tight'>Sign in</h2>
             <p className='text-sm text-muted-foreground'>
-              Enter your email and password below to log into{' '}
-              <br className='max-sm:hidden' /> your account.
+              Enter your email to receive a verification code.{' '}
+              <br className='max-sm:hidden' />
+              No password needed.
             </p>
           </div>
           <UserAuthForm />
