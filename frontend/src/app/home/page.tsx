@@ -1,0 +1,320 @@
+"use client";
+
+import {
+  Avatar,
+  AvatarBadge,
+  AvatarFallback,
+  AvatarImage,
+} from "@/components/ui/avatar";
+import { HomeWindowTitleBar } from "@/components/window-title-bar";
+import { createCollection, getCollections } from "@/services/collection";
+import { useUserStore } from "@/stores/user";
+import { getGreeting, getGreetingMessage } from "@/utils/base";
+import { IconCheck, IconPlus, IconStarFilled } from "@tabler/icons-react";
+import { useRequest } from "ahooks";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import toast from "react-hot-toast";
+import CollectionCard from "./_components/collection-card";
+import CreateCollectionModal from "./_components/create-collection-modal";
+import Sidebar from "./_components/sidebar";
+
+const AVATAR_URL =
+  "https://picx.zhimg.com/v2-0ad38053cbe09a5066b16c0a129fac10_xl.jpg?source=32738c0c&needBackground=1";
+
+export default function page() {
+  const router = useRouter();
+  const { user } = useUserStore();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const {
+    loading,
+    refresh,
+    data: collections = [],
+  } = useRequest(
+    async () => {
+      const res = await getCollections();
+      return res.data;
+    },
+    {
+      manual: false,
+    },
+  );
+
+  const { runAsync: submitCreate } = useRequest(
+    async (data: { name: string; icon: string }) => {
+      const res = await createCollection(data);
+      return res;
+    },
+    { manual: true },
+  );
+
+  const handleCreate = () => setIsModalOpen(true);
+
+  const handleSubmitCreate = async (data: { name: string; icon: string }) => {
+    try {
+      toast.loading("Creating collection...");
+      const res = await submitCreate(data);
+      if (res.success) {
+        refresh();
+        toast.success("Collection created successfully");
+      }
+    } catch (err) {
+      console.error("Failed to create collection:", err);
+      toast.error("Failed to create collection");
+    }
+  };
+
+  return (
+    <div className="flex min-h-screen flex-col bg-[#f7f8fc] text-white">
+      <HomeWindowTitleBar />
+      <div className="flex w-full flex-1">
+        <div className="left w-[280px] bg-white px-4 text-black">
+          <div className="flex flex-col items-start gap-4 pt-4">
+            <div className="mb-1 flex items-center gap-2">
+              <IconCheck strokeWidth={4} />
+              <span className="text-2xl leading-tight font-extrabold text-zinc-900">
+                LinkDo
+              </span>
+            </div>
+            <span className="-mt-2 mb-2 text-[15px] font-medium text-zinc-400">
+              v1.0.0
+            </span>
+            <div className="flex w-full flex-col rounded-xl border border-[#FFE7C2] bg-[#FFF8F1] px-4 py-3">
+              <div className="mb-1 flex items-center gap-2">
+                <IconStarFilled size={18} color="#BA821C" />
+                <span className="text-base font-bold text-[#BA821C]">
+                  Unlimited Monthly
+                </span>
+              </div>
+              <span className="text-sm text-[#BA821C]">无限制使用所有功能</span>
+            </div>
+          </div>
+
+          <Sidebar onCreateCollection={handleCreate} />
+        </div>
+        <div className="right w-full flex-1">
+          <header className="flex h-[80px] w-full items-center justify-between px-10 py-6 backdrop-blur-sm">
+            <div>
+              <h1 className="text-atext-500 text-2xl font-extrabold tracking-[-0.6px]">
+                {getGreeting()}, {user?.name}
+              </h1>
+              <p className="text-atext-450 mt-1 text-sm">
+                {getGreetingMessage()}
+              </p>
+            </div>
+
+            <div className="flex items-center gap-6">
+              <Avatar>
+                <AvatarImage
+                  src={user?.avatar_url}
+                  className="size-10 object-cover"
+                />
+                <AvatarFallback className="bg-primary-500">
+                  {user?.name.slice(0, 2) ?? "U"}
+                </AvatarFallback>
+                <AvatarBadge className="bg-green-600 dark:bg-green-800" />
+              </Avatar>
+            </div>
+          </header>
+
+          <div className="flex w-full">
+            <main className="flex-1 px-8">
+              <div className="mb-4 flex items-end justify-between">
+                <h2 className="text-atext-500 text-xl font-bold">Your Lists</h2>
+                <div className="flex items-center gap-2">
+                  <span className="text-atext-400 text-sm">
+                    Lists with your upcoming tasks
+                  </span>
+                </div>
+              </div>
+
+              {/* Bento Grid */}
+              {loading ? (
+                <div className="grid grid-cols-4 gap-6">
+                  {[1, 2, 3].map((i) => (
+                    <div
+                      key={i}
+                      className="h-[303px] animate-pulse rounded-xl"
+                    />
+                  ))}
+                </div>
+              ) : collections.length === 0 ? (
+                <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-[rgba(77,67,84,0.3)] py-20">
+                  <p className="mb-4 text-lg font-medium text-[#988d9f]">
+                    No lists yet
+                  </p>
+                  <button
+                    onClick={handleCreate}
+                    className="flex items-center gap-2 text-sm font-medium text-[#ddb7ff] transition-colors hover:text-white"
+                  >
+                    <IconPlus className="h-5 w-5 text-[#988d9f]" />
+                    Create your first list
+                  </button>
+                </div>
+              ) : (
+                <div className="grid grid-cols-3 gap-6">
+                  {collections.map((collection) => (
+                    <CollectionCard
+                      key={collection.uuid}
+                      collection={collection}
+                      onClick={() => {
+                        router.push(`/work?uuid=${collection.uuid}`);
+                      }}
+                    />
+                  ))}
+
+                  {/* Create List Card */}
+                  <div
+                    onClick={handleCreate}
+                    className="flex h-[303px] cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed border-[rgba(77,67,84,0.2)] bg-transparent transition-all hover:bg-white"
+                  >
+                    <svg
+                      width={52}
+                      height={60}
+                      viewBox="0 0 52 60"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <g filter="url(#filter0_ddd_6_172)">
+                        <rect
+                          x={2}
+                          y={1}
+                          width={48}
+                          height={56}
+                          rx={4}
+                          fill="white"
+                        />
+                        <rect
+                          x={2.5}
+                          y={1.5}
+                          width={47}
+                          height={55}
+                          rx={3.5}
+                          stroke="#DBEAFE"
+                        />
+                        <g opacity={0.4}>
+                          <rect
+                            x={9}
+                            y={8}
+                            width={34}
+                            height={4}
+                            rx={2}
+                            fill="#60A5FA"
+                          />
+                        </g>
+                        <g opacity={0.2}>
+                          <rect
+                            x={9}
+                            y={16}
+                            width={22.6641}
+                            height={4}
+                            rx={2}
+                            fill="#60A5FA"
+                          />
+                        </g>
+                        <g opacity={0.2}>
+                          <rect
+                            x={9}
+                            y={24}
+                            width={17}
+                            height={4}
+                            rx={2}
+                            fill="#60A5FA"
+                          />
+                        </g>
+                      </g>
+                      <defs>
+                        <filter
+                          id="filter0_ddd_6_172"
+                          x={0}
+                          y={0}
+                          width={52}
+                          height={60}
+                          filterUnits="userSpaceOnUse"
+                          colorInterpolationFilters="sRGB"
+                        >
+                          <feFlood
+                            floodOpacity={0}
+                            result="BackgroundImageFix"
+                          />
+                          <feColorMatrix
+                            in="SourceAlpha"
+                            type="matrix"
+                            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+                            result="hardAlpha"
+                          />
+                          <feOffset />
+                          <feColorMatrix
+                            type="matrix"
+                            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.2 0"
+                          />
+                          <feBlend
+                            mode="normal"
+                            in2="BackgroundImageFix"
+                            result="effect1_dropShadow_6_172"
+                          />
+                          <feColorMatrix
+                            in="SourceAlpha"
+                            type="matrix"
+                            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+                            result="hardAlpha"
+                          />
+                          <feOffset />
+                          <feColorMatrix
+                            type="matrix"
+                            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.2 0"
+                          />
+                          <feBlend
+                            mode="normal"
+                            in2="effect1_dropShadow_6_172"
+                            result="effect2_dropShadow_6_172"
+                          />
+                          <feColorMatrix
+                            in="SourceAlpha"
+                            type="matrix"
+                            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+                            result="hardAlpha"
+                          />
+                          <feOffset dy={1} />
+                          <feGaussianBlur stdDeviation={1} />
+                          <feColorMatrix
+                            type="matrix"
+                            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.05 0"
+                          />
+                          <feBlend
+                            mode="normal"
+                            in2="effect2_dropShadow_6_172"
+                            result="effect3_dropShadow_6_172"
+                          />
+                          <feBlend
+                            mode="normal"
+                            in="SourceGraphic"
+                            in2="effect3_dropShadow_6_172"
+                            result="shape"
+                          />
+                        </filter>
+                      </defs>
+                    </svg>
+                    <span className="text-primary-500 mt-4 text-sm font-medium">
+                      + 创建新列表
+                    </span>
+                    <div className="text-atext-450 mt-4 text-xs">
+                      整理你的任务，高效专注每一天
+                    </div>
+                  </div>
+                </div>
+              )}
+            </main>
+          </div>
+        </div>
+      </div>
+
+      <CreateCollectionModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onSubmit={handleSubmitCreate}
+      />
+    </div>
+  );
+}

@@ -1,0 +1,253 @@
+"use client";
+import { useData } from "@/app/work/data-provider";
+import { cn } from "@/lib/utils";
+import { ITask } from "@/types/base";
+import {
+  IconArrowLeft,
+  IconArrowRight,
+  IconBrandNotion,
+  IconCircleCheck,
+  IconDeviceGamepad2,
+  IconDotsVertical,
+  IconFileSmile,
+  IconMaximize,
+  IconMusicPause,
+  IconPlayerPlay,
+  IconSquareCheck,
+} from "@tabler/icons-react";
+import { useHover } from "ahooks";
+import { motion } from "framer-motion";
+import { useMemo, useRef } from "react";
+
+interface TaskCardItemProps {
+  item: ITask;
+}
+
+export default function TaskCardItem({ item, ...props }: TaskCardItemProps) {
+  const wrapperRef = useRef<HTMLDivElement>(null);
+  const { collection, toNextTaskStatus, toPrevTaskStatus } = useData();
+  const isHovered = useHover(wrapperRef);
+  const isHover = useMemo(() => isHovered, [isHovered]);
+  const isDone = useMemo(() => item.status === "done", [item.status]);
+  return (
+    <div
+      ref={wrapperRef}
+      className="text-atext-460 flex flex-col gap-2 rounded-lg bg-white p-3 text-sm select-none"
+      {...props}
+    >
+      <div className="flex w-full items-center">
+        {/* framer-motion width动画 */}
+        <motion.div
+          initial={
+            isDone
+              ? { width: 16, opacity: 1, marginRight: 4 }
+              : { width: 0, opacity: 0, marginRight: 0 }
+          }
+          animate={
+            isDone
+              ? false
+              : isHover
+                ? { width: 16, opacity: 1, marginRight: 4 }
+                : { width: 0, opacity: 0, marginRight: 0 }
+          }
+          transition={{ type: "spring", stiffness: 300, damping: 25 }}
+          style={{
+            overflow: "hidden",
+            display: "flex",
+            alignItems: "center",
+          }}
+          className="shrink-0"
+        >
+          <div className="size-4 cursor-pointer">
+            <IconSquareCheck
+              className={cn(
+                "hover:text-atext-400 size-full text-[#808080] transition-colors",
+                item.status === "done" ? "text-primary-500" : "",
+              )}
+            />
+          </div>
+        </motion.div>
+        <div className="text-atext-460 truncate">{item.title}</div>
+        <motion.div
+          className="ml-auto flex items-center"
+          initial={{ x: 0, opacity: 1, pointerEvents: "auto" }}
+          animate={
+            isHover
+              ? { x: 32, opacity: 0, pointerEvents: "none" }
+              : { x: 0, opacity: 1, pointerEvents: "auto" }
+          }
+          transition={{ type: "spring", stiffness: 400, damping: 26 }}
+        >
+          <div className="flex aspect-square size-[18px] items-center justify-center rounded bg-[#6f98e8] text-xs text-white">
+            {collection?.name?.slice(0, 1)}
+          </div>
+          <IconBrandNotion />
+        </motion.div>
+        <motion.div
+          className="actions flex items-center gap-1"
+          initial={{ x: 32, opacity: 0, pointerEvents: "none" }}
+          animate={
+            isHover
+              ? { x: 0, opacity: 1, pointerEvents: "auto", width: "auto" }
+              : { x: 32, opacity: 0, pointerEvents: "none", width: 0 }
+          }
+          transition={{ type: "spring", stiffness: 400, damping: 26 }}
+        >
+          <div className="hover:text-atext-400 size-5 cursor-pointer p-0.5 hover:rounded">
+            <IconFileSmile className="size-full text-[#808080]" />
+          </div>
+          {item.status !== "backlog" && (
+            <div
+              onClick={() => toPrevTaskStatus(item)}
+              className="size-5 cursor-pointer p-0.5 hover:rounded hover:bg-[#f7f8fc] hover:text-white"
+            >
+              <IconArrowLeft className="size-full text-[#808080]" />
+            </div>
+          )}
+          {item.status !== "done" && (
+            <div
+              onClick={() => toNextTaskStatus(item)}
+              className="size-5 cursor-pointer p-0.5 hover:rounded hover:bg-[#f7f8fc] hover:text-white"
+            >
+              <IconArrowRight className="size-full text-[#808080]" />
+            </div>
+          )}
+          <div className="size-5 cursor-pointer p-0.5 hover:rounded hover:bg-[#f7f8fc] hover:text-white">
+            <IconDotsVertical className="size-full text-[#808080]" />
+          </div>
+        </motion.div>
+      </div>
+      {/* desc */}
+      <div className="flex w-full items-center justify-between gap-2 text-xs">
+        <div className="text-[#808080]">{"+EST"}</div>
+        <div className="text-[#808080]">{item.actual_time}</div>
+
+        <div className="ml-auto text-white">{item?.estimated_time}</div>
+      </div>
+    </div>
+  );
+}
+
+export function CardSimpleItem({
+  item,
+  className,
+}: {
+  item: ITask;
+  className?: string;
+}) {
+  const { timerInfo } = useData();
+  const wrapperRef = useRef<HTMLDivElement>(null);
+  const isHover = useHover(wrapperRef);
+  const itemClassName = "cursor-pointer hover:text-white";
+  return (
+    <div
+      ref={wrapperRef}
+      className={`relative flex h-12 flex-col justify-center gap-2 overflow-hidden rounded-lg bg-[#2b2b2b] px-3 text-sm text-white select-none ${className}`}
+    >
+      <div className={cn("flex w-full items-center justify-between")}>
+        <div className="truncate text-white">{item.title}</div>
+        <div className="time w-[90px] text-right font-bold text-white">
+          <span className="text-white">{timerInfo?.duration}</span>
+        </div>
+      </div>
+      <motion.div
+        className="absolute inset-0 bg-[#2b2b2b]"
+        initial={{ opacity: 0, x: 32, pointerEvents: "none" }}
+        animate={
+          isHover
+            ? { opacity: 1, x: 0, pointerEvents: "auto" }
+            : { opacity: 0, x: 32, pointerEvents: "none" }
+        }
+        transition={{ type: "spring", stiffness: 400, damping: 26 }}
+      >
+        <div
+          data-tauri-drag-region
+          className="actions ml-auto flex size-full items-center justify-center gap-2 text-[#808080]"
+        >
+          <div className={`${itemClassName} `} onClick={() => {}}>
+            <IconDeviceGamepad2 className="size-5" />
+          </div>
+          <div className={`${itemClassName} `} onClick={() => {}}>
+            <IconFileSmile className="size-5" />
+          </div>
+          <div className={`${itemClassName} `} onClick={() => {}}>
+            <IconMusicPause className="size-5" />
+          </div>
+          <div className={`${itemClassName} `} onClick={() => {}}>
+            <IconPlayerPlay className="size-5" />
+          </div>
+          <div className={`${itemClassName} `} onClick={() => {}}>
+            <IconCircleCheck className="size-5 text-[#44ffe5]" />
+          </div>
+        </div>
+      </motion.div>
+    </div>
+  );
+}
+
+export function CapsuleItem({
+  item,
+  className,
+  onAction,
+}: {
+  item: ITask;
+  className?: string;
+  onAction: (action: "maximize" | "minimize" | "close") => void;
+}) {
+  const { timerInfo } = useData();
+  const wrapperRef = useRef<HTMLDivElement>(null);
+  const isHover = useHover(wrapperRef);
+  const itemClassName = "cursor-pointer hover:text-white";
+  return (
+    <div
+      ref={wrapperRef}
+      className={`relative flex h-12 flex-col justify-center gap-2 overflow-hidden rounded-lg bg-[#2b2b2b] px-3 text-sm text-white select-none ${className}`}
+    >
+      <div className={cn("flex w-full items-center justify-between")}>
+        <div className="truncate text-white">{item.title}</div>
+        <div className="time w-[90px] text-right font-bold text-white">
+          <span className="text-white">{timerInfo?.duration}</span>
+        </div>
+      </div>
+      <motion.div
+        className="absolute inset-0 bg-[#2b2b2b]"
+        initial={{ opacity: 0, x: 32, pointerEvents: "none" }}
+        animate={
+          isHover
+            ? { opacity: 1, x: 0, pointerEvents: "auto" }
+            : { opacity: 0, x: 32, pointerEvents: "none" }
+        }
+        transition={{ type: "spring", stiffness: 400, damping: 26 }}
+      >
+        <div
+          data-tauri-drag-region
+          className="actions ml-auto flex size-full items-center justify-center gap-2 text-[#808080]"
+        >
+          <div className={`${itemClassName} `} onClick={() => {}}>
+            <IconDeviceGamepad2 className="size-5" />
+          </div>
+          <div className={`${itemClassName} `} onClick={() => {}}>
+            <IconFileSmile className="size-5" />
+          </div>
+          <div className={`${itemClassName} `} onClick={() => {}}>
+            <IconMusicPause className="size-5" />
+          </div>
+          <div className={`${itemClassName} `} onClick={() => {}}>
+            <IconPlayerPlay className="size-5" />
+          </div>
+          <div className={`${itemClassName} `} onClick={() => {}}>
+            <IconCircleCheck className="size-5 text-[#44ffe5]" />
+          </div>
+          <div
+            className={`${itemClassName} `}
+            onClick={() => {
+              onAction("maximize");
+            }}
+          >
+            <IconMaximize className="size-5 text-[#44ffe5]" />
+          </div>
+        </div>
+      </motion.div>
+    </div>
+  );
+}

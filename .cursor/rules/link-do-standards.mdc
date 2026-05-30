@@ -1,0 +1,498 @@
+---
+description: Link-Do project-wide coding standards
+alwaysApply: true
+---
+
+# Link-Do Coding Standards
+
+## Project Overview
+
+Link-Do is a macOS desktop task management app using Tauri 2 + React 19 + Next.js App Router + Tailwind CSS + Zustand.
+
+## File Naming
+
+| Type | Convention | Example |
+|------|-----------|---------|
+| All files | **kebab-case** | `collection-card.tsx`, `client-request.ts` |
+| Directories | **kebab-case** | `app/home/_components/` |
+| Page files | **kebab-case** | `app/home/page.tsx` |
+| Component files | **kebab-case** | `create-collection-modal.tsx` |
+
+**Never use:** CamelCase, PascalCase, or snake_case for file names.
+
+## TypeScript
+
+### Interface Naming
+
+```typescript
+// ✅ Use I prefix for interfaces
+interface ICollection { ... }
+interface ITask { ... }
+interface IUser { ... }
+
+// ✅ Use DTO suffix for data transfer objects
+interface CreateCollectionDTO { ... }
+interface UpdateTaskDTO { ... }
+```
+
+### Props Interface Naming
+
+```typescript
+// ✅ Props interface named I{ComponentName}Props
+interface ICollectionCardProps {
+  collection: ICollection;
+  onClick: () => void;
+}
+
+export default function CollectionCard({ collection, onClick }: ICollectionCardProps) {
+  // ...
+}
+```
+
+### Type Exports with Alias
+
+```typescript
+// Re-export with type aliasing
+export type {
+  ICollection as Collection,
+  ITask as Task,
+  TaskStatus,
+};
+```
+
+### Generic Usage
+
+```typescript
+// API response with generic
+export interface ApiResponse<T> {
+  success: boolean;
+  data?: T;
+  error?: string;
+  message?: string;
+}
+```
+
+## Component Patterns
+
+### Functional Components Only
+
+```typescript
+// ✅ Always use functional components
+export default function CollectionCard({ ... }: ICollectionCardProps) {
+  return <div>...</div>;
+}
+
+// ✅ Named export for complex components
+export function KanbanBoard({ tasks }: IKanbanBoardProps) {
+  return <div>...</div>;
+}
+```
+
+### Props Destructure in Parameters
+
+```typescript
+// ✅ Destructure props directly in function parameters
+export default function CollectionCard({
+  collection,
+  onClick,
+}: ICollectionCardProps) {
+  // Use collection and onClick directly
+}
+
+// ❌ Don't do this
+export default function CollectionCard(props: ICollectionCardProps) {
+  const { collection, onClick } = props;
+}
+```
+
+## Import Organization
+
+Follow this import order:
+
+1. `"use client"` directive (if needed)
+2. React/framework imports
+3. Absolute path `@/` imports (components, services, stores)
+4. Third-party library imports (icons, ahooks, next/navigation, etc.)
+5. Relative imports (local components from same directory)
+
+```typescript
+"use client";
+
+import BottomNav from "@/components/bottom-nav";
+import { useUserStore } from "@/stores/user";
+import { IconPlus } from "@tabler/icons-react";
+import { useRequest } from "ahooks";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import CollectionCard from "./_components/collection-card";
+```
+
+## State Management (Zustand)
+
+### Store Naming & Structure
+
+```typescript
+// File: stores/user.ts
+// Store named use{StoreName}Store
+
+import { create } from "zustand";
+import { TOKEN_KEY } from "@/config";
+import { ApiResponse, getMe, MeResponse } from "@/services/base";
+import { IUser } from "@/types/base";
+
+interface IST {
+  isFetchedUser: boolean;
+  user: IUser | undefined;
+  fetchUser: () => Promise<ApiResponse<MeResponse>>;
+}
+
+export const useUserStore = create<IST>((set) => ({
+  isFetchedUser: false,
+  user: undefined,
+  fetchUser: async () => {
+    const token = localStorage.getItem(TOKEN_KEY);
+    if (!token) {
+      set({ isFetchedUser: true });
+    }
+    const response = await getMe();
+    if (response.success) {
+      set({ user: response.data, isFetchedUser: true });
+    } else {
+      set({ isFetchedUser: true });
+    }
+    return response;
+  },
+}));
+```
+
+### Store Usage
+
+```typescript
+const { user, fetchUser } = useUserStore();
+```
+
+## API Calls (ahooks useRequest)
+
+### GET Requests - Auto-fetch
+
+```typescript
+const {
+  loading,
+  refresh,
+  data: collections = [],
+} = useRequest(
+  async () => {
+    const res = await getCollections();
+    return res.data;
+  },
+  {
+    manual: false,  // Auto-fetch on mount
+  },
+);
+```
+
+### POST/PUT/DELETE - Manual Trigger
+
+```typescript
+const { runAsync: submitCreate } = useRequest(
+  async (data: { name: string; icon: string }) => {
+    const res = await createCollection(data);
+    return res;
+  },
+  { manual: true },
+);
+
+// Call directly without onSuccess
+await submitCreate(data);
+refresh();
+```
+
+### With refreshDeps
+
+```typescript
+const { data: tasks, runAsync: getTasks } = useRequest(
+  async () => {
+    const tasksRes = await getTasksService(collectionUuid!);
+    if (tasksRes.success && tasksRes.data) {
+      return tasksRes.data;
+    } else {
+      toast.error(tasksRes.message ?? "Failed to fetch tasks");
+      return [];
+    }
+  },
+  {
+    refreshDeps: [collectionUuid],  // Re-fetch when dependency changes
+  },
+);
+```
+
+### Error Handling Pattern
+
+```typescript
+const handleSubmitCreate = async (data: { name: string; icon: string }) => {
+  try {
+    toast.loading("Creating collection...");
+    const res = await submitCreate(data);
+    if (res.success) {
+      refresh();
+      toast.success("Collection created successfully");
+    }
+  } catch (err) {
+    console.error("Failed to create collection:", err);
+    toast.error("Failed to create collection");
+  }
+};
+```
+
+## Styling (Tailwind CSS)
+
+### Class Ordering Convention
+
+```tsx
+// Layout → Spacing → Colors → Typography → Effects
+<div className="flex min-h-screen flex-col bg-[#0e0e0f] text-white">
+  <header className="flex h-[80px] items-center justify-between px-10 py-6">
+    <h1 className="text-2xl font-extrabold tracking-[-0.6px]">
+```
+
+### Dark Theme Colors
+
+```tsx
+// Use hardcoded hex values for dark theme
+className="bg-[#201f20] text-[#e5e2e3] border-[rgba(77,67,84,0.1)]"
+```
+
+### Responsive Design
+
+```tsx
+// Mobile-first with @md, @lg breakpoints
+className="flex-col *:w-full @md/field-group:flex-row @md/field-group:items-center"
+```
+
+## Form Validation (react-hook-form + zod)
+
+```typescript
+const emailSchema = z.object({
+  email: z
+    .string()
+    .min(1, "请输入邮箱地址")
+    .regex(/^[^\s@]+@[^\s@]+\.[^\s@]+$/, "请输入有效的邮箱地址"),
+});
+
+const emailForm = useForm<EmailFormData>({
+  resolver: zodResolver(emailSchema),
+  mode: "onBlur",
+});
+```
+
+## Shadcn UI Components
+
+### Component Structure Pattern
+
+```typescript
+// src/components/ui/button.tsx
+import * as React from "react"
+import { cva, type VariantProps } from "class-variance-authority"
+import { Slot } from "radix-ui"
+import { cn } from "@/lib/utils"
+
+const buttonVariants = cva(
+  "group/button inline-flex shrink-0 items-center justify-center...",
+  {
+    variants: {
+      variant: {
+        default: "bg-primary text-primary-foreground...",
+        outline: "border-border bg-background...",
+        secondary: "bg-secondary text-secondary-foreground...",
+      },
+      size: {
+        default: "h-8 gap-1.5 px-2.5...",
+        sm: "h-7 gap-1...",
+        icon: "size-8",
+      },
+    },
+    defaultVariants: {
+      variant: "default",
+      size: "default",
+    },
+  }
+)
+
+function Button({ className, variant = "default", size = "default", ...props }) {
+  return (
+    <Comp
+      data-slot="button"
+      data-variant={variant}
+      data-size={size}
+      className={cn(buttonVariants({ variant, size, className }))}
+      {...props}
+    />
+  )
+}
+
+export { Button, buttonVariants }
+```
+
+## Next.js App Router
+
+### Client Components
+
+```typescript
+"use client";
+
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+
+// All components using hooks or browser APIs must be client components
+```
+
+### Root Layout Pattern
+
+```typescript
+// app/layout.tsx
+"use client";
+
+import Providers from "@/providers/base";
+import "@/styles/globals.css";
+import { Inter } from "next/font/google";
+
+const inter = Inter({ variable: "--font-inter", subsets: ["latin"] });
+
+export default function RootLayout({
+  children,
+}: Readonly<{ children: React.ReactNode }>) {
+  return (
+    <html lang="en" className="h-screen">
+      <body className={`${inter.className} flex h-screen flex-col overflow-hidden`}>
+        <Providers>
+          <div className="bg-background flex-1 overflow-y-scroll">
+            {children}
+          </div>
+        </Providers>
+      </body>
+    </html>
+  );
+}
+```
+
+## Utilities
+
+### cn() Helper
+
+```typescript
+// src/lib/utils.ts
+import { clsx, type ClassValue } from "clsx"
+import { twMerge } from "tailwind-merge"
+
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs))
+}
+```
+
+### Common Utility Patterns
+
+```typescript
+// src/utils/base.ts
+export function sleep(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+export function ellipsis(text: string, maxLength: number) {
+  if (!text) return "";
+  if (text.length > maxLength) {
+    return text.slice(0, maxLength) + "...";
+  }
+  return text;
+}
+
+export function toGroupedTasks(tasks: ITask[] | undefined): Record<TaskStatus, ITask[]> {
+  // Group tasks by status
+}
+
+export function formatEstimated(minutes: number): string | undefined {
+  if (minutes === 0) return undefined;
+  const h = Math.floor(minutes / 60);
+  if (h === 0) return `${minutes}m`;
+  if (h === 1) return "1hr";
+  return `${h}hr`;
+}
+```
+
+## Theme / Dark Mode
+
+```typescript
+// src/providers/base.tsx
+"use client";
+
+export default function Providers({ children }: IProviders) {
+  return (
+    <ThemeProvider
+      attribute="class"
+      defaultTheme="dark"
+      enableSystem
+      disableTransitionOnChange
+    >
+      <Toaster toastOptions={{ ... }} />
+      {children}
+    </ThemeProvider>
+  );
+}
+```
+
+## Folder Structure
+
+```
+frontend/src/
+├── app/                    # Next.js App Router pages
+│   ├── layout.tsx          # Root layout
+│   ├── page.tsx            # Root page (redirect)
+│   ├── home/               # Home route /home
+│   │   ├── page.tsx
+│   │   └── _components/    # Private components (underscore prefix)
+│   ├── work/               # Work route /work
+│   │   ├── page.tsx
+│   │   ├── content.tsx
+│   │   ├── data-provider.tsx
+│   │   └── _components/
+│   └── login/
+│       └── page.tsx
+├── components/             # Shared components
+│   ├── ui/                 # Shadcn UI components
+│   │   ├── button.tsx
+│   │   ├── avatar.tsx
+│   │   └── dialog.tsx
+│   ├── bottom-nav.tsx
+│   └── window-title-bar.tsx
+├── services/               # API service layer
+│   ├── base.ts             # Base API + types
+│   ├── client-request.ts   # Axios setup
+│   ├── auth.ts
+│   ├── collection.ts
+│   └── task.ts
+├── stores/                 # Zustand stores
+│   ├── user.ts
+│   └── common.ts
+├── hooks/                  # Custom hooks
+│   └── use-focus-mode-transition.ts
+├── types/                  # TypeScript types
+│   ├── base.ts
+│   └── work.ts
+├── utils/                  # Utility functions
+│   └── base.ts
+├── lib/                    # Shared utilities
+│   └── utils.ts            # cn() helper
+├── config/                # App configuration
+│   └── index.ts
+├── providers/              # React providers
+│   └── base.tsx
+└── styles/                 # Global styles
+    └── globals.css
+```
+
+## Icon Library
+
+Use `@tabler/icons-react` for all icons:
+
+```typescript
+import { IconPlus, IconSearch, IconDotsVertical } from "@tabler/icons-react";
+```
