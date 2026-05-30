@@ -1,15 +1,27 @@
 {
   "compilerOptions": {
     "paths": {
-      "@link-do/shared": ["./packages/shared/src/index.ts"],
-      "@link-do/shared/*": ["./packages/shared/src/*"]
+      "@link-do/shared": [
+        "./packages/shared/src/index.ts"
+      ],
+      "@link-do/shared/*": [
+        "./packages/shared/src/*"
+      ]
     }
   },
   "references": [
-    { "path": "./apps/frontend" },
-    { "path": "./apps/admin" },
-    { "path": "./apps/mcp" },
-    { "path": "./packages/shared" }
+    {
+      "path": "./apps/frontend"
+    },
+    {
+      "path": "./apps/admin"
+    },
+    {
+      "path": "./apps/mcp"
+    },
+    {
+      "path": "./packages/shared"
+    }
   ],
   "files": []
 }

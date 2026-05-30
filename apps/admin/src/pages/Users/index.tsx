@@ -8,11 +8,11 @@ import {
 } from '@ant-design/pro-components';
 import { Avatar } from 'antd';
 import dayjs from 'dayjs';
+
 import { useRef } from 'react';
 
 const UsersPage: React.FC = () => {
   const actionRef = useRef<ActionType>(null);
-
   const columns: ProColumns<API.UserInfo>[] = [
     {
       title: '用户',
@@ -25,6 +25,7 @@ const UsersPage: React.FC = () => {
             icon={<UserOutlined />}
             style={{ background: '#1677ff', flexShrink: 0 }}
           />
+
           <div>
             <div style={{ color: '#e5e5e5', fontWeight: 500 }}>
               {record.name || '-'}
