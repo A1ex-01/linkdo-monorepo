@@ -1,4 +1,9 @@
-import { Users } from 'lucide-react'
+import {
+  FolderOpen,
+  LayoutDashboard,
+  ListTodo,
+  Users,
+} from 'lucide-react'
 import { type SidebarData } from '../types'
 
 export const sidebarData: SidebarData = {
@@ -12,6 +17,21 @@ export const sidebarData: SidebarData = {
     {
       title: 'General',
       items: [
+        {
+          title: 'Dashboard',
+          url: '/',
+          icon: LayoutDashboard,
+        },
+        {
+          title: 'Collections',
+          url: '/collections',
+          icon: FolderOpen,
+        },
+        {
+          title: 'Tasks',
+          url: '/tasks',
+          icon: ListTodo,
+        },
         {
           title: 'Users',
           url: '/users',
