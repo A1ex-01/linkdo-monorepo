@@ -228,7 +228,7 @@ const MultipleSelector = React.forwardRef<
       ref,
       () => ({
         selectedValue: [...selected],
-        input: inputRef.current as HTMLInputElement,
+        input: inputRef.current! as HTMLInputElement,
         focus: () => inputRef?.current?.focus(),
         reset: () => setSelected([]),
       }),

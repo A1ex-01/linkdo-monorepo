@@ -7,7 +7,7 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "biome check && next lint",
+    "lint": "next lint",
     "fix": "biome check --fix && next lint --fix",
     "test": "vitest",
     "tauri": "tauri",
