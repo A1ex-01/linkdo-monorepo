@@ -31,7 +31,50 @@ declare namespace API {
 
   interface LoginResult {
     token?: string;
-    user?: UserInfo;
+    email?: string;
+  }
+
+  // Pre-defined result types
+  interface Result_string_ {
+    success?: boolean;
+    error?: string;
+    message?: string;
+    data?: string;
+  }
+
+  interface Result_LoginVO_ {
+    success?: boolean;
+    error?: string;
+    message?: string;
+    data?: LoginVO;
+  }
+
+  interface Result_LoginResult_ {
+    success?: boolean;
+    error?: string;
+    message?: string;
+    data?: LoginResult;
+  }
+
+  interface Result_UserInfo_ {
+    success?: boolean;
+    error?: string;
+    message?: string;
+    data?: UserInfo;
+  }
+
+  interface Result_StatsInfo_ {
+    success?: boolean;
+    error?: string;
+    message?: string;
+    data?: StatsInfo;
+  }
+
+  interface Result_TimeSessionInfo__ {
+    success?: boolean;
+    error?: string;
+    message?: string;
+    data?: TimeSessionInfo[];
   }
 
   interface UserInfo {

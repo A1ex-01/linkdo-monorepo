@@ -121,8 +121,7 @@ const LoginPage: React.FC = () => {
             captchaProps={{ size: 'large', loading: sending }}
             countDown={60}
             phoneName="email"
-            onGetCaptcha={async (form) => {
-              const email = form?.getFieldValue('email');
+            onGetCaptcha={async (email: string) => {
               return handleSendCode(email);
             }}
             rules={[

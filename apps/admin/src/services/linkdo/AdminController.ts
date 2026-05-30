@@ -1,6 +1,5 @@
 /* eslint-disable */
 import { request } from '@umijs/max';
-import type { API } from './typings';
 
 /** 获取用户列表 GET /api/v1/admin/users */
 export async function listUsers(
@@ -14,9 +13,10 @@ export async function listUsers(
   },
   options?: { [key: string]: any },
 ) {
-  return request<API.Result_PageInfo_UserInfo__>('/api/v1/admin/users', {
+  return request('/api/v1/admin/users', {
     method: 'GET',
     params: { ...params },
+    baseURL: 'http://192.168.55.102:8080',
     ...(options || {}),
   });
 }
@@ -33,9 +33,10 @@ export async function listAdminTasks(
   },
   options?: { [key: string]: any },
 ) {
-  return request<API.Result_PageInfo_TaskInfo__>('/api/v1/admin/tasks', {
+  return request('/api/v1/admin/tasks', {
     method: 'GET',
     params: { ...params },
+    baseURL: 'http://192.168.55.102:8080',
     ...(options || {}),
   });
 }
@@ -49,20 +50,19 @@ export async function listAdminCollections(
   },
   options?: { [key: string]: any },
 ) {
-  return request<API.Result_PageInfo_CollectionInfo__>(
-    '/api/v1/admin/collections',
-    {
-      method: 'GET',
-      params: { ...params },
-      ...(options || {}),
-    },
-  );
+  return request('/api/v1/admin/collections', {
+    method: 'GET',
+    baseURL: 'http://192.168.55.102:8080',
+    params: { ...params },
+    ...(options || {}),
+  });
 }
 
 /** 获取统计数据 GET /api/v1/admin/stats */
 export async function getStats(options?: { [key: string]: any }) {
-  return request<API.Result_StatsInfo_>('/api/v1/admin/stats', {
+  return request('/api/v1/admin/stats', {
     method: 'GET',
+    baseURL: 'http://192.168.55.102:8080',
     ...(options || {}),
   });
 }
@@ -73,12 +73,10 @@ export async function getTaskSessions(
   options?: { [key: string]: any },
 ) {
   const { taskUuid: param0 } = params;
-  return request<API.Result_TimeSessionInfo___>(
-    `/api/v1/admin/tasks/${param0}/sessions`,
-    {
-      method: 'GET',
-      params: { ...params },
-      ...(options || {}),
-    },
-  );
+  return request(`/api/v1/admin/tasks/${param0}/sessions`, {
+    method: 'GET',
+    baseURL: 'http://192.168.55.102:8080',
+    params: { ...params },
+    ...(options || {}),
+  });
 }

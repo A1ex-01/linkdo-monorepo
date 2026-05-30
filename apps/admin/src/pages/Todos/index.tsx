@@ -1,5 +1,4 @@
 import services from '@/services/linkdo';
-import type { API } from '@/services/linkdo/typings';
 import {
   ActionRef,
   PageContainer,
