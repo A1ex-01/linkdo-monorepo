@@ -14,5 +14,14 @@
   "engines": {
     "node": ">=18",
     "pnpm": ">=9"
+  },
+  "pnpm": {
+    "overrides": {
+      "@types/react": "19.1.5",
+      "@types/react-dom": "19.1.5",
+      "@ant-design/icons": "5.6.1",
+      "@ant-design/pro-components": "2.8.10",
+      "@link-do/admin>eslint": "8.57.1"
+    }
   }
 }

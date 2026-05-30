@@ -69,7 +69,7 @@ const LoginPage: React.FC = () => {
           background: '#1a1a1a',
           border: '1px solid rgba(255,255,255,0.08)',
         }}
-        styles={{ body: { padding: '40px 36px' } }}
+        bodyStyle={{ padding: '40px 36px' }}
       >
         <div style={{ textAlign: 'center', marginBottom: 32 }}>
           <Title

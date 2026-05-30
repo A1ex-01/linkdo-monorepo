@@ -3,6 +3,7 @@ import {
   ActionType,
   FooterToolbar,
   PageContainer,
+  ProColumns,
   ProDescriptions,
   ProDescriptionsItemProps,
   ProTable,
@@ -11,7 +12,6 @@ import { Button, Divider, Drawer, message } from 'antd';
 import React, { useRef, useState } from 'react';
 import CreateForm from './components/CreateForm';
 import UpdateForm, { FormValueType } from './components/UpdateForm';
-
 const { addUser, queryUserList, deleteUser, modifyUser } =
   services.UserController;
 
@@ -87,10 +87,10 @@ const TableList: React.FC<unknown> = () => {
   const [updateModalVisible, handleUpdateModalVisible] =
     useState<boolean>(false);
   const [stepFormValues, setStepFormValues] = useState({});
-  const actionRef = useRef<ActionType>();
+  const actionRef = useRef<ActionType>(null);
   const [row, setRow] = useState<API.UserInfo>();
   const [selectedRowsState, setSelectedRows] = useState<API.UserInfo[]>([]);
-  const columns: ProDescriptionsItemProps<API.UserInfo>[] = [
+  const columns: ProColumns<API.UserInfo, 'text'>[] = [
     {
       title: '名称',
       dataIndex: 'name',
@@ -259,7 +259,7 @@ const TableList: React.FC<unknown> = () => {
             params={{
               id: row?.name,
             }}
-            columns={columns}
+            columns={columns as ProDescriptionsItemProps<API.UserInfo>[]}
           />
         )}
       </Drawer>

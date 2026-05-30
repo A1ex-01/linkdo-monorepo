@@ -30,7 +30,7 @@ export async function getInitialState(): Promise<{
 }
 
 // ProLayout 配置
-export const layout: ExposeModel<'initialState'>['settings'] = {
+export const layout: any = {
   logoutmentsOnLogin: false,
   title: 'Link-Do Admin',
   logo: 'https://img.alicdn.com/tfs/TB1YHEpwUT1gK0jSZFhXXaAtVXa-28-27.svg',

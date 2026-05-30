@@ -1,7 +1,7 @@
 import services from '@/services/linkdo';
 import { UserOutlined } from '@ant-design/icons';
 import {
-  ActionRef,
+  ActionType,
   PageContainer,
   ProColumns,
   ProTable,
@@ -11,7 +11,7 @@ import dayjs from 'dayjs';
 import { useRef } from 'react';
 
 const UsersPage: React.FC = () => {
-  const actionRef = useRef<ActionRef>();
+  const actionRef = useRef<ActionType>(null);
 
   const columns: ProColumns<API.UserInfo>[] = [
     {

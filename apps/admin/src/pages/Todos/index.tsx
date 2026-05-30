@@ -1,6 +1,6 @@
 import services from '@/services/linkdo';
 import {
-  ActionRef,
+  ActionType,
   PageContainer,
   ProColumns,
   ProTable,
@@ -32,7 +32,7 @@ function formatDuration(minutes?: number): string {
 }
 
 const TodosPage: React.FC = () => {
-  const actionRef = useRef<ActionRef>();
+  const actionRef = useRef<ActionType>(null);
 
   const columns: ProColumns<API.TaskInfo>[] = [
     {
