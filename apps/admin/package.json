@@ -1,34 +1,28 @@
 {
-  "name": "@link-do/admin",
   "private": true,
+  "name": "@link-do/admin",
   "author": "a1ex <peterxhhx@gmail.com>",
   "scripts": {
-    "build": "max build",
-    "dev": "max dev",
-    "format": "prettier --cache --write .",
-    "postinstall": "max setup",
-    "prepare": "husky",
-    "setup": "max setup",
-    "start": "npm run dev",
-    "lint": "max lint",
-    "typecheck": "tsc --noEmit"
+    "dev": "umi dev",
+    "build": "umi build",
+    "postinstall": "umi setup",
+    "setup": "umi setup",
+    "start": "npm run dev"
   },
   "dependencies": {
-    "@ant-design/icons": "5.6.1",
-    "@ant-design/pro-components": "2.8.10",
-    "@umijs/max": "^4.6.57",
-    "antd": "^5.4.0",
-    "dayjs": "^1.11.10"
+    "@ant-design/pro-components": "^2.8.10",
+    "antd": "^5.29.3",
+    "axios": "^1.16.1",
+    "umi": "^4.6.57"
   },
   "devDependencies": {
-    "@types/react": "^19.1.5",
-    "@types/react-dom": "^19.1.5",
-    "eslint": "8.57.1",
-    "husky": "^9",
-    "lint-staged": "^13.2.0",
-    "prettier": "^2.8.7",
+    "@types/react": "^18.0.33",
+    "@types/react-dom": "^18.0.11",
+    "@umijs/plugins": "^4.6.57",
+    "prettier": "^2.8.8",
     "prettier-plugin-organize-imports": "^3.2.2",
     "prettier-plugin-packagejson": "^2.4.3",
+    "tailwindcss": "^3",
     "typescript": "^5.0.3"
   }
 }
