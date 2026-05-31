@@ -2,10 +2,10 @@
 
 import { TOKEN_KEY } from "@/config";
 import { ApiResponse, getMe, MeResponse } from "@/services/base";
+import { getMyPermissions } from "@/services/permission";
 import { IUser } from "@/types/base";
 import { create } from "zustand";
 import { usePermissionStore } from "./permission";
-import { getMyPermissions } from "@/services/permission";
 
 interface IST {
   isFetchedUser: boolean;

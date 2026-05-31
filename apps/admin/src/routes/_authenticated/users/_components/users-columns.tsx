@@ -42,9 +42,7 @@ export const usersColumns: ColumnDef<User>[] = [
     cell: ({ row }) => {
       const roleName = row.original.role_name
       if (!roleName) {
-        return (
-          <div className='text-muted-foreground'>No role</div>
-        )
+        return <div className='text-muted-foreground'>No role</div>
       }
       return <Badge variant='secondary'>{roleName}</Badge>
     },

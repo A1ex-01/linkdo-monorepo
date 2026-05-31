@@ -1,15 +1,15 @@
 import { createFileRoute } from '@tanstack/react-router'
 import {
-  Users,
-  ListChecks,
-  FolderOpen,
   BarChart3,
   Bell,
-  Shield,
+  FolderOpen,
+  LayoutDashboard,
+  ListChecks,
   RefreshCw,
   Settings,
+  Shield,
   Sparkles,
-  LayoutDashboard,
+  Users,
 } from 'lucide-react'
 
 export function ProductIntro() {
@@ -89,9 +89,12 @@ export function ProductIntro() {
   return (
     <div className='space-y-8 p-6'>
       <div>
-        <h2 className='text-2xl font-bold tracking-tight'>Product Introduction</h2>
-        <p className='text-muted-foreground mt-1'>
-          An overview of all features and capabilities available in the Link-Do Admin panel.
+        <h2 className='text-2xl font-bold tracking-tight'>
+          Product Introduction
+        </h2>
+        <p className='mt-1 text-muted-foreground'>
+          An overview of all features and capabilities available in the Link-Do
+          Admin panel.
         </p>
       </div>
 
@@ -110,7 +113,7 @@ export function ProductIntro() {
               </span>
             </div>
             <h3 className='mb-1.5 text-base font-semibold'>{feature.title}</h3>
-            <p className='text-sm text-muted-foreground leading-relaxed'>
+            <p className='text-sm leading-relaxed text-muted-foreground'>
               {feature.description}
             </p>
           </div>

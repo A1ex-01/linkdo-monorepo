@@ -1,5 +1,5 @@
-import { create } from "zustand";
 import type { PermissionCode } from "@/types/rbac";
+import { create } from "zustand";
 
 interface IPermissionState {
   permissions: PermissionCode[];
