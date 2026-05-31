@@ -1,6 +1,8 @@
 import axios, { AxiosError, AxiosRequestConfig } from "axios";
 import toast from "react-hot-toast";
+import { createLogger } from "@/utils/logger";
 
+const logger = createLogger("client-request");
 const TOKEN_KEY = "linkdo_token";
 
 function getToken(): string | null {
@@ -28,7 +30,7 @@ instance.interceptors.request.use(
     return config;
   },
   (error: AxiosError) => {
-    console.error("Request error:", JSON.stringify(error));
+    logger.error("Request error:", JSON.stringify(error));
     return Promise.reject(error);
   },
 );
@@ -37,7 +39,7 @@ instance.interceptors.response.use(
   (res) => {
     const payload = res.data as ApiResponse<unknown>;
     if (payload && payload.success === false) {
-      console.error("API Error:", payload.error);
+      logger.error("API Error:", payload.error);
     }
     return res;
   },

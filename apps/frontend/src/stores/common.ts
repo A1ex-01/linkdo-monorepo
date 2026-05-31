@@ -3,6 +3,9 @@
 import { getNotionDatabasesByCollection } from "@/services/notion";
 import { INotionDatabase } from "@/types/base";
 import { create } from "zustand";
+import { createLogger } from "@/utils/logger";
+
+const logger = createLogger("common-store");
 
 interface IST {
   isFetchingCurrCollectionNotionDbs: boolean;
@@ -19,7 +22,7 @@ export const useCommonStore = create<IST>((set) => ({
     if (response.success) {
       set({ currCollectionNotionDbs: response.data });
     } else {
-      console.error(response.error);
+      logger.error(response.error);
     }
     set({ isFetchingCurrCollectionNotionDbs: false });
   },
