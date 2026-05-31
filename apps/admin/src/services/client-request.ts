@@ -1,4 +1,7 @@
 import axios, { type AxiosError, type AxiosRequestConfig } from 'axios'
+import { createLogger } from '@/utils/logger'
+
+const logger = createLogger('client-request')
 
 const TOKEN_KEY = 'linkdo_admin_token'
 
@@ -31,8 +34,7 @@ instance.interceptors.request.use(
     return config
   },
   (error: AxiosError) => {
-    // eslint-disable-next-line no-console
-    console.error('Request error:', JSON.stringify(error))
+    logger.error('Request error', error)
     return Promise.reject(error)
   }
 )
@@ -41,15 +43,13 @@ instance.interceptors.response.use(
   (res) => {
     const payload = res.data as ApiResponse<unknown>
     if (payload && payload.success === false) {
-      // eslint-disable-next-line no-console
-      console.error('API Error:', payload.error)
+      logger.error('API Error', payload.error)
     }
     return res
   },
   (error: AxiosError<ApiResponse<unknown>>) => {
     if (error.response?.data?.error) {
-      // eslint-disable-next-line no-console
-      console.error('API Error:', error.response.data.error)
+      logger.error('API Error', error.response.data.error)
     }
     return Promise.reject(error)
   }

@@ -1,11 +1,11 @@
 import { AxiosError } from 'axios'
 import { toast } from 'sonner'
+import { createLogger } from '@/utils/logger'
+
+const logger = createLogger('handle-server-error')
 
 export function handleServerError(error: unknown) {
-  if (import.meta.env.DEV) {
-    // eslint-disable-next-line no-console
-    console.log(error)
-  }
+  logger.warn('Server error', error)
 
   let errMsg = 'Something went wrong!'
 
