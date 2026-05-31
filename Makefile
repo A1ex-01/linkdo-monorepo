@@ -38,3 +38,8 @@ lint:
 
 typecheck:
 	pnpm -r typecheck
+
+format-check:
+	pnpm -r format:check
+format:
+	pnpm -r format

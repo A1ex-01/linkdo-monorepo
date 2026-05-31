@@ -1,7 +1,7 @@
-import type { Collection } from '@/services/admin'
 import { AdminTable } from '@/components/data-table/admin-table'
-import type { ColumnDef } from '@tanstack/react-table'
 import type { NavigateFn } from '@/hooks/use-table-url-state'
+import type { Collection } from '@/services/admin'
+import type { ColumnDef } from '@tanstack/react-table'
 
 type CollectionsTableProps = {
   data: Collection[]

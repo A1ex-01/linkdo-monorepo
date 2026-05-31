@@ -1,9 +1,9 @@
-import { createFileRoute } from '@tanstack/react-router'
 import { ConfigDrawer } from '@/components/config-drawer'
 import { Header } from '@/components/layout/header'
 import { ProfileDropdown } from '@/components/profile-dropdown'
 import { Search } from '@/components/search'
 import { ThemeSwitch } from '@/components/theme-switch'
+import { createFileRoute } from '@tanstack/react-router'
 
 // import { ForbiddenError } from '../(errors)/_components/forbidden'
 // import { GeneralError } from '../(errors)/_components/general-error'

@@ -1,6 +1,6 @@
-import { createFileRoute } from '@tanstack/react-router'
 import { Logo } from '@/assets/logo'
 import { cn } from '@/lib/utils'
+import { createFileRoute } from '@tanstack/react-router'
 import { UserAuthForm } from './_components/user-auth-form'
 
 function SignIn() {

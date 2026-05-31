@@ -1,6 +1,6 @@
-import { type ColumnDef } from '@tanstack/react-table'
 import { DataTableColumnHeader } from '@/components/data-table'
 import type { User } from '@/services/admin'
+import { type ColumnDef } from '@tanstack/react-table'
 
 function formatDate(dateStr: string): string {
   try {

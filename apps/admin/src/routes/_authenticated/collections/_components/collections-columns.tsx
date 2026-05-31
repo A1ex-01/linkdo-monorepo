@@ -1,7 +1,7 @@
-import { type ColumnDef } from '@tanstack/react-table'
-import type { Collection } from '@/services/admin'
-import { Clock } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
+import type { Collection } from '@/services/admin'
+import { type ColumnDef } from '@tanstack/react-table'
+import { Clock } from 'lucide-react'
 
 function formatTime(minutes: number): string {
   if (minutes === 0) return '—'

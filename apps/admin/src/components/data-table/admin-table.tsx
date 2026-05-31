@@ -1,13 +1,3 @@
-import { useState } from 'react'
-import {
-  type ColumnDef,
-  type SortingState,
-  flexRender,
-  getCoreRowModel,
-  getSortedRowModel,
-  useReactTable,
-} from '@tanstack/react-table'
-import { cn } from '@/lib/utils'
 import {
   Table,
   TableBody,
@@ -16,6 +6,16 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
+import { cn } from '@/lib/utils'
+import {
+  type ColumnDef,
+  type SortingState,
+  flexRender,
+  getCoreRowModel,
+  getSortedRowModel,
+  useReactTable,
+} from '@tanstack/react-table'
+import { useState } from 'react'
 import { DataTablePagination } from './pagination'
 
 type AdminTableProps<T> = {
@@ -68,14 +68,18 @@ export function AdminTable<T>({
   function onPaginationChange(
     updater:
       | { pageIndex: number; pageSize: number }
-      | ((old: { pageIndex: number; pageSize: number }) => { pageIndex: number; pageSize: number }),
+      | ((old: { pageIndex: number; pageSize: number }) => {
+          pageIndex: number
+          pageSize: number
+        })
   ) {
     const next = typeof updater === 'function' ? updater(pagination) : updater
     navigate({
       search: (prev) => ({
         ...(prev as Record<string, unknown>),
         [paginationKey]: next.pageIndex === 0 ? undefined : next.pageIndex + 1,
-        [pageSizeKey]: next.pageSize === defaultPageSize ? undefined : next.pageSize,
+        [pageSizeKey]:
+          next.pageSize === defaultPageSize ? undefined : next.pageSize,
       }),
     })
   }
@@ -111,14 +115,14 @@ export function AdminTable<T>({
                     className={cn(
                       'bg-background group-hover/row:bg-muted',
                       header.column.columnDef.meta?.className,
-                      header.column.columnDef.meta?.thClassName,
+                      header.column.columnDef.meta?.thClassName
                     )}
                   >
                     {header.isPlaceholder
                       ? null
                       : flexRender(
                           header.column.columnDef.header,
-                          header.getContext(),
+                          header.getContext()
                         )}
                   </TableHead>
                 ))}
@@ -146,10 +150,13 @@ export function AdminTable<T>({
                       className={cn(
                         'bg-background group-hover/row:bg-muted',
                         cell.column.columnDef.meta?.className,
-                        cell.column.columnDef.meta?.tdClassName,
+                        cell.column.columnDef.meta?.tdClassName
                       )}
                     >
-                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext()
+                      )}
                     </TableCell>
                   ))}
                 </TableRow>

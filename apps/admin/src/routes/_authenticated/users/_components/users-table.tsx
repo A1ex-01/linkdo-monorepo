@@ -1,14 +1,4 @@
-import { useEffect, useState } from 'react'
-import {
-  type SortingState,
-  type VisibilityState,
-  flexRender,
-  getCoreRowModel,
-  getSortedRowModel,
-  useReactTable,
-} from '@tanstack/react-table'
-import { cn } from '@/lib/utils'
-import { type NavigateFn, useTableUrlState } from '@/hooks/use-table-url-state'
+import { DataTablePagination } from '@/components/data-table'
 import {
   Table,
   TableBody,
@@ -17,9 +7,19 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { DataTablePagination } from '@/components/data-table'
-import { usersColumns as columns } from './users-columns'
+import { type NavigateFn, useTableUrlState } from '@/hooks/use-table-url-state'
+import { cn } from '@/lib/utils'
 import type { User } from '@/services/admin'
+import {
+  type SortingState,
+  type VisibilityState,
+  flexRender,
+  getCoreRowModel,
+  getSortedRowModel,
+  useReactTable,
+} from '@tanstack/react-table'
+import { useEffect, useState } from 'react'
+import { usersColumns as columns } from './users-columns'
 
 type DataTableProps = {
   data: User[]
@@ -40,17 +40,14 @@ export function UsersTable({
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
   const [sorting, setSorting] = useState<SortingState>([])
 
-  const {
-    pagination,
-    onPaginationChange,
-    ensurePageInRange,
-  } = useTableUrlState({
-    search,
-    navigate,
-    pagination: { defaultPage: 1, defaultPageSize: 10 },
-    globalFilter: { enabled: false },
-    columnFilters: [],
-  })
+  const { pagination, onPaginationChange, ensurePageInRange } =
+    useTableUrlState({
+      search,
+      navigate,
+      pagination: { defaultPage: 1, defaultPageSize: 10 },
+      globalFilter: { enabled: false },
+      columnFilters: [],
+    })
 
   // eslint-disable-next-line react-hooks/incompatible-library
   const table = useReactTable({
@@ -111,7 +108,10 @@ export function UsersTable({
           <TableBody>
             {loading ? (
               <TableRow>
-                <TableCell colSpan={columns.length} className='h-24 text-center'>
+                <TableCell
+                  colSpan={columns.length}
+                  className='h-24 text-center'
+                >
                   <div className='flex items-center justify-center gap-2 text-muted-foreground'>
                     <span className='animate-pulse'>Loading...</span>
                   </div>

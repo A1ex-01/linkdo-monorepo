@@ -1,7 +1,3 @@
-import { useState, useEffect, useRef } from 'react'
-import { type Table } from '@tanstack/react-table'
-import { X } from 'lucide-react'
-import { cn } from '@/lib/utils'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
@@ -10,6 +6,10 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from '@/components/ui/tooltip'
+import { cn } from '@/lib/utils'
+import { type Table } from '@tanstack/react-table'
+import { X } from 'lucide-react'
+import { useEffect, useRef, useState } from 'react'
 
 type DataTableBulkActionsProps<TData> = {
   table: Table<TData>

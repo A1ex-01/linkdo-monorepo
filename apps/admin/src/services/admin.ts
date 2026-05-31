@@ -82,10 +82,18 @@ export interface ListCollectionsParams {
 
 export const adminService = {
   listUsers: (params: ListUsersParams = {}) =>
-    request<PaginatedData<User>>({ url: '/admin/users', method: 'get', params }),
+    request<PaginatedData<User>>({
+      url: '/admin/users',
+      method: 'get',
+      params,
+    }),
 
   listTasks: (params: ListTasksParams = {}) =>
-    request<PaginatedData<Task>>({ url: '/admin/tasks', method: 'get', params }),
+    request<PaginatedData<Task>>({
+      url: '/admin/tasks',
+      method: 'get',
+      params,
+    }),
 
   listCollections: (params: ListCollectionsParams = {}) =>
     request<PaginatedData<Collection>>({

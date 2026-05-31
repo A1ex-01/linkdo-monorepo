@@ -1,9 +1,9 @@
-import { type ColumnDef } from '@tanstack/react-table'
-import type { Task } from '@/services/admin'
-import { Clock, Eye } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
+import type { Task } from '@/services/admin'
+import { type ColumnDef } from '@tanstack/react-table'
+import { Clock, Eye } from 'lucide-react'
 
 function formatTime(minutes: number): string {
   if (minutes === 0) return '—'

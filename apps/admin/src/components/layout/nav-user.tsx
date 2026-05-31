@@ -1,6 +1,4 @@
-import { ChevronsUpDown, LogOut } from 'lucide-react'
-import useDialogState from '@/hooks/use-dialog-state'
-import { useAuthStore } from '@/stores/auth-store'
+import { SignOutDialog } from '@/components/sign-out-dialog'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import {
   DropdownMenu,
@@ -16,7 +14,9 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from '@/components/ui/sidebar'
-import { SignOutDialog } from '@/components/sign-out-dialog'
+import useDialogState from '@/hooks/use-dialog-state'
+import { useAuthStore } from '@/stores/auth-store'
+import { ChevronsUpDown, LogOut } from 'lucide-react'
 
 export function NavUser() {
   const { isMobile } = useSidebar()
@@ -41,7 +41,9 @@ export function NavUser() {
                   </AvatarFallback>
                 </Avatar>
                 <div className='grid flex-1 text-start text-sm leading-tight'>
-                  <span className='truncate font-semibold'>{user?.name ?? 'Admin'}</span>
+                  <span className='truncate font-semibold'>
+                    {user?.name ?? 'Admin'}
+                  </span>
                   <span className='truncate text-xs text-muted-foreground'>
                     {user?.email ?? ''}
                   </span>
@@ -64,7 +66,9 @@ export function NavUser() {
                     </AvatarFallback>
                   </Avatar>
                   <div className='grid flex-1 text-start text-sm leading-tight'>
-                    <span className='truncate font-semibold'>{user?.name ?? 'Admin'}</span>
+                    <span className='truncate font-semibold'>
+                      {user?.name ?? 'Admin'}
+                    </span>
                     <span className='truncate text-xs text-muted-foreground'>
                       {user?.email ?? ''}
                     </span>

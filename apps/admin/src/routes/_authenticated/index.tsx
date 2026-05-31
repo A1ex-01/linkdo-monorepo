@@ -1,9 +1,9 @@
-import { useEffect, useState } from 'react'
-import { createFileRoute } from '@tanstack/react-router'
-import { toast } from 'sonner'
-import { Users, ListChecks, LayoutList, CheckCircle } from 'lucide-react'
-import { adminService, type AdminStats } from '@/services/admin'
 import { cn } from '@/lib/utils'
+import { adminService, type AdminStats } from '@/services/admin'
+import { createFileRoute } from '@tanstack/react-router'
+import { CheckCircle, LayoutList, ListChecks, Users } from 'lucide-react'
+import { useEffect, useState } from 'react'
+import { toast } from 'sonner'
 
 export function Dashboard() {
   const [stats, setStats] = useState<AdminStats | null>(null)
@@ -63,17 +63,19 @@ export function Dashboard() {
   ]
 
   return (
-    <div className='p-6 space-y-6'>
+    <div className='space-y-6 p-6'>
       <div>
         <h2 className='text-2xl font-bold tracking-tight'>Dashboard</h2>
-        <p className='text-muted-foreground'>Overview of your Link-Do platform.</p>
+        <p className='text-muted-foreground'>
+          Overview of your Link-Do platform.
+        </p>
       </div>
 
       <div className='grid gap-4 md:grid-cols-2 lg:grid-cols-4'>
         {cards.map((card) => (
           <div
             key={card.title}
-            className='rounded-xl border bg-card text-card-foreground shadow-sm p-6'
+            className='rounded-xl border bg-card p-6 text-card-foreground shadow-sm'
           >
             <div className='flex items-center justify-between'>
               <p className='text-sm font-medium text-muted-foreground'>
@@ -89,7 +91,7 @@ export function Dashboard() {
               ) : (
                 <p className='text-3xl font-bold'>{card.value}</p>
               )}
-              <p className='text-xs text-muted-foreground mt-1'>
+              <p className='mt-1 text-xs text-muted-foreground'>
                 {card.description}
               </p>
             </div>

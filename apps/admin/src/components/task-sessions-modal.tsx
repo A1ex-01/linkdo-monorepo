@@ -1,13 +1,13 @@
-import { useEffect, useState } from 'react'
-import { toast } from 'sonner'
-import { Clock, PlayCircle } from 'lucide-react'
-import { adminService, type TimeSession } from '@/services/admin'
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
+import { adminService, type TimeSession } from '@/services/admin'
+import { Clock, PlayCircle } from 'lucide-react'
+import { useEffect, useState } from 'react'
+import { toast } from 'sonner'
 
 type TaskSessionsModalProps = {
   taskUuid: string
@@ -90,12 +90,13 @@ export function TaskSessionsModal({
         ) : (
           <div className='space-y-2'>
             <div className='text-sm text-muted-foreground'>
-              {sessions.length} session{sessions.length !== 1 ? 's' : ''} &middot; Total:{' '}
+              {sessions.length} session{sessions.length !== 1 ? 's' : ''}{' '}
+              &middot; Total:{' '}
               <span className='font-medium text-foreground'>
                 {formatDuration(totalDuration)}
               </span>
             </div>
-            <div className='max-h-80 overflow-y-auto space-y-1.5'>
+            <div className='max-h-80 space-y-1.5 overflow-y-auto'>
               {sessions.map((session) => (
                 <div
                   key={session.uuid}
@@ -104,7 +105,8 @@ export function TaskSessionsModal({
                   <div className='flex flex-col'>
                     <span className='text-xs text-muted-foreground'>
                       {formatDateTime(session.started_at)}
-                      {session.ended_at && ` — ${formatDateTime(session.ended_at)}`}
+                      {session.ended_at &&
+                        ` — ${formatDateTime(session.ended_at)}`}
                     </span>
                   </div>
                   <div className='flex items-center gap-1.5 font-mono text-sm'>

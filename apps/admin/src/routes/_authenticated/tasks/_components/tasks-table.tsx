@@ -1,7 +1,7 @@
-import { type Task } from '@/services/admin'
 import { AdminTable } from '@/components/data-table/admin-table'
-import type { ColumnDef } from '@tanstack/react-table'
 import type { NavigateFn } from '@/hooks/use-table-url-state'
+import { type Task } from '@/services/admin'
+import type { ColumnDef } from '@tanstack/react-table'
 
 type TasksTableProps = {
   data: Task[]
@@ -12,7 +12,14 @@ type TasksTableProps = {
   total: number
 }
 
-export function TasksTable({ data, columns, loading, search, navigate, total }: TasksTableProps) {
+export function TasksTable({
+  data,
+  columns,
+  loading,
+  search,
+  navigate,
+  total,
+}: TasksTableProps) {
   return (
     <AdminTable
       data={data}

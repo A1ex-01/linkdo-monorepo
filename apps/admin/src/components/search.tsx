@@ -1,8 +1,8 @@
 // todo: 保留
 
-import { SearchIcon } from 'lucide-react'
-import { cn } from '@/lib/utils'
 import { useSearch } from '@/context/search-provider'
+import { cn } from '@/lib/utils'
+import { SearchIcon } from 'lucide-react'
 import { Button } from './ui/button'
 
 export function Search({

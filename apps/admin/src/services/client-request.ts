@@ -34,7 +34,7 @@ instance.interceptors.request.use(
     // eslint-disable-next-line no-console
     console.error('Request error:', JSON.stringify(error))
     return Promise.reject(error)
-  },
+  }
 )
 
 instance.interceptors.response.use(
@@ -52,11 +52,11 @@ instance.interceptors.response.use(
       console.error('API Error:', error.response.data.error)
     }
     return Promise.reject(error)
-  },
+  }
 )
 
 export function request<T>(
-  config: AxiosRequestConfig<unknown>,
+  config: AxiosRequestConfig<unknown>
 ): Promise<ApiResponse<T>> {
   return instance.request<ApiResponse<T>>(config).then((res) => res.data)
 }

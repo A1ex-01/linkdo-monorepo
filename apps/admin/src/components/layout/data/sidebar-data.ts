@@ -1,9 +1,4 @@
-import {
-  FolderOpen,
-  LayoutDashboard,
-  ListTodo,
-  Users,
-} from 'lucide-react'
+import { FolderOpen, LayoutDashboard, ListTodo, Users } from 'lucide-react'
 import { type SidebarData } from '../types'
 
 export const sidebarData: SidebarData = {

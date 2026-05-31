@@ -12,10 +12,7 @@
     "prettier-plugin-organize-imports",
     "prettier-plugin-tailwindcss"
   ],
-  "tailwindFunctions": [
-    "cn",
-    "clsx"
-  ],
+  "tailwindFunctions": ["cn", "clsx"],
   "tailwindStylesheet": "./src/styles/index.css",
   "importOrder": [
     "^path$",

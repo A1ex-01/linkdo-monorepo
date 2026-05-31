@@ -1,5 +1,5 @@
-import { create } from 'zustand'
 import type { User } from '@/services/auth'
+import { create } from 'zustand'
 
 const ACCESS_TOKEN_KEY = 'linkdo_admin_token'
 
@@ -41,7 +41,10 @@ export const useAuthStore = create<AuthState>()((set) => ({
       set((state) => ({ ...state, auth: { ...state.auth, user } })),
     setAccessToken: (token) => {
       saveToken(token)
-      set((state) => ({ ...state, auth: { ...state.auth, accessToken: token } }))
+      set((state) => ({
+        ...state,
+        auth: { ...state.auth, accessToken: token },
+      }))
     },
     reset: () => {
       saveToken('')
