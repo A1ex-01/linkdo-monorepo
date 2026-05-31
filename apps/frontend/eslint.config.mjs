@@ -136,8 +136,8 @@ const eslintConfig = tseslint.config(
       "@typescript-eslint/no-non-null-asserted-optional-chain": "off",
       "@typescript-eslint/consistent-indexed-object-style": "off",
       "@typescript-eslint/prefer-non-null-assertion": "off",
-      "@typescript-eslint/no-deprecated": "off",  
-      "@typescript-eslint/no-unnecessary-boolean-literal-compare": "off"
+      "@typescript-eslint/no-deprecated": "off",
+      "@typescript-eslint/no-unnecessary-boolean-literal-compare": "off",
     },
     languageOptions: {
       parserOptions: {
@@ -145,7 +145,7 @@ const eslintConfig = tseslint.config(
         tsconfigRootDir: import.meta.dirname,
       },
     },
-  }
+  },
 );
 
 export default eslintConfig;

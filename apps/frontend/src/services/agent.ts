@@ -3,7 +3,7 @@
  * Endpoint: POST http://localhost:6001/v1/chat/stream
  */
 
-import { AGENT_URL, AGENT_API_KEY } from "@/config";
+import { AGENT_API_KEY, AGENT_URL } from "@/config";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -17,7 +17,13 @@ export interface PlanStep {
 }
 
 export type SSEEvent =
-  | { type: "confirm_required"; intent: string; summary: string; steps: PlanStep[]; session_id: string }
+  | {
+      type: "confirm_required";
+      intent: string;
+      summary: string;
+      steps: PlanStep[];
+      session_id: string;
+    }
   | { type: "execute_start"; session_id: string }
   | { type: "text"; content: string }
   | { type: "done"; session_id: string; message: string }
@@ -29,7 +35,12 @@ export interface SendMessageOptions {
   sessionId?: string;
   confirm?: boolean;
   onEvent?: (event: SSEEvent) => void;
-  onConfirmRequired?: (intent: string, summary: string, steps: PlanStep[], sessionId: string) => void;
+  onConfirmRequired?: (
+    intent: string,
+    summary: string,
+    steps: PlanStep[],
+    sessionId: string,
+  ) => void;
   onExecuteStart?: (sessionId: string) => void;
   onText?: (content: string) => void;
   onDone?: (message: string) => void;
@@ -56,15 +67,37 @@ function parseSSEEvent(data: string): SSEEvent {
 
     switch (type) {
       case "confirm_required":
-        return { type: "confirm_required", ...(parsed as { intent: string; summary: string; steps: PlanStep[]; session_id: string }) };
+        return {
+          type: "confirm_required",
+          ...(parsed as {
+            intent: string;
+            summary: string;
+            steps: PlanStep[];
+            session_id: string;
+          }),
+        };
       case "execute_start":
-        return { type: "execute_start", session_id: (parsed as { session_id: string }).session_id };
+        return {
+          type: "execute_start",
+          session_id: (parsed as { session_id: string }).session_id,
+        };
       case "text":
-        return { type: "text", content: (parsed as { content: string }).content };
+        return {
+          type: "text",
+          content: (parsed as { content: string }).content,
+        };
       case "done":
-        return { type: "done", session_id: (parsed as { session_id: string }).session_id, message: (parsed as { message: string }).message };
+        return {
+          type: "done",
+          session_id: (parsed as { session_id: string }).session_id,
+          message: (parsed as { message: string }).message,
+        };
       case "error":
-        return { type: "error", code: (parsed as { code: string }).code, message: (parsed as { message: string }).message };
+        return {
+          type: "error",
+          code: (parsed as { code: string }).code,
+          message: (parsed as { message: string }).message,
+        };
       default:
         return { type: "unknown", raw: data };
     }
@@ -77,7 +110,9 @@ function parseSSEEvent(data: string): SSEEvent {
 // Streaming fetch with SSE parsing
 // ---------------------------------------------------------------------------
 
-export async function sendAgentMessage(options: SendMessageOptions): Promise<void> {
+export async function sendAgentMessage(
+  options: SendMessageOptions,
+): Promise<void> {
   const {
     message,
     sessionId,
@@ -103,7 +138,10 @@ export async function sendAgentMessage(options: SendMessageOptions): Promise<voi
   });
 
   if (!response.ok) {
-    onError?.("HTTP_ERROR", `请求失败: ${response.status} ${response.statusText}`);
+    onError?.(
+      "HTTP_ERROR",
+      `请求失败: ${response.status} ${response.statusText}`,
+    );
     return;
   }
 
@@ -139,7 +177,12 @@ export async function sendAgentMessage(options: SendMessageOptions): Promise<voi
 
         switch (event.type) {
           case "confirm_required":
-            onConfirmRequired?.(event.intent, event.summary, event.steps, event.session_id);
+            onConfirmRequired?.(
+              event.intent,
+              event.summary,
+              event.steps,
+              event.session_id,
+            );
             break;
           case "execute_start":
             onExecuteStart?.(event.session_id);
@@ -162,17 +205,24 @@ export async function sendAgentMessage(options: SendMessageOptions): Promise<voi
 }
 
 export async function confirmAgentPlan(options: ConfirmOptions): Promise<void> {
-  const { sessionId, onEvent, onExecuteStart, onText, onDone, onError } = options;
+  const { sessionId, onEvent, onExecuteStart, onText, onDone, onError } =
+    options;
 
-  const response = await fetch(`${AGENT_URL}/v1/chat/confirm?session_id=${encodeURIComponent(sessionId)}`, {
-    method: "POST",
-    headers: {
-      "X-API-Key": AGENT_API_KEY,
+  const response = await fetch(
+    `${AGENT_URL}/v1/chat/confirm?session_id=${encodeURIComponent(sessionId)}`,
+    {
+      method: "POST",
+      headers: {
+        "X-API-Key": AGENT_API_KEY,
+      },
     },
-  });
+  );
 
   if (!response.ok) {
-    onError?.("HTTP_ERROR", `请求失败: ${response.status} ${response.statusText}`);
+    onError?.(
+      "HTTP_ERROR",
+      `请求失败: ${response.status} ${response.statusText}`,
+    );
     return;
   }
 

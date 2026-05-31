@@ -1,7 +1,7 @@
 // frontend/src/services/timer.ts
 
-import { request } from "./base";
 import type { ITimeSession } from "@/types/base";
+import { request } from "./base";
 
 export function startTimer(taskUuid: string) {
   return request<ITimeSession>({

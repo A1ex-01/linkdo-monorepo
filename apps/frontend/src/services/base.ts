@@ -1,6 +1,5 @@
-import { request } from "./client-request";
 import type { ApiResponse } from "./client-request";
-import { getToken } from "./client-request";
+import { getToken, request } from "./client-request";
 
 export { request };
 export type { ApiResponse, getToken };

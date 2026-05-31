@@ -24,4 +24,7 @@ build
 
 
 
-frontend/src/components/ui/**
+src/components/ui/**
+
+
+src-tauri/**
