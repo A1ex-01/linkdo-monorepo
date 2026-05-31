@@ -30,7 +30,7 @@ Before any **non-trivial** task, you MUST:
 |-----------|-------|--------------|
 | Requirements / Design / Behavior Change | `superpowers:brainstorming` | `.ai-runtime-artifacts/specs/` |
 | Implementation Plan | `superpowers:writing-plans` | `.ai-runtime-artifacts/plans/` |
-| Multi-task Coding / Parallel Impl | `omx ultrawork` or equivalent | `.ai-runtime-artifacts/execution-logs/` + code changes |
+| Multi-task Coding / Parallel Impl | `superpowers:subagent-driven-development` | `.ai-runtime-artifacts/execution-logs/` + code changes |
 | Code Review / Verification | `superpowers:verification-before-completion` | `.ai-runtime-artifacts/verifications/` |
 | Bug Investigation | `superpowers:systematic-debugging` | `.ai-runtime-artifacts/verifications/` |
 | Architecture Decision | architect / critic / planner | `.ai-runtime-artifacts/decisions/` |
@@ -47,9 +47,9 @@ The following are **NOT** trivial — MUST produce artifacts:
 
 ### Runbook Summary
 
-**New Feature:** spec (specs/) → plan decision (write plan if complex, skip otherwise) → coding (MUST use `omx ultrawork` or equivalent omx workflow) → execution-log (execution-logs/) → verification (verifications/)
+**New Feature:** spec (specs/) → plan decision (write plan if complex, skip otherwise) → coding (superpowers:subagent-driven-development) → execution-log (execution-logs/) → verification (verifications/)
 
-**Bug Fix:** root cause → fix (MUST use `omx` workflow) → execution-log (execution-logs/) → verification (verifications/)
+**Bug Fix:** root cause → fix (superpowers:systematic-debugging → direct fix) → execution-log (execution-logs/) → verification (verifications/)
 
 **Architecture Decision:** compare options → decision record (decisions/), MUST include accepted/rejected options, constraints, and risks
 

@@ -32,7 +32,6 @@ required_files=(
   "harness/entrypoints/GEMINI.md"
   "harness/adapters/agents/.agents/README.md"
   "harness/adapters/cursor/.cursor/rules/ai-entry.mdc"
-  "harness/adapters/codex/README.md"
   "harness/scripts/install-ai-skills.sh"
   "harness/scripts/harness-init.sh"
   "harness/scripts/harness-check.sh"
@@ -42,6 +41,7 @@ required_files=(
 required_dirs=(
   ".ai-runtime-artifacts/specs"
   ".ai-runtime-artifacts/plans"
+  ".ai-runtime-artifacts/execution-logs"
   ".ai-runtime-artifacts/reviews"
   ".ai-runtime-artifacts/verifications"
   ".ai-runtime-artifacts/decisions"

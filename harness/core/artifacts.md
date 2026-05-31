@@ -8,6 +8,7 @@ AI 过程产物统一放在项目根目录 `.ai-runtime-artifacts/`：
 | --- | --- |
 | `.ai-runtime-artifacts/specs/` | 需求理解、方案设计、设计说明 |
 | `.ai-runtime-artifacts/plans/` | 实施计划、任务拆解 |
+| `.ai-runtime-artifacts/execution-logs/` | 执行日志、实际路由、变更文件记录 |
 | `.ai-runtime-artifacts/reviews/` | 代码审查、方案审查 |
 | `.ai-runtime-artifacts/verifications/` | 验证报告、doctor 输出摘要、测试结果 |
 | `.ai-runtime-artifacts/decisions/` | 架构决策、技术取舍 |

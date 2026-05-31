@@ -31,8 +31,6 @@ created_at: 2026-05-14
 - `harness/adapters/agents/.agents/` -> `.agents/`
 - `harness/adapters/cursor/.cursor/` -> `.cursor/`
 
-Codex / OMX 适配遵循 `harness/adapters/codex/README.md`。不要把 `.codex/` 当作纯手写模板；它主要由 `omx setup` 生成。
-
 ## 初始化项目画像
 
 创建 AI 运行时产物目录：

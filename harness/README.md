@@ -4,20 +4,20 @@
 它描述项目规则、工作流路由、过程产物、验证门禁、入口模板、工具适配和脚本。
 
 会在你的项目根目录中，对如下文件/目录生成当前项目的投影或运行态：
-`AGENTS.md`、`CLAUDE.md`、`GEMINI.md`、`.agents/`、`.cursor/` 和 `.codex/`
+`AGENTS.md`、`CLAUDE.md`、`GEMINI.md`、`.agents/`、`.cursor/`
 
 迁移源头在 `harness/`。
 
 ## 重点关注
 
-这套工程的唯一目的：让你轻松用上 Harness 工程化，解决“万事开头难”的哲学问题。
+这套工程的唯一目的：让你轻松用上 Harness 工程化，解决"万事开头难"的哲学问题。
 然后在实施过程中，你一定会用 AI 对这套 Harness 规范不断的优化，沉淀出属于你们团队的资产，让团队 100% AI 化
 
 ## 核心能力集
 
 - `superpowers` 负责全面的思考
-- `oh-my-codex` / `omx` 负责运行时编排，同时自动选择内置的高级角色，去处理对应的任务
-- 用户指定 skills 时，默认按“默认 route + 用户指定 skills”合并执行；只有用户明确要求跳过默认 route 时，才允许不使用默认 skills。
+- Harness 负责项目边界、产物协议、验证门禁和可迁移约束
+- 用户指定 skills 时，默认按"默认 route + 用户指定 skills"合并执行；只有用户明确要求跳过默认 route 时，才允许不使用默认 skills。
 
 ## 读取顺序
 
@@ -29,7 +29,7 @@
 6. `harness/project.verification.md`
 7. `harness/core/verification.md`
 8. `harness/core/runbooks.md`
-9. 与任务相关的 `.agents/skills/` 或 `.codex/skills/`
+9. 与任务相关的 `.agents/skills/`
 
 ## 目录结构
 

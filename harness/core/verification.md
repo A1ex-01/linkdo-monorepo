@@ -23,22 +23,27 @@ git status --short
 ## AI 环境验证
 
 ```bash
-yarn ai:install-skills
-omx doctor
+# superpowers skills（必需）
+npx skills add obra/superpowers -g
 ```
-
-如果这些命令涉及全局安装或本机环境修改，执行前要明确说明影响；不能执行时，至少运行静态检查并说明原因。
 
 ## 应用验证
 
 根据改动范围选择：
 
 ```bash
-yarn build
-yarn build:processes
-yarn build:screenUpload
-yarn build:controlProcess
-yarn build:all
+# 桌面端（前端）
+pnpm --filter @link-do/frontend build
+
+# 管理后台
+pnpm --filter @link-do/admin build
+
+# MCP Server
+pnpm --filter @link-do/mcp build
+
+# 或通过 Makefile
+make build-frontend
+make build-admin
 ```
 
 如果只改 Harness 文档和规则，不要求运行应用构建。

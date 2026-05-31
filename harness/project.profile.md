@@ -78,8 +78,11 @@ generator: harness-init
 
 ## 待确认项
 
-- Agent 服务是否已接入生产环境 DeepSeek API
-- MySQL 和 Redis 连接配置（`.env` 是否已在版本控制外）
-- Notion OAuth 是否已完成应用注册和回调配置
-- Admin 管理后台当前开发进度和状态
-- packages/shared/ 是否已有实质内容
+以下信息无法从公开代码中确认，请 review：
+
+1. **Agent 服务接入状态**：services/agent 是否已接入生产 DeepSeek API？
+2. **MySQL / Redis 配置**：连接字符串通过 `.env` 管理，是否已加入 `.gitignore`？
+3. **Notion OAuth**：应用注册和回调 URL 配置是否已完成？
+4. **Admin 后台进度**：apps/admin 当前开发完成度如何？
+5. **packages/shared/**：`packages/shared/` 是否已有实质代码，或仍为空目录？
+6. **services/backend 脚本**：services/backend 是否有独立的 lint 或 test 命令？

@@ -2,17 +2,7 @@
 
 本文件描述可迁移 Agent Harness 的通用架构。它不包含具体项目业务背景；项目业务画像放在 `harness/project.profile.md`。
 
-## 三层架构
-
-### Runtime Layer
-
-由 `oh-my-codex` / `omx` 和 AI 工具运行时管理：
-
-- `AGENTS.md`
-- `.codex/`
-- omx skills、prompts、agents、hooks
-
-这层负责多 Agent 编排、workflow 调度和运行时能力。
+## 两层架构
 
 ### Project Overlay Layer
 
