@@ -1,6 +1,6 @@
+import type { PermissionCode } from "@/types/rbac";
 import type { ApiResponse } from "./client-request";
 import { request } from "./client-request";
-import type { PermissionCode } from "@/types/rbac";
 
 export type { ApiResponse };
 

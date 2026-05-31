@@ -1,7 +1,7 @@
+import type { IPermission, IRole } from '@/types/rbac'
 import { request } from './client-request'
-import type { IRole, IPermission } from '@/types/rbac'
 
-export type { IRole, IPermission }
+export type { IPermission, IRole }
 
 export interface PaginatedData<T> {
   current: number
