@@ -1,8 +1,15 @@
-.PHONY: dev dev-frontend dev-admin dev-mcp dev-backend dev-agent install
+.PHONY: dev dev-frontend dev-admin dev-mcp dev-backend dev-agent install migrate-up migrate-down
 
 # 安装所有 JS/TS 依赖
 install:
 	pnpm install
+
+# 数据库迁移
+migrate-up:
+	cd services/backend && go run main.go migrate-up
+
+migrate-down:
+	cd services/backend && go run main.go migrate-down
 
 # 启动所有服务（并行）
 dev:
