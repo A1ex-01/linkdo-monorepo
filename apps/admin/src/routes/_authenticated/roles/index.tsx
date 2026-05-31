@@ -1,3 +1,4 @@
+import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -10,13 +11,6 @@ import {
 } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { adminRBACService } from '@/services/admin-rbac'
-import type { IRole } from '@/services/admin-rbac'
-import { createFileRoute, getRouteApi } from '@tanstack/react-router'
-import { PencilIcon, PlusIcon, TrashIcon } from 'lucide-react'
-import { useEffect, useState } from 'react'
-import { toast } from 'sonner'
-import { Badge } from '@/components/ui/badge'
 import {
   Table,
   TableBody,
@@ -25,6 +19,11 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
+import { adminRBACService, type IRole } from '@/services/admin-rbac'
+import { createFileRoute, getRouteApi } from '@tanstack/react-router'
+import { PencilIcon, PlusIcon, TrashIcon } from 'lucide-react'
+import { useEffect, useState } from 'react'
+import { toast } from 'sonner'
 
 function RolesPage() {
   const [data, setData] = useState<IRole[]>([])
@@ -170,7 +169,10 @@ function RolesPage() {
               </TableRow>
             ) : data.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={5} className='h-24 text-center text-muted-foreground'>
+                <TableCell
+                  colSpan={5}
+                  className='h-24 text-center text-muted-foreground'
+                >
                   No roles found.
                 </TableCell>
               </TableRow>
@@ -195,7 +197,9 @@ function RolesPage() {
                         variant='ghost'
                         size='icon'
                         className='size-8'
-                        onClick={() => navigate({ params: { roleId: String(role.id) } })}
+                        onClick={() =>
+                          navigate({ params: { roleId: String(role.id) } })
+                        }
                       >
                         <PencilIcon className='size-4' />
                       </Button>

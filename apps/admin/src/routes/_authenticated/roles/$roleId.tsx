@@ -4,10 +4,13 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Separator } from '@/components/ui/separator'
 import { Skeleton } from '@/components/ui/skeleton'
-import { adminRBACService } from '@/services/admin-rbac'
-import type { IRole, IPermission } from '@/services/admin-rbac'
-import { createFileRoute, getRouteApi } from '@tanstack/react-router'
+import {
+  adminRBACService,
+  type IPermission,
+  type IRole,
+} from '@/services/admin-rbac'
 import { ArrowLeftIcon } from '@radix-ui/react-icons'
+import { createFileRoute, getRouteApi } from '@tanstack/react-router'
 import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
 
@@ -63,7 +66,8 @@ function RoleDetailPage() {
     try {
       const updates: { name?: string; description?: string } = {}
       if (name.trim() !== role?.name) updates.name = name.trim()
-      if (description.trim() !== role?.description) updates.description = description.trim()
+      if (description.trim() !== role?.description)
+        updates.description = description.trim()
 
       let roleRes: { success: boolean; error?: string } = { success: false }
       if (Object.keys(updates).length > 0) {
@@ -74,7 +78,10 @@ function RoleDetailPage() {
         }
       }
 
-      const permRes = await adminRBACService.setRolePermissions(numericId, Array.from(selectedIds))
+      const permRes = await adminRBACService.setRolePermissions(
+        numericId,
+        Array.from(selectedIds)
+      )
       if (permRes.success) {
         toast.success('Role saved successfully')
         fetchData()
@@ -120,7 +127,7 @@ function RoleDetailPage() {
     return (
       <div className='flex flex-col items-center justify-center gap-4 p-6'>
         <p className='text-muted-foreground'>Role not found.</p>
-        <Button variant='outline'           onClick={() => window.history.back()}>
+        <Button variant='outline' onClick={() => window.history.back()}>
           Back to Roles
         </Button>
       </div>
@@ -210,14 +217,14 @@ function RoleDetailPage() {
           </div>
         )}
 
-        {adminPerms.length > 0 && frontendPerms.length > 0 && (
-          <Separator />
-        )}
+        {adminPerms.length > 0 && frontendPerms.length > 0 && <Separator />}
 
         {/* Frontend Permissions */}
         {frontendPerms.length > 0 && (
           <div className='flex flex-col gap-3'>
-            <h4 className='text-sm font-medium text-muted-foreground'>Frontend</h4>
+            <h4 className='text-sm font-medium text-muted-foreground'>
+              Frontend
+            </h4>
             <div className='flex flex-col gap-2'>
               {frontendPerms.map((perm) => (
                 <PermissionRow
@@ -243,7 +250,12 @@ interface PermissionRowProps {
   disabled: boolean
 }
 
-function PermissionRow({ permission, checked, onToggle, disabled }: PermissionRowProps) {
+function PermissionRow({
+  permission,
+  checked,
+  onToggle,
+  disabled,
+}: PermissionRowProps) {
   return (
     <div className='flex items-start gap-3 rounded-md border bg-background/50 p-3'>
       <Checkbox
@@ -261,7 +273,9 @@ function PermissionRow({ permission, checked, onToggle, disabled }: PermissionRo
           {permission.name}
         </Label>
         <div className='flex items-center gap-2 text-xs text-muted-foreground'>
-          <code className='rounded bg-muted px-1 font-mono'>{permission.code}</code>
+          <code className='rounded bg-muted px-1 font-mono'>
+            {permission.code}
+          </code>
           <span>{permission.description}</span>
         </div>
       </div>
