@@ -1,10 +1,10 @@
-import { useEffect, useState } from 'react'
-import z from 'zod'
-import { createFileRoute } from '@tanstack/react-router'
-import { adminService, type Task } from '@/services/admin'
-import { toast } from 'sonner'
 import { AppTitle } from '@/components/layout/app-title'
 import { TaskSessionsModal } from '@/components/task-sessions-modal'
+import { adminService, type Task } from '@/services/admin'
+import { createFileRoute } from '@tanstack/react-router'
+import { useEffect, useState } from 'react'
+import { toast } from 'sonner'
+import z from 'zod'
 import { getTasksColumns } from './_components/tasks-columns'
 import { TasksTable } from './_components/tasks-table'
 import { TasksToolbar } from './_components/tasks-toolbar'
@@ -45,7 +45,7 @@ function Tasks() {
 
   return (
     <div className='flex flex-col gap-6'>
-      <AppTitle title='Tasks' description='View and manage all tasks.' />
+      <AppTitle />
 
       <TasksToolbar />
 

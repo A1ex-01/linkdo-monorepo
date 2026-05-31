@@ -3,7 +3,7 @@ import { Logo } from '@/assets/logo'
 import { cn } from '@/lib/utils'
 import { UserAuthForm } from './_components/user-auth-form'
 
-export function SignIn() {
+function SignIn() {
   return (
     <div className='relative container grid h-svh flex-col items-center justify-center lg:max-w-none lg:grid-cols-2 lg:px-0'>
       <div className='lg:p-8'>

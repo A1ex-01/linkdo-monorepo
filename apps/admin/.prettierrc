@@ -9,10 +9,13 @@
   "bracketSpacing": true,
   "endOfLine": "lf",
   "plugins": [
-    "@trivago/prettier-plugin-sort-imports",
+    "prettier-plugin-organize-imports",
     "prettier-plugin-tailwindcss"
   ],
-  "tailwindFunctions": ["cn", "clsx"],
+  "tailwindFunctions": [
+    "cn",
+    "clsx"
+  ],
   "tailwindStylesheet": "./src/styles/index.css",
   "importOrder": [
     "^path$",

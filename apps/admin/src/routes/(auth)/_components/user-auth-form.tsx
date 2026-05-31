@@ -73,7 +73,6 @@ export function UserAuthForm({ className, redirectTo }: UserAuthFormProps) {
   }
 
   async function handleVerify(data: CodeFormData) {
-    console.log('🐽🐽 ~ user-auth-form.tsx ~ handleVerify ~ data:', data)
     setIsLoading(true)
     try {
       const res = await authService.verifyCode(data.email, data.code)

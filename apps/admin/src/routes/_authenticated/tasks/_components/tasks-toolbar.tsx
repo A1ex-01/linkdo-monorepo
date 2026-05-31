@@ -1,27 +1,13 @@
-import { getRouteApi } from '@tanstack/react-router'
-import { Search } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
+import { getRouteApi } from '@tanstack/react-router'
+import { Search } from 'lucide-react'
 
 const route = getRouteApi('/_authenticated/tasks/')
-const STATUS_OPTIONS = [
-  { label: 'All Status', value: '' },
-  { label: 'Pending', value: 'pending' },
-  { label: 'In Progress', value: 'in_progress' },
-  { label: 'Done', value: 'done' },
-]
 
 export function TasksToolbar() {
   const search = route.useSearch()
   const navigate = route.useNavigate()
-
   function updateParam(key: string, value: string) {
     navigate({
       search: {
@@ -30,8 +16,6 @@ export function TasksToolbar() {
       },
     })
   }
-
-  const status = search.status ?? ''
 
   return (
     <div className='flex flex-wrap items-center gap-3'>

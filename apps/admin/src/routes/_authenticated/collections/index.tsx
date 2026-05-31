@@ -1,9 +1,9 @@
-import { useEffect, useState } from 'react'
-import z from 'zod'
-import { createFileRoute } from '@tanstack/react-router'
-import { adminService, type Collection } from '@/services/admin'
-import { toast } from 'sonner'
 import { AppTitle } from '@/components/layout/app-title'
+import { adminService, type Collection } from '@/services/admin'
+import { createFileRoute } from '@tanstack/react-router'
+import { useEffect, useState } from 'react'
+import { toast } from 'sonner'
+import z from 'zod'
 import { getCollectionsColumns } from './_components/collections-columns'
 import { CollectionsTable } from './_components/collections-table'
 
@@ -45,10 +45,7 @@ function Collections() {
 
   return (
     <div className='flex flex-col gap-6'>
-      <AppTitle
-        title='Collections'
-        description='View and manage all collections.'
-      />
+      <AppTitle />
 
       <CollectionsTable
         data={data}
