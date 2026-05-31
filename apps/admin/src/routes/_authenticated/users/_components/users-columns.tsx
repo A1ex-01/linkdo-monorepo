@@ -1,4 +1,5 @@
 import { DataTableColumnHeader } from '@/components/data-table'
+import { Badge } from '@/components/ui/badge'
 import type { User } from '@/services/admin'
 import { type ColumnDef } from '@tanstack/react-table'
 
@@ -32,6 +33,21 @@ export const usersColumns: ColumnDef<User>[] = [
     cell: ({ row }) => (
       <div className='text-muted-foreground'>{row.getValue('email')}</div>
     ),
+  },
+  {
+    accessorKey: 'role_name',
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title='Role' />
+    ),
+    cell: ({ row }) => {
+      const roleName = row.original.role_name
+      if (!roleName) {
+        return (
+          <div className='text-muted-foreground'>No role</div>
+        )
+      }
+      return <Badge variant='secondary'>{roleName}</Badge>
+    },
   },
   {
     accessorKey: 'notion_user_id',
