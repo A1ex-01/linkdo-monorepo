@@ -6,6 +6,12 @@
       "sourceType": "github",
       "skillPath": "skills/ant-design/SKILL.md",
       "computedHash": "096d4ac9513e43030f960aab49b50168a3d5eb35be86926ac6e96e5998ea9466"
+    },
+    "shadcn": {
+      "source": "shadcn/ui",
+      "sourceType": "github",
+      "skillPath": "skills/shadcn/SKILL.md",
+      "computedHash": "80a6226e78f6d1fe464214ae0ef449d49d8ffaa3e7704f011e9b418c678ad4d1"
     }
   }
 }

@@ -209,6 +209,9 @@ importers:
       prettier-plugin-tailwindcss:
         specifier: ^0.7.2
         version: 0.7.4(@trivago/prettier-plugin-sort-imports@6.0.2(prettier@3.8.3))(prettier-plugin-organize-imports@4.3.0(prettier@3.8.3)(typescript@6.0.3))(prettier@3.8.3)
+      shadcn:
+        specifier: ^4.8.3
+        version: 4.8.3(@types/node@25.9.1)(typescript@6.0.3)
       typescript:
         specifier: ~6.0.3
         version: 6.0.3
@@ -8518,7 +8521,6 @@ snapshots:
       '@inquirer/type': 4.0.7(@types/node@25.9.1)
     optionalDependencies:
       '@types/node': 25.9.1
-    optional: true
 
   '@inquirer/core@11.2.1(@types/node@24.12.4)':
     dependencies:
@@ -8543,7 +8545,6 @@ snapshots:
       signal-exit: 4.1.0
     optionalDependencies:
       '@types/node': 25.9.1
-    optional: true
 
   '@inquirer/figures@2.0.7': {}
 
@@ -8554,7 +8555,6 @@ snapshots:
   '@inquirer/type@4.0.7(@types/node@25.9.1)':
     optionalDependencies:
       '@types/node': 25.9.1
-    optional: true
 
   '@jridgewell/gen-mapping@0.3.13':
     dependencies:
@@ -11232,6 +11232,15 @@ snapshots:
     optionalDependencies:
       typescript: 5.9.3
 
+  cosmiconfig@9.0.1(typescript@6.0.3):
+    dependencies:
+      env-paths: 2.2.1
+      import-fresh: 3.3.1
+      js-yaml: 4.1.1
+      parse-json: 5.2.0
+    optionalDependencies:
+      typescript: 6.0.3
+
   cross-spawn@7.0.6:
     dependencies:
       path-key: 3.1.1
@@ -13213,7 +13222,6 @@ snapshots:
       typescript: 6.0.3
     transitivePeerDependencies:
       - '@types/node'
-    optional: true
 
   mute-stream@3.0.0: {}
 
@@ -14476,6 +14484,49 @@ snapshots:
       https-proxy-agent: 7.0.6
       kleur: 4.1.5
       msw: 2.14.6(@types/node@24.12.4)(typescript@5.9.3)
+      node-fetch: 3.3.2
+      open: 11.0.0
+      ora: 8.2.0
+      postcss: 8.5.15
+      postcss-selector-parser: 7.1.1
+      prompts: 2.4.2
+      recast: 0.23.11
+      stringify-object: 5.0.0
+      tailwind-merge: 3.6.0
+      ts-morph: 26.0.0
+      tsconfig-paths: 4.2.0
+      validate-npm-package-name: 7.0.2
+      zod: 3.25.76
+      zod-to-json-schema: 3.25.2(zod@3.25.76)
+    transitivePeerDependencies:
+      - '@cfworker/json-schema'
+      - '@types/node'
+      - babel-plugin-macros
+      - supports-color
+      - typescript
+
+  shadcn@4.8.3(@types/node@25.9.1)(typescript@6.0.3):
+    dependencies:
+      '@babel/core': 7.29.7
+      '@babel/parser': 7.29.7
+      '@babel/plugin-transform-typescript': 7.29.7(@babel/core@7.29.7)
+      '@babel/preset-typescript': 7.29.7(@babel/core@7.29.7)
+      '@dotenvx/dotenvx': 1.69.2
+      '@modelcontextprotocol/sdk': 1.29.0(zod@3.25.76)
+      '@types/validate-npm-package-name': 4.0.2
+      browserslist: 4.28.2
+      commander: 14.0.3
+      cosmiconfig: 9.0.1(typescript@6.0.3)
+      dedent: 1.7.2
+      deepmerge: 4.3.1
+      diff: 8.0.4
+      execa: 9.6.1
+      fast-glob: 3.3.3
+      fs-extra: 11.3.5
+      fuzzysort: 3.1.0
+      https-proxy-agent: 7.0.6
+      kleur: 4.1.5
+      msw: 2.14.6(@types/node@25.9.1)(typescript@6.0.3)
       node-fetch: 3.3.2
       open: 11.0.0
       ora: 8.2.0
