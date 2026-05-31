@@ -15,6 +15,7 @@ from app.agent.graph import build_graph
 from app.api.routes import chat
 from app.config import settings
 from app.mcp.manager import MCPConnectionManager, set_mcp_manager
+from app.middleware.logging import RequestLoggingMiddleware
 import app.runtime_state as runtime_state
 from app.utils.logger import configure_logging, get_logger
 
@@ -72,6 +73,7 @@ def create_app() -> FastAPI:
         allow_methods=["*"],
         allow_headers=["*"],
     )
+    app.add_middleware(RequestLoggingMiddleware)
 
     app.include_router(chat.router)
 
