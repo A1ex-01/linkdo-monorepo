@@ -3,6 +3,7 @@ import {
   Info,
   LayoutDashboard,
   ListTodo,
+  MessageCircle,
   Shield,
   Users,
 } from 'lucide-react'
@@ -48,6 +49,11 @@ export const sidebarData: SidebarData = {
           title: 'Product Intro',
           url: '/product-intro',
           icon: Info,
+        },
+        {
+          title: 'Chat',
+          url: '/chat',
+          icon: MessageCircle,
         },
       ],
     },

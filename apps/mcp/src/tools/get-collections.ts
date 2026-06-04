@@ -33,16 +33,17 @@ export async function handler(args: GetCollectionsArgs, token?: string) {
 
   const lines = truncated.map(
     (c) =>
-      `- [${c.icon}] **${c.name}** (uuid: ${c.uuid}, pending: ${c.pending_count}, estimated: ${c.estimated_total}min)${c.is_archived ? " [archived]" : ""}`
+      `- [${c.icon}] **${c.name}** (uuid: ${c.uuid}, pending: ${c.pending_count}, estimated: ${c.estimated_total}min)${c.is_archived ? " [archived]" : ""}`,
   );
 
   return {
     content: [
       {
         type: "text" as const,
-        text: lines.length > 0
-          ? `## Collections (${truncated.length}${truncatedNote})\n\n${lines.join("\n")}`
-          : "当前没有任何 Collection。",
+        text:
+          lines.length > 0
+            ? `## Collections (${truncated.length}${truncatedNote})\n\n${lines.join("\n")}`
+            : "当前没有任何 Collection。",
       },
     ],
   };

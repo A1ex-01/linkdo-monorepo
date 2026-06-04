@@ -5,7 +5,7 @@ const BASE_URL = process.env.LINKDO_API_BASE_URL ?? "http://localhost:8080";
 async function request<T>(
   path: string,
   options: RequestInit = {},
-  token?: string
+  token?: string,
 ): Promise<ApiResponse<T>> {
   const url = `${BASE_URL}${path}`;
   const headers: Record<string, string> = {
@@ -14,6 +14,7 @@ async function request<T>(
   if (token) {
     headers["Authorization"] = `Bearer ${token}`;
   }
+  console.log("🐽🐽 ~ client.ts ~ request ~ headers:", headers);
 
   let res: Response;
   try {
@@ -43,7 +44,7 @@ async function request<T>(
 
 export async function getCollections(
   token?: string,
-  archived = false
+  archived = false,
 ): Promise<ApiResponse<ICollection[]>> {
   return request<ICollection[]>("/api/v1/collections", {}, token);
 }
@@ -52,49 +53,69 @@ export async function getCollections(
 
 export async function getTasksByCollection(
   collectionUuid: string,
-  token?: string
+  token?: string,
 ): Promise<ApiResponse<ITask[]>> {
-  return request<ITask[]>(`/api/v1/collections/${collectionUuid}/tasks`, {}, token);
+  return request<ITask[]>(
+    `/api/v1/collections/${collectionUuid}/tasks`,
+    {},
+    token,
+  );
 }
 
 export async function createTask(
   collectionUuid: string,
   data: { title: string; estimated_time?: number; status?: string },
-  token?: string
+  token?: string,
 ): Promise<ApiResponse<ITask>> {
-  return request<ITask>(`/api/v1/collections/${collectionUuid}/tasks`, {
-    method: "POST",
-    body: JSON.stringify(data),
-  }, token);
+  return request<ITask>(
+    `/api/v1/collections/${collectionUuid}/tasks`,
+    {
+      method: "POST",
+      body: JSON.stringify(data),
+    },
+    token,
+  );
 }
 
 export async function updateTask(
   taskUuid: string,
   data: { title?: string; estimated_time?: number },
-  token?: string
+  token?: string,
 ): Promise<ApiResponse<void>> {
-  return request<void>(`/api/v1/tasks/${taskUuid}`, {
-    method: "PATCH",
-    body: JSON.stringify(data),
-  }, token);
+  return request<void>(
+    `/api/v1/tasks/${taskUuid}`,
+    {
+      method: "PATCH",
+      body: JSON.stringify(data),
+    },
+    token,
+  );
 }
 
 export async function updateTaskStatus(
   taskUuid: string,
   status: string,
-  token?: string
+  token?: string,
 ): Promise<ApiResponse<void>> {
-  return request<void>(`/api/v1/tasks/${taskUuid}/status`, {
-    method: "PATCH",
-    body: JSON.stringify({ status }),
-  }, token);
+  return request<void>(
+    `/api/v1/tasks/${taskUuid}/status`,
+    {
+      method: "PATCH",
+      body: JSON.stringify({ status }),
+    },
+    token,
+  );
 }
 
 export async function deleteTask(
   taskUuid: string,
-  token?: string
+  token?: string,
 ): Promise<ApiResponse<void>> {
-  return request<void>(`/api/v1/tasks/${taskUuid}`, {
-    method: "DELETE",
-  }, token);
+  return request<void>(
+    `/api/v1/tasks/${taskUuid}`,
+    {
+      method: "DELETE",
+    },
+    token,
+  );
 }

@@ -47,7 +47,6 @@ async function main() {
 
     // Extract Bearer token and verify via backend /oauth/introspect
     const authHeader = req.headers["authorization"];
-    console.log("🐽🐽 ~ index.ts ~ main ~ authHeader:", authHeader);
     if (authHeader && typeof authHeader === "string") {
       const match = authHeader.match(/^Bearer\s+(.+)$/i);
       if (match) {
