@@ -74,6 +74,21 @@ class ServerConfig(BaseSettings):
     model_config = SettingsConfigDict(env_prefix="SERVER_")
 
 
+class LangSmithConfig(BaseSettings):
+    """LangSmith 可观测性配置。"""
+
+    enabled: bool = False
+    api_key: str = ""
+    project: str = "link-do-agent"
+    endpoint: str = "https://api.smith.langchain.com"
+
+    @property
+    def is_configured(self) -> bool:
+        return self.enabled and bool(self.api_key)
+
+    model_config = SettingsConfigDict(env_prefix="LANGSMITH_")
+
+
 class AgentServerSettings(BaseSettings):
     """Agent FastAPI 服务全局配置。"""
 
@@ -84,6 +99,7 @@ class AgentServerSettings(BaseSettings):
     llm: LLMConfig = LLMConfig()
     mcp: MCPConfig = MCPConfig()
     server: ServerConfig = ServerConfig()
+    langsmith: LangSmithConfig = LangSmithConfig()
 
 
 settings = AgentServerSettings()

@@ -114,8 +114,12 @@ async def agent_run(
     sid = session_id or str(uuid.uuid4())
     state = initial_state or _build_initial_state(user_input, mcp_client)
 
+    # ── LangSmith tracer config（注入 metadata）────────────────────────────
+    from app.tracing import get_tracer_config
+    tracer_config = get_tracer_config(metadata={"session_id": sid})
+
     # ── 阶段 A：分类 + 规划 + 确认（LangGraph invoke）────────────────────
-    graph_result = compiled_graph.invoke(state)
+    graph_result = compiled_graph.invoke(state, config=tracer_config)
     state = dict(graph_result)
 
     intent = state.get("intent", "chat")
@@ -229,7 +233,9 @@ async def chat_stream(
         if request.confirm:
             # ── 两阶段：提取计划 ────────────────────────────────────────
             state = _build_initial_state(user_message, mcp_client)
-            graph_result = compiled_graph.invoke(state)
+            from app.tracing import get_tracer_config
+            tracer_config = get_tracer_config(metadata={"session_id": session_id})
+            graph_result = compiled_graph.invoke(state, config=tracer_config)
             state = dict(graph_result)
 
             intent = state.get("intent", "chat")

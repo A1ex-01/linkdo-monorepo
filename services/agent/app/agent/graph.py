@@ -125,7 +125,15 @@ def build_graph(mcp_client: MCPClient) -> Any:
     graph.add_edge("needs_confirm", END)
     graph.add_edge("skip_confirm", END)
 
-    return graph.compile()
+    compiled = graph.compile()
+
+    # ── LangSmith 追踪注入 ───────────────────────────────────────────────
+    from app.tracing import get_tracer
+    tracer = get_tracer()
+    if tracer is not None:
+        compiled = compiled.with_config(callbacks=[tracer])
+
+    return compiled
 
 
 __all__ = ["AgentState", "build_graph"]

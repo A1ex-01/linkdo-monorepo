@@ -29,28 +29,48 @@ from app.agent.client import MCPClient
 from app.utils.logger import get_logger
 
 if TYPE_CHECKING:
-    from langchain_deepseek import ChatDeepSeek
+    pass
+
 
 logger = get_logger(__name__)
+
+
+def _traceable_if_enabled(fn: Any, run_type: str = "chain") -> Any:
+    """
+    条件装饰器：如果 LangSmith 已配置则应用 @traceable，否则原样返回函数。
+    避免在未配置时引入任何额外开销。
+    """
+    from app.tracing import is_tracing_enabled
+    if is_tracing_enabled():
+        from langsmith import traceable
+        return traceable(run_type=run_type)(fn)
+    return fn
+
 
 # ─────────────────────────────────────────────────────────────────────────────
 # 全局 LLM 实例（lazy init）
 # ─────────────────────────────────────────────────────────────────────────────
 
-_llm: "ChatDeepSeek | None" = None
+_llm: Any = None
 
 
-def _get_llm() -> "ChatDeepSeek":
+def _get_llm() -> Any:
     global _llm
     if _llm is None:
-        from langchain_deepseek import ChatDeepSeek
+        from app.tracing import is_tracing_enabled
         from app.config import settings
-        _llm = ChatDeepSeek(
-            model=settings.llm.model,
-            api_key=settings.llm.api_key,
-            api_base=settings.llm.base_url,
-            temperature=settings.llm.temperature,
-        )  # type: ignore[assignment]
+
+        if is_tracing_enabled():
+            from app.tracing import traced_llm
+            _llm = traced_llm()
+        else:
+            from langchain_deepseek import ChatDeepSeek
+            _llm = ChatDeepSeek(
+                model=settings.llm.model,
+                api_key=settings.llm.api_key,
+                api_base=settings.llm.base_url,
+                temperature=settings.llm.temperature,
+            )
     return _llm
 
 
@@ -112,6 +132,7 @@ def _rules_classify(text: str) -> dict | None:
 # Node 0: 意图分类
 # ─────────────────────────────────────────────────────────────────────────────
 
+@is_tracing_enabled  # type: ignore[misc]
 def intent_classifier(state: dict, mcp_client: MCPClient) -> IntentClassifierOutput:
     """
     两层分类：
@@ -668,6 +689,15 @@ def route_after_confirm(state: dict) -> str:
     return "needs_confirm" if needs else "skip_confirm"
 
 
+# ─────────────────────────────────────────────────────────────────────────────
+# LangSmith 追踪：条件应用 @traceable（惰性，仅在 LangSmith 已配置时生效）
+# ─────────────────────────────────────────────────────────────────────────────
+
+intent_classifier = _traceable_if_enabled(intent_classifier, run_type="chain")
+planner_node = _traceable_if_enabled(planner_node, run_type="chain")
+synthesizer_node = _traceable_if_enabled(synthesizer_node, run_type="chain")
+
+
 __all__ = [
     "intent_classifier",
     "planner_node",
@@ -681,4 +711,5 @@ __all__ = [
     "ConfirmOutput",
     "ExecutorOutput",
     "SynthesizerOutput",
+    "_traceable_if_enabled",
 ]

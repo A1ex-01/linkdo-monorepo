@@ -2,12 +2,12 @@
 MCP Client 封装 — 复用 app.mcp.manager.MCPConnectionManager。
 
 MCPConnectionManager 已实现完整的 JSON-RPC 2.0 over SSE 协议。
-本模块在其基础上提供 LangChain 兼容的工具接口（schema）。
+本模块在其基础上提供 LangChain 兼容的工具接口（schema），
+并通过 langsmith @traceable 追踪工具调用。
 """
 
 from __future__ import annotations
 
-import json
 import time
 from typing import TYPE_CHECKING, Any
 
@@ -19,6 +19,10 @@ if TYPE_CHECKING:
 
 logger = get_logger(__name__)
 
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 惰性 @traceable（仅在 LangSmith 已配置时生效）
+# ─────────────────────────────────────────────────────────────────────────────
 
 class MCPClient:
     """
@@ -81,6 +85,34 @@ class MCPClient:
         return self._tool_schemas
 
 
+# ─────────────────────────────────────────────────────────────────────────────
+# LangSmith 追踪工具调用（惰性，仅在 LangSmith 已配置时生效）
+# run_executor 内部通过 app.agent.client.traced_call_tool 调用
+# ─────────────────────────────────────────────────────────────────────────────
+
+_traced_call_tool: Any = None
+
+
+def _get_traced_call_tool() -> Any:
+    global _traced_call_tool
+    if _traced_call_tool is None:
+        from app.tracing import is_tracing_enabled
+        if is_tracing_enabled():
+            from langsmith import traceable
+
+            @traceable(run_type="tool")
+            async def traced(self: MCPClient, tool_name: str, arguments: dict[str, Any]) -> str:  # type: ignore[valid-type]
+                return await MCPClient.call_tool(self, tool_name, arguments)
+
+            _traced_call_tool = traced
+        else:
+            async def noop(self: MCPClient, tool_name: str, arguments: dict[str, Any]) -> str:  # type: ignore[valid-type]
+                return await MCPClient.call_tool(self, tool_name, arguments)
+
+            _traced_call_tool = noop
+    return _traced_call_tool
+
+
 # ─── 全局单例 ────────────────────────────────────────────────────────────────
 
 _mcp_client: MCPClient | None = None
@@ -95,6 +127,9 @@ async def get_mcp_client(manager: MCPConnectionManager | None = None) -> MCPClie
             manager = get_mcp_manager()
         _mcp_client = MCPClient(manager)
         await _mcp_client.discover_tools()
+        # 注入追踪版 call_tool（惰性，由 _get_traced_call_tool 按需初始化）
+        traced_fn = _get_traced_call_tool()
+        _mcp_client.call_tool = traced_fn  # type: ignore[method-assign]
     return _mcp_client
 
 
@@ -103,4 +138,4 @@ async def close_mcp_client() -> None:
     _mcp_client = None
 
 
-__all__ = ["MCPClient", "get_mcp_client", "close_mcp_client"]
+__all__ = ["MCPClient", "get_mcp_client", "close_mcp_client", "_get_traced_call_tool"]
