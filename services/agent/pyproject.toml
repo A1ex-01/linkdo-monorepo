@@ -20,6 +20,10 @@ dependencies = [
     "structlog>=24.0.0,<25.0.0",
     "tenacity>=8.0.0",
     "langsmith>=0.1.0",
+    "langgraph>=1.2.4",
+    "langchain-deepseek>=0.3.0",
+    "mcp>=1.0.0",
+    "openai>=2.41.0",
 ]
 
 [project.optional-dependencies]

@@ -61,8 +61,8 @@ def _get_llm() -> Any:
         from app.config import settings
 
         if is_tracing_enabled():
-            from app.tracing import traced_llm
-            _llm = traced_llm()
+            from app.tracing import chat_with_deepseek as _chat
+            _llm = _chat
         else:
             from langchain_deepseek import ChatDeepSeek
             _llm = ChatDeepSeek(
@@ -132,7 +132,6 @@ def _rules_classify(text: str) -> dict | None:
 # Node 0: 意图分类
 # ─────────────────────────────────────────────────────────────────────────────
 
-@is_tracing_enabled  # type: ignore[misc]
 def intent_classifier(state: dict, mcp_client: MCPClient) -> IntentClassifierOutput:
     """
     两层分类：
@@ -177,7 +176,7 @@ def intent_classifier(state: dict, mcp_client: MCPClient) -> IntentClassifierOut
 {{"intent": "task|notion|timer|flow|chat", "confidence": "high|medium|low", "reason": "判断理由"}}
 """
     t0 = time.perf_counter()
-    response = _get_llm().invoke(
+    response = _get_llm()(
         [HumanMessage(content=f"{system_prompt}\n\n用户说: {original_input}")]
     )
     logger.info("agent_llm_classify", elapsed_ms=f"{(time.perf_counter()-t0)*1000:.0f}ms",
@@ -251,7 +250,7 @@ def planner_node(state: dict, mcp_client: MCPClient) -> PlannerOutput:
 只输出 JSON。"""
 
     t0 = time.perf_counter()
-    response = _get_llm().invoke([HumanMessage(content=planning_prompt)])
+    response = _get_llm()([HumanMessage(content=planning_prompt)])
     elapsed_ms = (time.perf_counter() - t0) * 1000
     logger.info("agent_plan_llm", elapsed_ms=f"{elapsed_ms:.0f}ms",
                 response=response.content.strip()[:300])
@@ -476,7 +475,7 @@ async def _llm_resolve_args(
 - 只输出 JSON，不要 markdown 代码块，不要任何其他文字"""
 
     t0 = time.perf_counter()
-    response = llm.invoke([HumanMessage(content=prompt)])
+    response = llm([HumanMessage(content=prompt)])
     elapsed = (time.perf_counter() - t0) * 1000
     logger.info("agent_llm_resolve_args", tool=tool_name, elapsed_ms=f"{elapsed:.0f}ms",
                 preview=response.content.strip()[:200])
@@ -551,7 +550,7 @@ async def run_executor(
         # ── 纯分析步骤 ──
         if tool_name is None:
             t0 = time.perf_counter()
-            response = _get_llm().invoke([
+            response = _get_llm()([
                 HumanMessage(
                     content=f"用户请求：「{original_input}」\n"
                             f"步骤：{action}\n请简洁分析。"
@@ -638,7 +637,7 @@ def synthesizer_node(state: dict) -> SynthesizerOutput:
     # ── chat 类型 ──
     if intent == "chat" and not step_results:
         t0 = time.perf_counter()
-        response = _get_llm().invoke([
+        response = _get_llm()([
             HumanMessage(content=f"用户说：「{original_input}」\n\n"
                                   "你是 Link-Do 助手，帮助管理任务、专注计时、Notion 同步。"
                                   "请友好、简洁地回复。")
