@@ -9,6 +9,7 @@ MCPConnectionManager 已实现完整的 JSON-RPC 2.0 over SSE 协议。
 from __future__ import annotations
 
 import time
+from types import MethodType
 from typing import TYPE_CHECKING, Any
 
 from app.mcp.manager import MCPConnectionManager
@@ -129,7 +130,7 @@ async def get_mcp_client(manager: MCPConnectionManager | None = None) -> MCPClie
         await _mcp_client.discover_tools()
         # 注入追踪版 call_tool（惰性，由 _get_traced_call_tool 按需初始化）
         traced_fn = _get_traced_call_tool()
-        _mcp_client.call_tool = traced_fn  # type: ignore[method-assign]
+        _mcp_client.call_tool = MethodType(traced_fn, _mcp_client)
     return _mcp_client
 
 
