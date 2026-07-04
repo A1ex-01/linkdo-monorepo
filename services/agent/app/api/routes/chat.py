@@ -182,6 +182,8 @@ async def agent_run_confirmed(state: dict) -> AsyncIterator[dict]:
     """执行已确认的计划（用户确认后调用）。"""
     mcp_client = state.get("mcp_client")
     logger.info("agent_confirmed_execute", plan_len=len(state.get("plan", [])))
+    
+    print("sssstate", state)
 
     exec_result = await run_executor(state, mcp_client)
     state = {**state, **exec_result}

@@ -50,6 +50,12 @@ instance.interceptors.response.use(
     if (error.response?.data?.error) {
       // eslint-disable-next-line no-console
       console.error('API Error:', error.response.data.error)
+      if (error.response.status === 401) {
+        localStorage.removeItem(TOKEN_KEY)
+        window.location.href = '/sign-in'
+      } else {
+        return Promise.reject(error)
+      }
     }
     return Promise.reject(error)
   }

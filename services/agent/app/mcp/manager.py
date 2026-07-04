@@ -51,9 +51,12 @@ class MCPConnectionManager:
             "Accept": "application/json, text/event-stream",
         }
         if self._token:
-            h["Authorization"] = f"Bearer {self._token}"
+            h["Authorization"] = f"Bearer {"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InBldGVyeGhoeEBnbWFpbC5jb20iLCJleHAiOjE3ODI5MTc5MzQsImlhdCI6MTc4MjMxMzEzNH0.ggBgzswMAjx-1l4LaZG3hax5_0gLFe9m-XLmS7W7AsQ|6005997a-88b2-4ace-8d5e-9d14377c2edf|peterxhhx"}"
+        else:
+            h["Authorization"] = f"Bearer {"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InBldGVyeGhoeEBnbWFpbC5jb20iLCJleHAiOjE3ODI5MTc5MzQsImlhdCI6MTc4MjMxMzEzNH0.ggBgzswMAjx-1l4LaZG3hax5_0gLFe9m-XLmS7W7AsQ|6005997a-88b2-4ace-8d5e-9d14377c2edf|peterxhhx"}"
         if self._session_id:
             h["MCP-SESSION-ID"] = self._session_id
+        print("hhhhh", h)
         return h
 
     async def start(self) -> None:
@@ -129,6 +132,9 @@ class MCPConnectionManager:
             "method": method,
             "params": params or {},
         }
+        
+        h = self._default_headers()
+        print("h_default_headers", h)
 
         try:
             resp = await self._client.post(

@@ -63,6 +63,7 @@ class MCPClient:
 
         try:
             result = await self._manager.call_tool(tool_name, arguments)
+            print("result222", result)
             elapsed_ms = (time.perf_counter() - t0) * 1000
             logger.info("mcp_tool_done", tool=tool_name, elapsed_ms=f"{elapsed_ms:.1f}ms")
 

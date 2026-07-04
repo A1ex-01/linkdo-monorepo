@@ -172,7 +172,7 @@ export function UserAuthForm({ className, redirectTo }: UserAuthFormProps) {
             </FormItem>
           )}
         />
-        <Button type='submit' disabled={isSending}>
+        <Button type='submit' disabled={isSending} className='mt-3'>
           {isSending ? (
             <Loader2 className='animate-spin' />
           ) : (
