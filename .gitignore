@@ -22,6 +22,7 @@ apps/mcp/dist/
 
 # Python
 services/agent/__pycache__/
+services/a-agent/agent/__pycache__/
 services/agent/*.egg-info/
 services/agent/.venv/
 
@@ -32,3 +33,9 @@ services/backend/link-do-backend
 .env
 .env.local
 .env.*.local
+
+
+__pycache__/
+services/a-agent/agent/__pycache__/
+services/agent/__pycache__/
+
