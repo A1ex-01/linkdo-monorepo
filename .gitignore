@@ -39,3 +39,7 @@ __pycache__/
 services/a-agent/agent/__pycache__/
 services/agent/__pycache__/
 
+
+
+*.log
+
