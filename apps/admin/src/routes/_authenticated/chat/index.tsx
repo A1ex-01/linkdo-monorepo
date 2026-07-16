@@ -6,7 +6,7 @@ import { Search } from '@/components/search'
 import { ThemeSwitch } from '@/components/theme-switch'
 import { createFileRoute } from '@tanstack/react-router'
 import z from 'zod'
-import ChatPanel from './_components/chat-panel'
+import ChatPanelV2 from './_components/chat-panel-v2'
 
 export function ChatComponent() {
   return (
@@ -19,7 +19,7 @@ export function ChatComponent() {
       </Header>
 
       <Main className='flex flex-1 flex-col gap-4 sm:gap-6'>
-        <ChatPanel />
+        <ChatPanelV2 />
       </Main>
     </>
   )
