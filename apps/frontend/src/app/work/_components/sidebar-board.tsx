@@ -28,17 +28,20 @@ export function SidebarBoard({}: SidebarBoardProps) {
       <div className="flex h-full justify-center gap-6">
         <div
           className={cn(
-            "relative flex h-full flex-1 flex-col overflow-hidden overflow-y-scroll bg-[#181818] p-4",
+            "bg-card text-card-foreground relative flex h-full flex-1 flex-col overflow-hidden overflow-y-scroll rounded-2xl border border-[#e2e8f0] p-4 shadow-sm",
           )}
         >
           <div
             data-tauri-drag-region
             className="flex w-full shrink-0 cursor-pointer items-center justify-between"
           >
-            <div className="text-xl font-bold text-white">{"Today"}</div>
+            <div className="flex items-center gap-2">
+              <span className="bg-primary size-2 rounded-full" />
+              <div className="text-xl font-bold text-[#1c283e]">{"Today"}</div>
+            </div>
             <div className="actions">
               <IconHome
-                className="text-atext-450 cursor-pointer"
+                className="cursor-pointer text-[#64748b] transition-colors hover:text-[#1c283e]"
                 onClick={async () => {
                   exitSidebar();
                   if (timerInfo) {
@@ -64,7 +67,7 @@ export function SidebarBoard({}: SidebarBoardProps) {
               setViewMode("capsule");
               enterCapsule();
             }}
-            variant={"outline"}
+            className="bg-primary-400 hover:bg-primary-400/90 mt-2 rounded-full text-white shadow-sm"
           >
             Focus on task
           </Button>

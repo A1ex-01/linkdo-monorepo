@@ -97,7 +97,7 @@ export default function TaskCardItem({ item, ...props }: TaskCardItemProps) {
   return (
     <div
       ref={wrapperRef}
-      className="text-atext-460 flex flex-col gap-2 rounded-lg bg-white p-3 text-sm select-none"
+      className="text-atext-460 flex flex-col gap-2 rounded-lg border border-solid border-[#e6e6e6] bg-white p-3 text-sm select-none"
       {...props}
     >
       <div className="flex w-full items-center">
@@ -272,24 +272,25 @@ export function CardSimpleItem({
   const { timerInfo } = useData();
   const wrapperRef = useRef<HTMLDivElement>(null);
   const isHover = useHover(wrapperRef);
-  const itemClassName = "cursor-pointer hover:text-white";
+  const itemClassName = "cursor-pointer hover:text-[#1c283e]";
+  const mergedClassName = className ?? "bg-secondary text-[#1c283e]";
   return (
     <div
       ref={wrapperRef}
-      className={`relative flex h-12 flex-col justify-center gap-2 overflow-hidden rounded-lg bg-[#2b2b2b] px-3 text-sm text-white select-none ${className}`}
+      className={`relative flex h-12 flex-col justify-center gap-2 overflow-hidden rounded-lg px-3 text-sm select-none ${mergedClassName}`}
     >
       <div className={cn("flex w-full items-center justify-between")}>
-        <div className="truncate text-white">{item.title}</div>
+        <div className="truncate">{item.title}</div>
 
         <StopWatch
           seconds={timerInfo?.duration ?? 0}
-          color="#2b2b2b"
+          color="#f0f7ff"
           fontSize={16}
           onTick={() => {}}
         />
       </div>
       <motion.div
-        className="absolute inset-0 bg-[#2b2b2b]"
+        className="absolute inset-0 bg-inherit"
         initial={{ opacity: 0, x: 32, pointerEvents: "none" }}
         animate={
           isHover
@@ -300,7 +301,7 @@ export function CardSimpleItem({
       >
         <div
           data-tauri-drag-region
-          className="actions ml-auto flex size-full items-center justify-center gap-2 text-[#808080]"
+          className="actions ml-auto flex size-full items-center justify-center gap-2 text-[#64748b]"
         >
           <div className={`${itemClassName} `} onClick={() => {}}>
             <IconDeviceGamepad2 className="size-5" />
@@ -315,7 +316,7 @@ export function CardSimpleItem({
             <IconPlayerPlay className="size-5" />
           </div>
           <div className={`${itemClassName} `} onClick={() => {}}>
-            <IconCircleCheck className="size-5 text-[#44ffe5]" />
+            <IconCircleCheck className="text-primary-400 size-5" />
           </div>
         </div>
       </motion.div>
@@ -335,23 +336,24 @@ export function CapsuleItem({
   const { timerInfo } = useData();
   const wrapperRef = useRef<HTMLDivElement>(null);
   const isHover = useHover(wrapperRef);
-  const itemClassName = "cursor-pointer hover:text-white";
+  const itemClassName = "cursor-pointer hover:text-[#1c283e]";
+  const mergedClassName = className ?? "bg-secondary text-[#1c283e]";
   return (
     <div
       ref={wrapperRef}
-      className={`relative flex h-12 flex-col justify-center gap-2 overflow-hidden rounded-lg bg-[#2b2b2b] px-3 text-sm text-white select-none ${className}`}
+      className={`relative flex h-12 flex-col justify-center gap-2 overflow-hidden rounded-lg px-3 text-sm select-none ${mergedClassName}`}
     >
       <div className={cn("flex w-full items-center justify-between")}>
-        <div className="truncate text-white">{item.title}</div>
+        <div className="truncate">{item.title}</div>
         <StopWatch
           seconds={timerInfo?.duration ?? 0}
-          color="#2b2b2b"
+          color="#f0f7ff"
           fontSize={16}
           onTick={() => {}}
         />
       </div>
       <motion.div
-        className="absolute inset-0 bg-[#2b2b2b]"
+        className="absolute inset-0 bg-inherit"
         initial={{ opacity: 0, x: 32, pointerEvents: "none" }}
         animate={
           isHover
@@ -362,7 +364,7 @@ export function CapsuleItem({
       >
         <div
           data-tauri-drag-region
-          className="actions ml-auto flex size-full items-center justify-center gap-2 text-[#808080]"
+          className="actions ml-auto flex size-full items-center justify-center gap-2 text-[#64748b]"
         >
           <div className={`${itemClassName} `} onClick={() => {}}>
             <IconDeviceGamepad2 className="size-5" />
@@ -377,7 +379,7 @@ export function CapsuleItem({
             <IconPlayerPlay className="size-5" />
           </div>
           <div className={`${itemClassName} `} onClick={() => {}}>
-            <IconCircleCheck className="size-5 text-[#44ffe5]" />
+            <IconCircleCheck className="text-primary-400 size-5" />
           </div>
           <div
             className={`${itemClassName} `}
@@ -385,7 +387,7 @@ export function CapsuleItem({
               onAction("maximize");
             }}
           >
-            <IconMaximize className="size-5 text-[#44ffe5]" />
+            <IconMaximize className="text-primary-400 size-5" />
           </div>
         </div>
       </motion.div>
