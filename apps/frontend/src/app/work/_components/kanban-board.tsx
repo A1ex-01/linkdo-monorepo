@@ -108,6 +108,7 @@ export function KanbanBoard({}: KanbanBoardProps) {
                         "relative flex h-full flex-1 flex-col overflow-hidden rounded-xl border-2 border-gray-200 p-px",
 
                         isOver && "",
+                        col.isHighlighted && "border-primary/30 shadow-lg",
                       )}
                       ref={provided.innerRef}
                       {...provided.droppableProps}
