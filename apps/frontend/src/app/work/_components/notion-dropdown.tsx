@@ -223,9 +223,7 @@ export function NotionDropdown({ className }: IProps) {
                         className="item flex w-full items-center"
                         key={item.value}
                       >
-                        <div className="label w-20 text-white/60">
-                          {item.label}
-                        </div>
+                        <div className="label w-20">{item.label}</div>
                         <StatusOptionSelector
                           setCurrDbStatusMapping={setCurrDbStatusMapping}
                           item={item}

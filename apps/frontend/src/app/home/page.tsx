@@ -66,7 +66,7 @@ export default function page() {
   };
 
   return (
-    <div className="flex min-h-screen flex-col bg-[#f7f8fc] text-white">
+    <div className="text-foreground flex min-h-screen flex-col bg-[#f7f8fc]">
       <HomeWindowTitleBar />
       <div className="flex w-full flex-1">
         <div className="left w-[280px] bg-white px-4 text-black">
@@ -113,7 +113,7 @@ export default function page() {
                 <AvatarFallback className="bg-primary-500">
                   {user?.name.slice(0, 2) ?? "U"}
                 </AvatarFallback>
-                <AvatarBadge className="bg-green-600 dark:bg-green-800" />
+                <AvatarBadge className="bg-green-600" />
               </Avatar>
             </div>
           </header>
@@ -140,15 +140,15 @@ export default function page() {
                   ))}
                 </div>
               ) : collections.length === 0 ? (
-                <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-[rgba(77,67,84,0.3)] py-20">
-                  <p className="mb-4 text-lg font-medium text-[#988d9f]">
+                <div className="border-muted-foreground/30 flex flex-col items-center justify-center rounded-2xl border border-dashed py-20">
+                  <p className="text-muted-foreground mb-4 text-lg font-medium">
                     No lists yet
                   </p>
                   <button
                     onClick={handleCreate}
-                    className="flex items-center gap-2 text-sm font-medium text-[#ddb7ff] transition-colors hover:text-white"
+                    className="text-muted-foreground hover:text-foreground flex items-center gap-2 text-sm font-medium transition-colors"
                   >
-                    <IconPlus className="h-5 w-5 text-[#988d9f]" />
+                    <IconPlus className="text-muted-foreground h-5 w-5" />
                     Create your first list
                   </button>
                 </div>
@@ -167,7 +167,7 @@ export default function page() {
                   {/* Create List Card */}
                   <div
                     onClick={handleCreate}
-                    className="flex h-[303px] cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed border-[rgba(77,67,84,0.2)] bg-transparent transition-all hover:bg-white"
+                    className="border-muted-foreground/20 hover:bg-muted flex h-[303px] cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed bg-transparent transition-all"
                   >
                     <svg
                       width={52}

@@ -4,12 +4,11 @@
 
 import { NotionDropdown } from "@/app/work/_components/notion-dropdown";
 import { useData } from "@/app/work/data-provider";
-import { ThemeToggle } from "@/components/theme-toggle";
 import {
-  Avatar,
-  AvatarBadge,
-  AvatarFallback,
-  AvatarImage,
+ Avatar,
+ AvatarBadge,
+ AvatarFallback,
+ AvatarImage,
 } from "@/components/ui/avatar";
 import { useUserStore } from "@/stores/user";
 import { IconChevronDown, IconChevronLeft } from "@tabler/icons-react";
@@ -51,25 +50,23 @@ export function WorkHeader() {
         )}
       </div>
 
-      {/* Right: Nav and User */}
-      <div className="flex items-center gap-6">
-        {/* Notion Dropdown */}
-        <NotionDropdown className="w-full" />
-        {/* Theme Toggle */}
-        <ThemeToggle />
-        <div className="flex items-center gap-4">
-          <Avatar>
-            <AvatarImage
-              src={user?.avatar_url}
-              className="size-10 object-cover"
-            />
-            <AvatarFallback className="bg-primary-500">
-              {user?.name.slice(0, 2) ?? "U"}
-            </AvatarFallback>
-            <AvatarBadge className="bg-green-600 dark:bg-green-800" />
-          </Avatar>
-        </div>
-      </div>
-    </header>
-  );
+ {/* Right: Nav and User */}
+ <div className="flex items-center gap-6">
+ {/* Notion Dropdown */}
+ <NotionDropdown className="w-full" />
+ <div className="flex items-center gap-4">
+ <Avatar>
+ <AvatarImage
+ src={user?.avatar_url}
+ className="size-10 object-cover"
+ />
+ <AvatarFallback className="bg-primary-500">
+ {user?.name.slice(0, 2) ?? "U"}
+ </AvatarFallback>
+ <AvatarBadge className="bg-green-600" />
+ </Avatar>
+ </div>
+ </div>
+ </header>
+ );
 }

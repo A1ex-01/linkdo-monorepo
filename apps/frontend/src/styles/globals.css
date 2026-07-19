@@ -1,7 +1,5 @@
 @import "tailwindcss";
 
-@custom-variant dark (&:is(.dark *));
-
 @source "../src/**/*.{js,jsx,mjs,ts,tsx}";
 
 @layer base {
@@ -89,71 +87,4 @@
   --color-atext-450: #999999;
   --color-atext-400: #666666;
   --color-atext-300: #bfbfbf;
-}
-
-.dark {
-  --color-background: #0f172a;
-  --color-foreground: #f8fafc;
-  --color-card: #1e293b;
-  --color-card-foreground: #f8fafc;
-  --color-popover: #1e293b;
-  --color-popover-foreground: #f8fafc;
-  --color-primary: #60a5fa;
-  --color-primary-400: #115e59;
-  --color-primary-450: #0e7490;
-  --color-primary-500: #06b6d4;
-  --color-primary-foreground: #0f172a;
-  --color-secondary: #334155;
-  --color-secondary-foreground: #f8fafc;
-  --color-muted: #334155;
-  --color-muted-foreground: #94a3b8;
-  --color-accent: #1e293b;
-  --color-accent-foreground: #f8fafc;
-  --color-destructive: #ef4444;
-  --color-destructive-foreground: #ffffff;
-  --color-border: #334155;
-  --color-input: #334155;
-  --color-ring: #60a5fa;
-  --color-chart-1: #60a5fa;
-  --color-chart-2: #a78bfa;
-  --color-chart-3: #22d3ee;
-  --color-chart-4: #fbbf24;
-  --color-chart-5: #f472b6;
-  --color-sidebar: #0f172a;
-  --color-sidebar-foreground: #f8fafc;
-  --color-sidebar-primary: #60a5fa;
-  --color-sidebar-primary-foreground: #0f172a;
-  --color-sidebar-accent: #1e293b;
-  --color-sidebar-accent-foreground: #f8fafc;
-  --color-sidebar-border: #334155;
-  --color-sidebar-ring: #60a5fa;
-  --font-sans: Inter, system-ui, sans-serif;
-  --font-serif: Georgia, serif;
-  --font-mono: JetBrains Mono, monospace;
-  --radius: 1rem;
-  --shadow-x: 0;
-  --shadow-y: 8px;
-  --shadow-blur: 15px;
-  --shadow-spread: 0px;
-  --shadow-opacity: 0.2;
-  --color-shadow-color: rgba(0, 0, 0, 0.4);
-  --shadow-2xs: 0 8px 15px 0px hsl(0 0% 0% / 0.1);
-  --shadow-xs: 0 8px 15px 0px hsl(0 0% 0% / 0.1);
-  --shadow-sm:
-    0 8px 15px 0px hsl(0 0% 0% / 0.2), 0 1px 2px -1px hsl(0 0% 0% / 0.2);
-  --shadow:
-    0 8px 15px 0px hsl(0 0% 0% / 0.2), 0 1px 2px -1px hsl(0 0% 0% / 0.2);
-  --shadow-md:
-    0 8px 15px 0px hsl(0 0% 0% / 0.2), 0 2px 4px -1px hsl(0 0% 0% / 0.2);
-  --shadow-lg:
-    0 8px 15px 0px hsl(0 0% 0% / 0.2), 0 4px 6px -1px hsl(0 0% 0% / 0.2);
-  --shadow-xl:
-    0 8px 15px 0px hsl(0 0% 0% / 0.2), 0 8px 10px -1px hsl(0 0% 0% / 0.2);
-  --shadow-2xl: 0 8px 15px 0px hsl(0 0% 0% / 0.5);
-
-  --color-atext-500: #e5e7eb;
-  --color-atext-460: #a3a3a3;
-  --color-atext-450: #d1d5db;
-  --color-atext-400: #94a3b8;
-  --color-atext-300: #64748b;
 }
