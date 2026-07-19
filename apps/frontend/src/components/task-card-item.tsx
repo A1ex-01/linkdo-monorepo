@@ -30,7 +30,7 @@ import { motion } from "framer-motion";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { StopWatch } from "./timer";
 
-interface TaskCardItemProps {
+interface TaskCardItemProps extends React.HTMLAttributes<HTMLDivElement> {
   item: ITask;
 }
 
