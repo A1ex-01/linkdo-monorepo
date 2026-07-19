@@ -6,7 +6,7 @@ import {
   getCollection as getCollectionService,
   getTasks as getTasksService,
 } from "@/services/collection";
-import { updateTaskStatus } from "@/services/task";
+import { updateTask, updateTaskStatus } from "@/services/task";
 import { startTimer, stopTimer } from "@/services/timer";
 import { ICollection, ITask, ITimeSession, TaskStatus } from "@/types/base";
 import { useRequest } from "ahooks";
@@ -37,6 +37,7 @@ interface IDataContext {
   exitCapsule: () => void;
   toNextTaskStatus: (task: ITask) => void;
   toPrevTaskStatus: (task: ITask) => void;
+  updateTaskTitle: (task: ITask, title: string) => Promise<boolean>;
 }
 
 const DataContext = createContext<IDataContext | null>(null);
@@ -158,6 +159,17 @@ export const DataProvider = ({ children }: DataProviderProps) => {
     }
   };
 
+  const updateTaskTitle = async (task: ITask, title: string) => {
+    const trimmed = title.trim();
+    if (!trimmed || trimmed === task.title) return false;
+    const res = await updateTask(task.uuid, { title: trimmed });
+    if (res.success) {
+      await getTasks();
+      return true;
+    }
+    return false;
+  };
+
   return (
     <DataContext.Provider
       value={{
@@ -177,6 +189,7 @@ export const DataProvider = ({ children }: DataProviderProps) => {
         exitCapsule,
         toNextTaskStatus,
         toPrevTaskStatus,
+        updateTaskTitle,
       }}
     >
       {children}

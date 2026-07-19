@@ -17,7 +17,7 @@ import {
 } from "@tabler/icons-react";
 import { useHover } from "ahooks";
 import { motion } from "framer-motion";
-import { useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 interface TaskCardItemProps {
   item: ITask;
@@ -25,10 +25,58 @@ interface TaskCardItemProps {
 
 export default function TaskCardItem({ item, ...props }: TaskCardItemProps) {
   const wrapperRef = useRef<HTMLDivElement>(null);
-  const { collection, toNextTaskStatus, toPrevTaskStatus } = useData();
+  const { collection, toNextTaskStatus, toPrevTaskStatus, updateTaskTitle } =
+    useData();
   const isHovered = useHover(wrapperRef);
   const isHover = useMemo(() => isHovered, [isHovered]);
   const isDone = useMemo(() => item.status === "done", [item.status]);
+
+  const [isEditingTitle, setIsEditingTitle] = useState(false);
+  const [titleDraft, setTitleDraft] = useState(item.title);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (isEditingTitle) {
+      inputRef.current?.focus();
+      inputRef.current?.select();
+    }
+  }, [isEditingTitle]);
+
+  useEffect(() => {
+    if (!isEditingTitle) {
+      setTitleDraft(item.title);
+    }
+  }, [item.title, isEditingTitle]);
+
+  const startEditingTitle = () => {
+    if (!isHover) return;
+    setTitleDraft(item.title);
+    setIsEditingTitle(true);
+  };
+
+  const cancelEditingTitle = () => {
+    setTitleDraft(item.title);
+    setIsEditingTitle(false);
+  };
+
+  const commitTitle = async () => {
+    const trimmed = titleDraft.trim();
+    if (!trimmed) {
+      cancelEditingTitle();
+      return;
+    }
+    if (trimmed === item.title) {
+      setIsEditingTitle(false);
+      return;
+    }
+    const ok = await updateTaskTitle(item, trimmed);
+    if (ok) {
+      setIsEditingTitle(false);
+    } else {
+      setTitleDraft(item.title);
+      setIsEditingTitle(false);
+    }
+  };
   return (
     <div
       ref={wrapperRef}
@@ -67,7 +115,37 @@ export default function TaskCardItem({ item, ...props }: TaskCardItemProps) {
             />
           </div>
         </motion.div>
-        <div className="text-atext-460 truncate">{item.title}</div>
+        <div
+          className={cn(
+            "min-w-0 flex-1 truncate",
+            isHover && !isEditingTitle
+              ? "cursor-text hover:text-[#808080]"
+              : "",
+          )}
+          onClick={startEditingTitle}
+        >
+          {isEditingTitle ? (
+            <input
+              ref={inputRef}
+              value={titleDraft}
+              onChange={(e) => setTitleDraft(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  e.preventDefault();
+                  void commitTitle();
+                } else if (e.key === "Escape") {
+                  e.preventDefault();
+                  cancelEditingTitle();
+                }
+              }}
+              onBlur={() => void commitTitle()}
+              onClick={(e) => e.stopPropagation()}
+              className="h-6 w-full rounded-md border border-[#e5e7eb] bg-white px-2 text-sm text-[#333] shadow-sm outline-none focus:border-[#6f98e8]"
+            />
+          ) : (
+            item.title
+          )}
+        </div>
         <motion.div
           className="ml-auto flex items-center"
           initial={{ x: 0, opacity: 1, pointerEvents: "auto" }}
