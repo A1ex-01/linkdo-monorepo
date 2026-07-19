@@ -21,6 +21,7 @@ export interface ITask {
   notion_uuid?: string;
   estimated_time: number;
   actual_time: number;
+  scheduled_date?: string;
   completed_at?: string;
   created_at: string;
   updated_at: string;

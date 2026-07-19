@@ -43,6 +43,10 @@ interface IDataContext {
   toNextTaskStatus: (task: ITask) => void;
   toPrevTaskStatus: (task: ITask) => void;
   updateTaskTitle: (task: ITask, title: string) => Promise<boolean>;
+  updateTaskScheduledDate: (
+    task: ITask,
+    scheduledDate: string | null,
+  ) => Promise<boolean>;
   deleteTask: (task: ITask) => Promise<boolean>;
   openTaskInNotion: (task: ITask) => Promise<void>;
 }
@@ -177,6 +181,18 @@ export const DataProvider = ({ children }: DataProviderProps) => {
     return false;
   };
 
+  const updateTaskScheduledDate = async (
+    task: ITask,
+    scheduledDate: string | null,
+  ) => {
+    const res = await updateTask(task.uuid, { scheduled_date: scheduledDate });
+    if (res.success) {
+      await getTasks();
+      return true;
+    }
+    return false;
+  };
+
   const deleteTask = async (task: ITask) => {
     try {
       const res = await deleteTaskService(task.uuid);
@@ -228,6 +244,7 @@ export const DataProvider = ({ children }: DataProviderProps) => {
         toNextTaskStatus,
         toPrevTaskStatus,
         updateTaskTitle,
+        updateTaskScheduledDate,
         deleteTask,
         openTaskInNotion,
       }}

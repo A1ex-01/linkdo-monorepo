@@ -8,11 +8,13 @@ export interface CreateTaskDTO {
   estimated_time?: number;
   notion_database_uuid?: string;
   status?: TaskStatus;
+  scheduled_date?: string;
 }
 
 export interface UpdateTaskDTO {
   title?: string;
   estimated_time?: number;
+  scheduled_date?: string | null;
 }
 
 export function createTask(collectionUuid: string, data: CreateTaskDTO) {

@@ -1,5 +1,6 @@
 "use client";
 import { useData } from "@/app/work/data-provider";
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -7,6 +8,12 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Input } from "@/components/ui/input";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 import { ITask } from "@/types/base";
 import { formatEstimated } from "@/utils/base";
@@ -14,6 +21,8 @@ import {
   IconArrowLeft,
   IconArrowRight,
   IconBrandNotion,
+  IconCalendar,
+  IconCalendarPlus,
   IconCircleCheck,
   IconDeviceGamepad2,
   IconDotsVertical,
@@ -24,6 +33,7 @@ import {
   IconPlayerPlay,
   IconSquareCheck,
   IconTrash,
+  IconX,
 } from "@tabler/icons-react";
 import { useHover } from "ahooks";
 import { motion } from "framer-motion";
@@ -41,6 +51,7 @@ export default function TaskCardItem({ item, ...props }: TaskCardItemProps) {
     toNextTaskStatus,
     toPrevTaskStatus,
     updateTaskTitle,
+    updateTaskScheduledDate,
     deleteTask,
     openTaskInNotion,
   } = useData();
@@ -256,10 +267,147 @@ export default function TaskCardItem({ item, ...props }: TaskCardItemProps) {
           {formatEstimated(item.actual_time)}
         </div>
 
-        <div className="ml-auto text-white">{item?.estimated_time}</div>
+        <div className="ml-auto flex items-center gap-2">
+          <ScheduledDateChip
+            value={item.scheduled_date}
+            onChange={(next) => {
+              updateTaskScheduledDate(item, next);
+            }}
+          />
+          <span className="text-[#1c283e]">{item?.estimated_time}</span>
+        </div>
       </div>
     </div>
   );
+}
+
+function ScheduledDateChip({
+  value,
+  onChange,
+}: {
+  value?: string;
+  onChange: (next: string | null) => void;
+}) {
+  const [open, setOpen] = useState(false);
+  const [draft, setDraft] = useState(toInputValue(value));
+
+  useEffect(() => {
+    if (open) {
+      setDraft(toInputValue(value));
+    }
+  }, [open, value]);
+
+  const display = formatScheduledLabel(value);
+  const hasDate = Boolean(value);
+
+  const apply = () => {
+    const next = draft ? new Date(`${draft}T00:00:00`).toISOString() : null;
+    if (next === value) {
+      setOpen(false);
+      return;
+    }
+    onChange(next);
+    setOpen(false);
+  };
+
+  const clear = () => {
+    onChange(null);
+    setOpen(false);
+  };
+
+  return (
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger asChild>
+        <button
+          type="button"
+          onClick={(e) => {
+            e.stopPropagation();
+          }}
+          className={cn(
+            "inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[11px] font-medium transition-colors",
+            hasDate
+              ? "border-primary-400/40 bg-primary-400/10 text-primary-400 hover:bg-primary-400/15"
+              : "border-[#e2e8f0] text-[#808080] hover:border-[#cdd5e2] hover:text-[#1c283e]",
+          )}
+        >
+          {hasDate ? (
+            <IconCalendar className="size-3" />
+          ) : (
+            <IconCalendarPlus className="size-3" />
+          )}
+          <span>{display}</span>
+        </button>
+      </PopoverTrigger>
+      <PopoverContent
+        align="end"
+        className="w-64 p-3"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="mb-2 text-xs font-semibold text-[#1c283e]">
+          Scheduled date
+        </div>
+        <Input
+          type="date"
+          value={draft}
+          onChange={(e) => setDraft(e.target.value)}
+          className="h-8 text-xs"
+        />
+        <div className="mt-3 flex items-center justify-between gap-2">
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            onClick={clear}
+            disabled={!hasDate}
+            className="h-7 px-2 text-[11px] text-[#808080] hover:text-[#ef4444]"
+          >
+            <IconX className="size-3" />
+            Clear
+          </Button>
+          <Button
+            type="button"
+            size="sm"
+            onClick={apply}
+            className="bg-primary-400 hover:bg-primary-400/90 h-7 rounded-md px-3 text-[11px] text-white"
+          >
+            Save
+          </Button>
+        </div>
+      </PopoverContent>
+    </Popover>
+  );
+}
+
+function toInputValue(value?: string): string {
+  if (!value) return "";
+  const d = new Date(value);
+  if (Number.isNaN(d.getTime())) return "";
+  const yyyy = d.getFullYear();
+  const mm = String(d.getMonth() + 1).padStart(2, "0");
+  const dd = String(d.getDate()).padStart(2, "0");
+  return `${yyyy}-${mm}-${dd}`;
+}
+
+function formatScheduledLabel(value?: string): string {
+  if (!value) return "Set date";
+  const d = new Date(value);
+  if (Number.isNaN(d.getTime())) return "Set date";
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const target = new Date(d);
+  target.setHours(0, 0, 0, 0);
+  const diffDays = Math.round(
+    (target.getTime() - today.getTime()) / (1000 * 60 * 60 * 24),
+  );
+  if (diffDays === 0) return "Today";
+  if (diffDays === 1) return "Tomorrow";
+  if (diffDays === -1) return "Yesterday";
+  if (diffDays > 1 && diffDays < 7) return `In ${diffDays}d`;
+  if (diffDays < -1 && diffDays > -7) return `${Math.abs(diffDays)}d ago`;
+  const yyyy = d.getFullYear();
+  const mm = String(d.getMonth() + 1).padStart(2, "0");
+  const dd = String(d.getDate()).padStart(2, "0");
+  return `${mm}-${dd}`;
 }
 
 export function CardSimpleItem({

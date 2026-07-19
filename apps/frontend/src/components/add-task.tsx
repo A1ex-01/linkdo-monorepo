@@ -26,6 +26,7 @@ interface IAddTaskForm {
   title: string;
   estimated_time: string;
   notion_database_uuid: string;
+  scheduled_date: string;
 }
 
 export function AddTask({ className, status }: IProps) {
@@ -42,6 +43,7 @@ export function AddTask({ className, status }: IProps) {
     defaultValues: {
       estimated_time: "00:30",
       notion_database_uuid: currCollectionNotionDbs[0]?.uuid || "",
+      scheduled_date: "",
     },
   });
   const onSubmit: SubmitHandler<IAddTaskForm> = async (data) => {
@@ -51,6 +53,9 @@ export function AddTask({ className, status }: IProps) {
         parseInt(data.estimated_time.split(":")[0]) * 60 +
         parseInt(data.estimated_time.split(":")[1]),
       status: status,
+      scheduled_date: data.scheduled_date
+        ? new Date(`${data.scheduled_date}T00:00:00`).toISOString()
+        : undefined,
     };
     // 新建任务
     const res = await createTask(collection?.uuid ?? "", params);
@@ -95,6 +100,13 @@ export function AddTask({ className, status }: IProps) {
                   type="time"
                   className="border-divider w-max shrink-0 border"
                   {...register("estimated_time", { required: true })}
+                />
+              </div>
+              <div className="mt-2 flex gap-2">
+                <Input
+                  type="date"
+                  className="border-divider w-full border text-xs"
+                  {...register("scheduled_date")}
                 />
               </div>
               {/* errors will return when field validation fails  */}
