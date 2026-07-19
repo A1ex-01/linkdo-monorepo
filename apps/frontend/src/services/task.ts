@@ -17,7 +17,7 @@ export interface UpdateTaskDTO {
 
 export function createTask(collectionUuid: string, data: CreateTaskDTO) {
   return request<ITask>({
-    url: `/api/v1/collections/${collectionUuid}/tasks`,
+    url: `/api/collections/${collectionUuid}/tasks`,
     method: "post",
     data,
   });
@@ -25,7 +25,7 @@ export function createTask(collectionUuid: string, data: CreateTaskDTO) {
 
 export function updateTask(taskUuid: string, data: UpdateTaskDTO) {
   return request<void>({
-    url: `/api/v1/tasks/${taskUuid}`,
+    url: `/api/tasks/${taskUuid}`,
     method: "patch",
     data,
   });
@@ -33,7 +33,7 @@ export function updateTask(taskUuid: string, data: UpdateTaskDTO) {
 
 export function updateTaskStatus(taskUuid: string, status: TaskStatus) {
   return request<void>({
-    url: `/api/v1/tasks/${taskUuid}/status`,
+    url: `/api/tasks/${taskUuid}/status`,
     method: "patch",
     data: { status },
   });
@@ -41,7 +41,7 @@ export function updateTaskStatus(taskUuid: string, status: TaskStatus) {
 
 export function deleteTask(taskUuid: string) {
   return request<void>({
-    url: `/api/v1/tasks/${taskUuid}`,
+    url: `/api/tasks/${taskUuid}`,
     method: "delete",
   });
 }

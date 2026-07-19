@@ -18,7 +18,7 @@ export interface ApiResponse<T> {
 }
 
 const instance = axios.create({
-  baseURL: '/api/v1',
+  baseURL: '/api',
   timeout: 50000,
 })
 

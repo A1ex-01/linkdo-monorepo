@@ -5,21 +5,21 @@ import { request } from "./base";
 
 export function startTimer(taskUuid: string) {
   return request<ITimeSession>({
-    url: `/api/v1/tasks/${taskUuid}/timer/start`,
+    url: `/api/tasks/${taskUuid}/timer/start`,
     method: "post",
   });
 }
 
 export function stopTimer(taskUuid: string) {
   return request<void>({
-    url: `/api/v1/tasks/${taskUuid}/timer/stop`,
+    url: `/api/tasks/${taskUuid}/timer/stop`,
     method: "post",
   });
 }
 
 export function getCurrentTimer() {
   return request<ITimeSession | null>({
-    url: "/api/v1/timer/current",
+    url: "/api/timer/current",
     method: "get",
   });
 }

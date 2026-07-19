@@ -45,3 +45,6 @@ services/agent/__pycache__/
 
 *.log
 
+__debug_bin*
+
+services/backend/cmd/__debug_bin*

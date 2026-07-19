@@ -15,14 +15,14 @@ export interface MeResponse {
 
 export function getMe(): Promise<ApiResponse<MeResponse>> {
   return request<MeResponse>({
-    url: "/api/v1/auth/me",
+    url: "/api/auth/me",
     method: "get",
   });
 }
 
 export function logout(): Promise<ApiResponse<void>> {
   return request<void>({
-    url: "/api/v1/auth/logout",
+    url: "/api/auth/logout",
     method: "post",
   });
 }

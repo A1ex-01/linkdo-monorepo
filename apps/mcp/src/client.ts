@@ -46,7 +46,7 @@ export async function getCollections(
   token?: string,
   archived = false,
 ): Promise<ApiResponse<ICollection[]>> {
-  return request<ICollection[]>("/api/v1/collections", {}, token);
+  return request<ICollection[]>("/api/collections", {}, token);
 }
 
 // Tasks
@@ -56,7 +56,7 @@ export async function getTasksByCollection(
   token?: string,
 ): Promise<ApiResponse<ITask[]>> {
   return request<ITask[]>(
-    `/api/v1/collections/${collectionUuid}/tasks`,
+    `/api/collections/${collectionUuid}/tasks`,
     {},
     token,
   );
@@ -68,7 +68,7 @@ export async function createTask(
   token?: string,
 ): Promise<ApiResponse<ITask>> {
   return request<ITask>(
-    `/api/v1/collections/${collectionUuid}/tasks`,
+    `/api/collections/${collectionUuid}/tasks`,
     {
       method: "POST",
       body: JSON.stringify(data),
@@ -83,7 +83,7 @@ export async function updateTask(
   token?: string,
 ): Promise<ApiResponse<void>> {
   return request<void>(
-    `/api/v1/tasks/${taskUuid}`,
+    `/api/tasks/${taskUuid}`,
     {
       method: "PATCH",
       body: JSON.stringify(data),
@@ -98,7 +98,7 @@ export async function updateTaskStatus(
   token?: string,
 ): Promise<ApiResponse<void>> {
   return request<void>(
-    `/api/v1/tasks/${taskUuid}/status`,
+    `/api/tasks/${taskUuid}/status`,
     {
       method: "PATCH",
       body: JSON.stringify({ status }),
@@ -112,7 +112,7 @@ export async function deleteTask(
   token?: string,
 ): Promise<ApiResponse<void>> {
   return request<void>(
-    `/api/v1/tasks/${taskUuid}`,
+    `/api/tasks/${taskUuid}`,
     {
       method: "DELETE",
     },

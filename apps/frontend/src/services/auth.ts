@@ -25,7 +25,7 @@ export const authService = {
   sendCode: (data: SendCodeRequest) =>
     request<SendCodeResponse>({
       baseURL: "http://localhost:8080",
-      url: "/api/v1/auth/email/send-code",
+      url: "/api/auth/email/send-code",
       method: "POST",
       data,
     }),
@@ -33,7 +33,7 @@ export const authService = {
   verifyCode: (data: VerifyCodeRequest) =>
     request<VerifyCodeResponse>({
       baseURL: "http://localhost:8080",
-      url: "/api/v1/auth/email/verify",
+      url: "/api/auth/email/verify",
       method: "POST",
       data,
     }),
