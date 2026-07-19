@@ -6,9 +6,14 @@ import {
   getCollection as getCollectionService,
   getTasks as getTasksService,
 } from "@/services/collection";
-import { updateTask, updateTaskStatus } from "@/services/task";
+import {
+  deleteTask as deleteTaskService,
+  updateTask,
+  updateTaskStatus,
+} from "@/services/task";
 import { startTimer, stopTimer } from "@/services/timer";
 import { ICollection, ITask, ITimeSession, TaskStatus } from "@/types/base";
+import { open } from "@tauri-apps/plugin-shell";
 import { useRequest } from "ahooks";
 import { useSearchParams } from "next/navigation";
 import {
@@ -38,6 +43,8 @@ interface IDataContext {
   toNextTaskStatus: (task: ITask) => void;
   toPrevTaskStatus: (task: ITask) => void;
   updateTaskTitle: (task: ITask, title: string) => Promise<boolean>;
+  deleteTask: (task: ITask) => Promise<boolean>;
+  openTaskInNotion: (task: ITask) => Promise<void>;
 }
 
 const DataContext = createContext<IDataContext | null>(null);
@@ -170,6 +177,37 @@ export const DataProvider = ({ children }: DataProviderProps) => {
     return false;
   };
 
+  const deleteTask = async (task: ITask) => {
+    try {
+      const res = await deleteTaskService(task.uuid);
+      if (!res.success) {
+        toast.error(res.error ?? "Failed to delete task");
+        return false;
+      }
+      await getTasks();
+      toast.success("Task deleted");
+      return true;
+    } catch {
+      toast.error("Failed to delete task");
+      return false;
+    }
+  };
+
+  const openTaskInNotion = async (task: ITask) => {
+    if (!task.notion_page_id) {
+      toast.error("This task is not linked to a Notion page");
+      return;
+    }
+
+    try {
+      await open(
+        `https://www.notion.so/${task.notion_page_id.replaceAll("-", "")}`,
+      );
+    } catch {
+      toast.error("Failed to open Notion page");
+    }
+  };
+
   return (
     <DataContext.Provider
       value={{
@@ -190,6 +228,8 @@ export const DataProvider = ({ children }: DataProviderProps) => {
         toNextTaskStatus,
         toPrevTaskStatus,
         updateTaskTitle,
+        deleteTask,
+        openTaskInNotion,
       }}
     >
       {children}

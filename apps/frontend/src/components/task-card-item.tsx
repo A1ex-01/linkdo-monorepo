@@ -1,5 +1,12 @@
 "use client";
 import { useData } from "@/app/work/data-provider";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
 import { ITask } from "@/types/base";
 import {
@@ -9,11 +16,13 @@ import {
   IconCircleCheck,
   IconDeviceGamepad2,
   IconDotsVertical,
+  IconExternalLink,
   IconFileSmile,
   IconMaximize,
   IconMusicPause,
   IconPlayerPlay,
   IconSquareCheck,
+  IconTrash,
 } from "@tabler/icons-react";
 import { useHover } from "ahooks";
 import { motion } from "framer-motion";
@@ -25,8 +34,14 @@ interface TaskCardItemProps {
 
 export default function TaskCardItem({ item, ...props }: TaskCardItemProps) {
   const wrapperRef = useRef<HTMLDivElement>(null);
-  const { collection, toNextTaskStatus, toPrevTaskStatus, updateTaskTitle } =
-    useData();
+  const {
+    collection,
+    toNextTaskStatus,
+    toPrevTaskStatus,
+    updateTaskTitle,
+    deleteTask,
+    openTaskInNotion,
+  } = useData();
   const isHovered = useHover(wrapperRef);
   const isHover = useMemo(() => isHovered, [isHovered]);
   const isDone = useMemo(() => item.status === "done", [item.status]);
@@ -190,9 +205,46 @@ export default function TaskCardItem({ item, ...props }: TaskCardItemProps) {
               <IconArrowRight className="size-full text-[#808080]" />
             </div>
           )}
-          <div className="size-5 cursor-pointer p-0.5 hover:rounded hover:bg-[#f7f8fc] hover:text-white">
-            <IconDotsVertical className="size-full text-[#808080]" />
-          </div>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button
+                type="button"
+                aria-label="Task actions"
+                onClick={(e) => e.stopPropagation()}
+                className="flex size-5 cursor-pointer items-center justify-center rounded p-0.5 hover:bg-[#f7f8fc]"
+              >
+                <IconDotsVertical className="size-full text-[#808080]" />
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent
+              align="end"
+              sideOffset={6}
+              className="w-44 bg-white p-1 text-[#4b5563]"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <DropdownMenuItem
+                disabled={!item.notion_page_id}
+                onSelect={() => void openTaskInNotion(item)}
+                className="gap-2 px-2 py-1.5 text-xs"
+              >
+                <IconExternalLink className="size-3.5" />
+                Open in Notion
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem
+                variant="destructive"
+                onSelect={() => {
+                  if (window.confirm("Delete this task?")) {
+                    void deleteTask(item);
+                  }
+                }}
+                className="gap-2 px-2 py-1.5 text-xs"
+              >
+                <IconTrash className="size-3.5" />
+                Delete
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </motion.div>
       </div>
       {/* desc */}
