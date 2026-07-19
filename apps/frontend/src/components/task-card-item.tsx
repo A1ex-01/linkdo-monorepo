@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
 import { ITask } from "@/types/base";
+import { formatEstimated } from "@/utils/base";
 import {
   IconArrowLeft,
   IconArrowRight,
@@ -27,6 +28,7 @@ import {
 import { useHover } from "ahooks";
 import { motion } from "framer-motion";
 import { useEffect, useMemo, useRef, useState } from "react";
+import { StopWatch } from "./timer";
 
 interface TaskCardItemProps {
   item: ITask;
@@ -250,7 +252,9 @@ export default function TaskCardItem({ item, ...props }: TaskCardItemProps) {
       {/* desc */}
       <div className="flex w-full items-center justify-between gap-2 text-xs">
         <div className="text-[#808080]">{"+EST"}</div>
-        <div className="text-[#808080]">{item.actual_time}</div>
+        <div className="text-[#808080]">
+          {formatEstimated(item.actual_time)}
+        </div>
 
         <div className="ml-auto text-white">{item?.estimated_time}</div>
       </div>
@@ -276,9 +280,13 @@ export function CardSimpleItem({
     >
       <div className={cn("flex w-full items-center justify-between")}>
         <div className="truncate text-white">{item.title}</div>
-        <div className="time w-[90px] text-right font-bold text-white">
-          <span className="text-white">{timerInfo?.duration}</span>
-        </div>
+
+        <StopWatch
+          seconds={timerInfo?.duration ?? 0}
+          color="#2b2b2b"
+          fontSize={16}
+          onTick={() => {}}
+        />
       </div>
       <motion.div
         className="absolute inset-0 bg-[#2b2b2b]"
@@ -335,9 +343,12 @@ export function CapsuleItem({
     >
       <div className={cn("flex w-full items-center justify-between")}>
         <div className="truncate text-white">{item.title}</div>
-        <div className="time w-[90px] text-right font-bold text-white">
-          <span className="text-white">{timerInfo?.duration}</span>
-        </div>
+        <StopWatch
+          seconds={timerInfo?.duration ?? 0}
+          color="#2b2b2b"
+          fontSize={16}
+          onTick={() => {}}
+        />
       </div>
       <motion.div
         className="absolute inset-0 bg-[#2b2b2b]"

@@ -49,7 +49,7 @@ export function getGreetingMessage(): string {
 export function formatEstimated(minutes: number): string | undefined {
   if (minutes === 0) return undefined;
   const h = Math.floor(minutes / 60);
-  if (h === 0) return `${minutes}m`;
+  if (h === 0) return `${minutes}min`;
   if (h === 1) return "1hr";
   return `${h}hr`;
 }
