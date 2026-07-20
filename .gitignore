@@ -48,3 +48,6 @@ services/agent/__pycache__/
 __debug_bin*
 
 services/backend/cmd/__debug_bin*
+
+
+k8s/
