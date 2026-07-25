@@ -13,6 +13,7 @@ export interface CreateTaskDTO {
 
 export interface UpdateTaskDTO {
   title?: string;
+  content?: string;
   estimated_time?: number;
   scheduled_date?: string | null;
 }

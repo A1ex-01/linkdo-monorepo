@@ -47,22 +47,16 @@ interface TaskCardItemProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 export default function TaskCardItem({ item, ...props }: TaskCardItemProps) {
-  const [showContentEditor, setShowContentEditor] = useState(true);
-  const [markdownContent, setMarkdownContent] = useState(`# Milkdown React Crepe
-
-> You're scared of a world where you're needed.
-
-This is a demo for using Crepe with **React**.`);
-  console.log(
-    "🐽🐽 ~ task-card-item.tsx ~ TaskCardItem ~ markdownContent:",
-    markdownContent,
-  );
+  const [showContentEditor, setShowContentEditor] = useState(false);
+  const [markdownContent, setMarkdownContent] = useState("");
+  const [isSavingContent, setIsSavingContent] = useState(false);
   const wrapperRef = useRef<HTMLDivElement>(null);
   const {
     collection,
     toNextTaskStatus,
     toPrevTaskStatus,
     updateTaskTitle,
+    updateTaskContent,
     updateTaskScheduledDate,
     deleteTask,
     openTaskInNotion,
@@ -211,7 +205,13 @@ This is a demo for using Crepe with **React**.`);
           }
           transition={{ type: "spring", stiffness: 400, damping: 26 }}
         >
-          <div className="hover:text-atext-400 size-5 cursor-pointer p-0.5 hover:rounded">
+          <div
+            className="hover:text-atext-400 size-5 cursor-pointer p-0.5 hover:rounded"
+            onClick={() => {
+              setMarkdownContent(item.content ?? "");
+              setShowContentEditor(true);
+            }}
+          >
             <IconFileSmile className="size-full text-[#808080]" />
           </div>
           {item.status !== "backlog" && (
@@ -273,30 +273,63 @@ This is a demo for using Crepe with **React**.`);
         </motion.div>
       </div>
       {/* desc */}
-      <div className="flex w-full items-center justify-between gap-2 text-xs">
-        <div className="text-[#808080]">{"+EST"}</div>
-        <div className="text-[#808080]">
-          {formatEstimated(item.actual_time)}
-        </div>
+      {showContentEditor ? null : (
+        <div className="flex w-full items-center justify-between gap-2 text-xs">
+          <div className="text-[#808080]">{"+EST"}</div>
+          <div className="text-[#808080]">
+            {formatEstimated(item.actual_time)}
+          </div>
 
-        <div className="ml-auto flex items-center gap-2">
-          <ScheduledDateChip
-            value={item.scheduled_date}
-            onChange={(next) => {
-              updateTaskScheduledDate(item, next);
-            }}
-          />
-          <span className="text-[#1c283e]">{item?.estimated_time}</span>
+          <div className="ml-auto flex items-center gap-2">
+            <ScheduledDateChip
+              value={item.scheduled_date}
+              onChange={(next) => {
+                updateTaskScheduledDate(item, next);
+              }}
+            />
+            <span className="text-[#1c283e]">{item?.estimated_time}</span>
+          </div>
         </div>
-      </div>
+      )}
 
       {/* content editor */}
       {showContentEditor && (
-        <div className="flex w-full items-center justify-between gap-2 text-xs">
+        <div className="flex w-full cursor-auto flex-col items-center justify-between gap-2 overflow-hidden rounded-[4px] border border-solid border-[#e6e6e6] text-xs">
           <AMarkdownEditor
             value={markdownContent}
             onChange={setMarkdownContent}
           />
+          <div className="flex w-full items-center justify-end gap-2 px-3 py-2">
+            <Button
+              variant="outline"
+              size="sm"
+              disabled={isSavingContent}
+              onClick={() => {
+                setMarkdownContent(item.content ?? "");
+                setShowContentEditor(false);
+              }}
+            >
+              Cancel
+            </Button>
+            <Button
+              variant="default"
+              size="sm"
+              disabled={isSavingContent}
+              onClick={async () => {
+                setIsSavingContent(true);
+                try {
+                  const ok = await updateTaskContent(item, markdownContent);
+                  if (ok) {
+                    setShowContentEditor(false);
+                  }
+                } finally {
+                  setIsSavingContent(false);
+                }
+              }}
+            >
+              {isSavingContent ? "Saving..." : "Save"}
+            </Button>
+          </div>
         </div>
       )}
     </div>

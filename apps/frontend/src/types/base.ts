@@ -16,6 +16,7 @@ export interface ITask {
   collection_uuid: string;
   notion_database_uuid?: string;
   title: string;
+  content: string;
   status: TaskStatus;
   notion_page_id?: string;
   notion_uuid?: string;

@@ -32,6 +32,7 @@ const MilkdownEditor = ({ value, onChange }: IProps) => {
         onChange?.(markdown as string);
       });
     });
+    root.autofocus = true;
 
     return crepe;
   }, []);
@@ -44,7 +45,7 @@ const MilkdownEditor = ({ value, onChange }: IProps) => {
 };
 export function AMarkdownEditor({ className, value, onChange }: IProps) {
   return (
-    <div className={cn("notion-comment-editor", className)}>
+    <div className={cn("notion-comment-editor w-full", className)}>
       <MilkdownProvider>
         <MilkdownEditor value={value} onChange={onChange} />
       </MilkdownProvider>
