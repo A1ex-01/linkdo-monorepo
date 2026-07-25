@@ -1,6 +1,7 @@
 "use client";
 import { useData } from "@/app/work/data-provider";
 import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -8,7 +9,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Input } from "@/components/ui/input";
 import {
   Popover,
   PopoverContent,
@@ -36,6 +36,7 @@ import {
   IconX,
 } from "@tabler/icons-react";
 import { useHover } from "ahooks";
+import { format } from "date-fns";
 import { motion } from "framer-motion";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { StopWatch } from "./timer";
@@ -299,6 +300,7 @@ function ScheduledDateChip({
 
   const display = formatScheduledLabel(value);
   const hasDate = Boolean(value);
+  const selectedDate = draft ? new Date(`${draft}T00:00:00`) : undefined;
 
   const apply = () => {
     const next = draft ? new Date(`${draft}T00:00:00`).toISOString() : null;
@@ -340,19 +342,21 @@ function ScheduledDateChip({
       </PopoverTrigger>
       <PopoverContent
         align="end"
-        className="w-64 p-3"
+        className="w-auto p-0"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="mb-2 text-xs font-semibold text-[#1c283e]">
+        <div className="px-3 pt-3 text-xs font-semibold text-[#1c283e]">
           Scheduled date
         </div>
-        <Input
-          type="date"
-          value={draft}
-          onChange={(e) => setDraft(e.target.value)}
-          className="h-8 text-xs"
+        <Calendar
+          mode="single"
+          selected={selectedDate}
+          defaultMonth={selectedDate}
+          onSelect={(date) => {
+            setDraft(date ? format(date, "yyyy-MM-dd") : "");
+          }}
         />
-        <div className="mt-3 flex items-center justify-between gap-2">
+        <div className="flex items-center justify-between gap-2 px-3 pb-3">
           <Button
             type="button"
             variant="ghost"

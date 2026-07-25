@@ -3,13 +3,16 @@ import { cn } from "@/lib/utils";
 import { createTask } from "@/services/task";
 import { useCommonStore } from "@/stores/common";
 import { TaskStatus } from "@/types/base";
-import { IconPlus, IconX } from "@tabler/icons-react";
+import { IconCalendar, IconPlus, IconX } from "@tabler/icons-react";
+import { format } from "date-fns";
 import { useState } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { Button } from "./ui/button";
+import { Calendar } from "./ui/calendar";
 import { Field } from "./ui/field";
 import { Input } from "./ui/input";
+import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 import {
   Select,
   SelectContent,
@@ -31,6 +34,7 @@ interface IAddTaskForm {
 
 export function AddTask({ className, status }: IProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
   const { currCollectionNotionDbs } = useCommonStore();
   const { collection, getTasks } = useData();
 
@@ -103,10 +107,50 @@ export function AddTask({ className, status }: IProps) {
                 />
               </div>
               <div className="mt-2 flex gap-2">
-                <Input
-                  type="date"
-                  className="border-divider w-full border text-xs"
-                  {...register("scheduled_date")}
+                <Controller
+                  name="scheduled_date"
+                  control={control}
+                  render={({ field }) => {
+                    const selectedDate = field.value
+                      ? new Date(`${field.value}T00:00:00`)
+                      : undefined;
+
+                    return (
+                      <Popover
+                        open={isDatePickerOpen}
+                        onOpenChange={setIsDatePickerOpen}
+                      >
+                        <PopoverTrigger asChild>
+                          <Button
+                            type="button"
+                            variant="outline"
+                            data-empty={!field.value}
+                            className="border-divider data-[empty=true]:text-muted-foreground w-full justify-between border text-left font-normal"
+                          >
+                            {selectedDate ? (
+                              format(selectedDate, "yyyy-MM-dd")
+                            ) : (
+                              <span>Pick a date</span>
+                            )}
+                            <IconCalendar data-icon="inline-end" />
+                          </Button>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-auto p-0" align="start">
+                          <Calendar
+                            mode="single"
+                            selected={selectedDate}
+                            defaultMonth={selectedDate}
+                            onSelect={(date) => {
+                              field.onChange(
+                                date ? format(date, "yyyy-MM-dd") : "",
+                              );
+                              setIsDatePickerOpen(false);
+                            }}
+                          />
+                        </PopoverContent>
+                      </Popover>
+                    );
+                  }}
                 />
               </div>
               {/* errors will return when field validation fails  */}
