@@ -205,13 +205,3 @@ async def traced(self: MCPClient, tool_name: str, arguments: dict) -> str:
 
 mcp_client.call_tool = MethodType(traced, mcp_client)
 ```
-
-## 开发
-
-```bash
-# 运行测试
-uv run pytest
-
-# 交互式调试（模拟 Agent 主循环）
-uv run python -m app.base
-```
