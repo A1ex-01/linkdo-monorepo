@@ -51,3 +51,7 @@ services/backend/cmd/__debug_bin*
 
 
 k8s/
+
+
+
+backups
