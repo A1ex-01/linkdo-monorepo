@@ -39,6 +39,7 @@ import { useHover } from "ahooks";
 import { format } from "date-fns";
 import { motion } from "framer-motion";
 import { useEffect, useMemo, useRef, useState } from "react";
+import { AMarkdownEditor } from "./a-markdown-editor";
 import { StopWatch } from "./timer";
 
 interface TaskCardItemProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -46,6 +47,16 @@ interface TaskCardItemProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 export default function TaskCardItem({ item, ...props }: TaskCardItemProps) {
+  const [showContentEditor, setShowContentEditor] = useState(true);
+  const [markdownContent, setMarkdownContent] = useState(`# Milkdown React Crepe
+
+> You're scared of a world where you're needed.
+
+This is a demo for using Crepe with **React**.`);
+  console.log(
+    "🐽🐽 ~ task-card-item.tsx ~ TaskCardItem ~ markdownContent:",
+    markdownContent,
+  );
   const wrapperRef = useRef<HTMLDivElement>(null);
   const {
     collection,
@@ -278,6 +289,16 @@ export default function TaskCardItem({ item, ...props }: TaskCardItemProps) {
           <span className="text-[#1c283e]">{item?.estimated_time}</span>
         </div>
       </div>
+
+      {/* content editor */}
+      {showContentEditor && (
+        <div className="flex w-full items-center justify-between gap-2 text-xs">
+          <AMarkdownEditor
+            value={markdownContent}
+            onChange={setMarkdownContent}
+          />
+        </div>
+      )}
     </div>
   );
 }

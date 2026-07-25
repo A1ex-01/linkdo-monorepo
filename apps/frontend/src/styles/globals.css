@@ -88,3 +88,160 @@
   --color-atext-400: #666666;
   --color-atext-300: #bfbfbf;
 }
+
+/* ===== Notion Comment Mini Typography ===== */
+
+.milkdown .ProseMirror {
+  padding: 8px 10px !important;
+}
+
+.notion-comment-editor {
+  --base-font-size: 14px;
+  --line-height: 1.5;
+}
+
+/* 主体 */
+.notion-comment-editor .milkdown {
+  font-size: var(--base-font-size);
+  line-height: var(--line-height);
+  color: #222;
+}
+
+/* 编辑区域 */
+.notion-comment-editor .ProseMirror {
+  padding: 8px 10px !important;
+  min-height: 36px !important;
+  outline: none !important;
+}
+
+/* ===== 标题（递减 1px） ===== */
+.notion-comment-editor .milkdown h1 {
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  margin: 4px 0 !important;
+  line-height: 1.5 !important;
+}
+
+.notion-comment-editor .milkdown h2 {
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  margin: 3px 0 !important;
+  line-height: 1.5 !important;
+}
+
+.notion-comment-editor .milkdown h3 {
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  margin: 2px 0 !important;
+  line-height: 1.5 !important;
+}
+
+.notion-comment-editor .milkdown h4 {
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  margin: 2px 0 !important;
+  line-height: 1.5 !important;
+}
+
+.notion-comment-editor .milkdown h5 {
+  font-size: 10px !important;
+  font-weight: 600 !important;
+  margin: 2px 0 !important;
+  line-height: 1.5 !important;
+}
+
+.notion-comment-editor .milkdown h6 {
+  font-size: 9px !important;
+  font-weight: 600 !important;
+  margin: 2px 0 !important;
+  line-height: 1.5 !important;
+}
+
+/* ===== 普通文本 ===== */
+.notion-comment-editor .milkdown p {
+  font-size: 14px !important;
+  margin: 2px 0 !important;
+  line-height: 1.5 !important;
+}
+
+/* ===== 列表 ===== */
+.notion-comment-editor .milkdown ul,
+.notion-comment-editor .milkdown ol {
+  padding-left: 18px !important;
+  margin: 2px 0 !important;
+  line-height: 1.5 !important;
+}
+
+.notion-comment-editor .milkdown li {
+  font-size: 13px !important; /* 比正文小一号 */
+  margin: 2px 0 !important;
+  line-height: 1.5 !important;
+}
+
+/* ===== 引用 ===== */
+.notion-comment-editor .milkdown blockquote {
+  font-size: 13px !important;
+  margin: 4px 0 !important;
+  padding-left: 8px !important;
+  color: #666 !important;
+  line-height: 1.5 !important;
+}
+
+/* ===== code ===== */
+.notion-comment-editor .milkdown code {
+  font-size: 12px !important;
+  background: #f5f5f5 !important;
+  padding: 2px 4px !important;
+  border-radius: 4px !important;
+  line-height: 1.5 !important;
+}
+
+/* ===== pre code block ===== */
+.notion-comment-editor .milkdown pre {
+  font-size: 12px !important;
+  padding: 8px !important;
+  border-radius: 6px !important;
+  border-radius: 6px !important;
+  overflow-x: auto !important;
+  line-height: 1.5 !important;
+}
+
+/* ===== 分割线 ===== */
+.notion-comment-editor .milkdown hr {
+  margin: 6px 0 !important;
+  border: none !important;
+  border-top: 1px solid #eee;
+  line-height: 1.5 !important;
+}
+
+/* ===== 强调 ===== */
+.notion-comment-editor .milkdown strong {
+  font-weight: 600 !important;
+  line-height: 1.5 !important;
+}
+
+.notion-comment-editor .milkdown em {
+  font-style: italic !important;
+  line-height: 1.5 !important;
+}
+
+/* ===== placeholder ===== */
+.notion-comment-editor .milkdown .placeholder::before,
+.notion-comment-editor .ProseMirror:empty::before {
+  content: "Write a comment...";
+  color: #999 !important;
+  font-size: 14px !important;
+  pointer-events: none !important ;
+  line-height: 1.5 !important;
+}
+
+/* ===== 去掉 block UI ===== */
+.milkdown-block-handle,
+.milkdown-crepe-block-handle {
+  display: none !important;
+}
+
+/* hover 不高亮（更像输入框） */
+.milkdown .milkdown-block:hover {
+  background: transparent !important;
+}
