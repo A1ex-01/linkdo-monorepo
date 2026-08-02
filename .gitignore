@@ -56,3 +56,8 @@ k8s/
 
 
 backups
+
+*.example
+
+
+.env.server
