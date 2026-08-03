@@ -12,7 +12,7 @@ export interface SearchNotionDatabaseResult {
 
 export function searchNotionDatabases(query?: string) {
   return request<SearchNotionDatabaseResult[]>({
-    url: "/api/auth/notion/databases",
+    url: "/api/notion/databases",
     method: "get",
     params: query ? { query } : undefined,
   });
@@ -77,14 +77,14 @@ export function fetchStatusOptions(notionDbUuid: string) {
 
 export function getOAuthUrl() {
   return request<{ url: string }>({
-    url: "/api/auth/notion/url",
+    url: "/api/notion/url",
     method: "get",
   });
 }
 
 export function exchangeCode(code: string) {
   return request<{ url: string }>({
-    url: "/api/auth/notion/callback",
+    url: "/api/notion/callback",
     method: "get",
     params: { code },
   });
