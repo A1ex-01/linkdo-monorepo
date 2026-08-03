@@ -60,6 +60,7 @@ export function AddTask({ className, status }: IProps) {
       scheduled_date: data.scheduled_date
         ? new Date(`${data.scheduled_date}T00:00:00`).toISOString()
         : undefined,
+      content: "-",
     };
     // 新建任务
     const res = await createTask(collection?.uuid ?? "", params);
