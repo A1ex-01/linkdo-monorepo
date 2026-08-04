@@ -114,7 +114,7 @@ export default function TaskCardItem({ item, ...props }: TaskCardItemProps) {
   return (
     <div
       ref={wrapperRef}
-      className="text-atext-460 flex flex-col gap-2 rounded-lg border border-solid border-[#e6e6e6] bg-white p-3 text-sm select-none"
+      className="flex flex-col gap-2 rounded-lg border border-solid border-[#363636] bg-[#262626] p-3 text-sm text-white select-none"
       {...props}
     >
       <div className="flex w-full items-center">
@@ -152,9 +152,7 @@ export default function TaskCardItem({ item, ...props }: TaskCardItemProps) {
         <div
           className={cn(
             "min-w-0 flex-1 truncate",
-            isHover && !isEditingTitle
-              ? "cursor-text hover:text-[#808080]"
-              : "",
+            isHover && !isEditingTitle ? "cursor-text" : "",
           )}
           onClick={startEditingTitle}
         >
@@ -174,7 +172,7 @@ export default function TaskCardItem({ item, ...props }: TaskCardItemProps) {
               }}
               onBlur={() => void commitTitle()}
               onClick={(e) => e.stopPropagation()}
-              className="h-6 w-full rounded-md border border-[#e5e7eb] bg-white px-2 text-sm text-[#333] shadow-sm outline-none focus:border-[#6f98e8]"
+              className="bg-atext-500 h-6 w-full rounded-md px-2 text-sm text-white shadow-sm outline-none"
             />
           ) : (
             item.title
@@ -190,10 +188,10 @@ export default function TaskCardItem({ item, ...props }: TaskCardItemProps) {
           }
           transition={{ type: "spring", stiffness: 400, damping: 26 }}
         >
-          <div className="flex aspect-square size-[18px] items-center justify-center rounded bg-[#6f98e8] text-xs text-white">
+          <div className="flex aspect-square size-4.5 items-center justify-center rounded-sm bg-[#6f98e8] text-xs text-white">
             {collection?.name?.slice(0, 1)}
           </div>
-          <IconBrandNotion />
+          <IconBrandNotion className="-ml-2" />
         </motion.div>
         <motion.div
           className="actions flex items-center gap-1"
@@ -206,28 +204,28 @@ export default function TaskCardItem({ item, ...props }: TaskCardItemProps) {
           transition={{ type: "spring", stiffness: 400, damping: 26 }}
         >
           <div
-            className="hover:text-atext-400 size-5 cursor-pointer p-0.5 hover:rounded"
+            className="text-atext-460 size-5 cursor-pointer rounded-md p-0.5 hover:bg-[#444444] hover:text-white"
             onClick={() => {
               setMarkdownContent(item.content ?? "");
               setShowContentEditor(true);
             }}
           >
-            <IconFileSmile className="size-full text-[#808080]" />
+            <IconFileSmile className="size-full" />
           </div>
           {item.status !== "backlog" && (
             <div
               onClick={() => toPrevTaskStatus(item)}
-              className="size-5 cursor-pointer p-0.5 hover:rounded hover:bg-[#f7f8fc] hover:text-white"
+              className="text-atext-460 size-5 cursor-pointer rounded-md p-0.5 hover:bg-[#444444] hover:text-white"
             >
-              <IconArrowLeft className="size-full text-[#808080]" />
+              <IconArrowLeft className="size-full" />
             </div>
           )}
           {item.status !== "done" && (
             <div
               onClick={() => toNextTaskStatus(item)}
-              className="size-5 cursor-pointer p-0.5 hover:rounded hover:bg-[#f7f8fc] hover:text-white"
+              className="text-atext-460 size-5 cursor-pointer rounded-md p-0.5 hover:bg-[#444444] hover:text-white"
             >
-              <IconArrowRight className="size-full text-[#808080]" />
+              <IconArrowRight className="size-full" />
             </div>
           )}
           <DropdownMenu>
@@ -236,21 +234,21 @@ export default function TaskCardItem({ item, ...props }: TaskCardItemProps) {
                 type="button"
                 aria-label="Task actions"
                 onClick={(e) => e.stopPropagation()}
-                className="flex size-5 cursor-pointer items-center justify-center rounded p-0.5 hover:bg-[#f7f8fc]"
+                className="text-atext-460 flex size-5 cursor-pointer items-center justify-center rounded-md p-0.5"
               >
-                <IconDotsVertical className="size-full text-[#808080]" />
+                <IconDotsVertical className="size-full" />
               </button>
             </DropdownMenuTrigger>
             <DropdownMenuContent
               align="end"
               sideOffset={6}
-              className="w-44 bg-white p-1 text-[#4b5563]"
+              className="w-44 p-1"
               onClick={(e) => e.stopPropagation()}
             >
               <DropdownMenuItem
                 disabled={!item.notion_page_id}
                 onSelect={() => void openTaskInNotion(item)}
-                className="gap-2 px-2 py-1.5 text-xs"
+                className="gap-2 px-2 py-1.5 text-xs text-white"
               >
                 <IconExternalLink className="size-3.5" />
                 Open in Notion
@@ -275,8 +273,8 @@ export default function TaskCardItem({ item, ...props }: TaskCardItemProps) {
       {/* desc */}
       {showContentEditor ? null : (
         <div className="flex w-full items-center justify-between gap-2 text-xs">
-          <div className="text-[#808080]">{"+EST"}</div>
-          <div className="text-[#808080]">
+          <div className="text-atext-460">{"+EST"}</div>
+          <div className="text-atext-460">
             {formatEstimated(item.actual_time)}
           </div>
 
@@ -287,14 +285,14 @@ export default function TaskCardItem({ item, ...props }: TaskCardItemProps) {
                 updateTaskScheduledDate(item, next);
               }}
             />
-            <span className="text-[#1c283e]">{item?.estimated_time}</span>
+            <span className="text-atext-460">{item?.estimated_time}</span>
           </div>
         </div>
       )}
 
       {/* content editor */}
       {showContentEditor && (
-        <div className="flex w-full cursor-auto flex-col items-center justify-between gap-2 overflow-hidden rounded-[4px] border border-solid border-[#e6e6e6] text-xs">
+        <div className="flex w-full cursor-auto flex-col items-center justify-between gap-2 overflow-hidden rounded-[4px] border border-solid border-[#363636] text-xs">
           <AMarkdownEditor
             value={markdownContent}
             onChange={setMarkdownContent}
@@ -382,8 +380,8 @@ function ScheduledDateChip({
           className={cn(
             "inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[11px] font-medium transition-colors",
             hasDate
-              ? "border-primary-400/40 bg-primary-400/10 text-primary-400 hover:bg-primary-400/15"
-              : "border-[#e2e8f0] text-[#808080] hover:border-[#cdd5e2] hover:text-[#1c283e]",
+              ? "text-atext-460 bg-atext-500 border-[#363636]"
+              : "text-atext-460 border-[#363636]",
           )}
         >
           {hasDate ? (
@@ -399,7 +397,7 @@ function ScheduledDateChip({
         className="w-auto p-0"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="px-3 pt-3 text-xs font-semibold text-[#1c283e]">
+        <div className="text-atext-460 px-3 pt-3 text-xs font-semibold">
           Scheduled date
         </div>
         <Calendar
@@ -417,7 +415,7 @@ function ScheduledDateChip({
             size="sm"
             onClick={clear}
             disabled={!hasDate}
-            className="h-7 px-2 text-[11px] text-[#808080] hover:text-[#ef4444]"
+            className="text-atext-460 h-7 px-2 text-[11px] hover:text-[#ef4444]"
           >
             <IconX className="size-3" />
             Clear
@@ -426,7 +424,7 @@ function ScheduledDateChip({
             type="button"
             size="sm"
             onClick={apply}
-            className="bg-primary-400 hover:bg-primary-400/90 h-7 rounded-md px-3 text-[11px] text-white"
+            className="bg-atext-500 h-7 rounded-md px-3 text-[11px] text-white"
           >
             Save
           </Button>

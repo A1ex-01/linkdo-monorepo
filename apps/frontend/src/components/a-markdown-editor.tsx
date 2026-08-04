@@ -45,7 +45,9 @@ const MilkdownEditor = ({ value, onChange }: IProps) => {
 };
 export function AMarkdownEditor({ className, value, onChange }: IProps) {
   return (
-    <div className={cn("notion-comment-editor w-full", className)}>
+    <div
+      className={cn("notion-comment-editor bg-atext-500! w-full", className)}
+    >
       <MilkdownProvider>
         <MilkdownEditor value={value} onChange={onChange} />
       </MilkdownProvider>

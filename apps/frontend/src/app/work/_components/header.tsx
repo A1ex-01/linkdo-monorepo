@@ -4,14 +4,13 @@
 
 import { NotionDropdown } from "@/app/work/_components/notion-dropdown";
 import { useData } from "@/app/work/data-provider";
-import {
-  Avatar,
-  AvatarBadge,
-  AvatarFallback,
-  AvatarImage,
-} from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useUserStore } from "@/stores/user";
-import { IconChevronDown, IconChevronLeft } from "@tabler/icons-react";
+import {
+  IconChevronDown,
+  IconChevronLeft,
+  IconSearch,
+} from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
 
 export function WorkHeader() {
@@ -29,7 +28,7 @@ export function WorkHeader() {
         <button
           type="button"
           onClick={() => router.push("/home")}
-          className="group/brand flex items-center gap-2 rounded-md px-2 py-1 text-[15px] font-semibold tracking-tight text-black transition-colors hover:text-black"
+          className="group/brand flex items-center gap-1 rounded-md px-2 py-1 text-[15px] font-semibold tracking-tight text-[#858585] transition-colors hover:text-[#858585]"
         >
           <IconChevronLeft />
           BACK
@@ -38,25 +37,34 @@ export function WorkHeader() {
         {collection?.name ? (
           <button
             type="button"
-            className="group/collection flex items-center gap-1.5 rounded-md bg-white px-2 px-4 py-1 text-lg font-medium text-black/85 transition-colors hover:bg-white/5 hover:text-black"
+            className="group/collection flex items-center gap-1.5 rounded-md bg-[#181818] px-4 py-1 text-lg font-medium text-white transition-colors"
           >
             <span className="max-w-[28ch] truncate">{collection.name}</span>
-            <IconChevronDown className="size-4 text-black/40 transition-transform group-hover/collection:rotate-180" />
+            <IconChevronDown className="size-4 text-[#858585] transition-transform group-hover/collection:rotate-180" />
           </button>
         ) : null}
+        <div className="text-atext-460 text-sm">
+          This list has 6 pending tasks, Est:1hr
+        </div>
       </div>
 
       {/* Right: Quick search + Notion + Avatar */}
       <div className="flex items-center gap-3">
         <NotionDropdown className="w-full" />
 
-        <Avatar size="default" className="ring-1 ring-white/10">
-          <AvatarImage src={user?.avatar_url} className="size-9 object-cover" />
-          <AvatarFallback className="bg-gradient-to-br from-[#7c9cff]/30 to-[#b07cff]/30 text-xs text-black">
-            {user?.name?.slice(0, 2)?.toUpperCase() ?? "U"}
-          </AvatarFallback>
-          <AvatarBadge className="bg-emerald-400" />
-        </Avatar>
+        <div className="text-atext-460 flex items-center gap-4 rounded-xs bg-[#181818] px-4 py-2">
+          <IconSearch />
+          <Avatar size="default" className="ring-1 ring-white/10">
+            <AvatarImage
+              src={user?.avatar_url}
+              className="size-9 object-cover"
+            />
+            <AvatarFallback className="bg-[#2f2f2f] text-xs text-white">
+              {user?.name?.slice(0, 2)?.toUpperCase() ?? "U"}
+            </AvatarFallback>
+          </Avatar>
+          <IconChevronDown className="-ml-3 size-4" />
+        </div>
       </div>
     </header>
   );

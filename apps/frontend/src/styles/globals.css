@@ -20,29 +20,30 @@
 }
 
 @theme {
-  --color-background: #f4f7fb;
+  --color-background: #262626;
+
   --color-foreground: #1c283e;
-  --color-card: #ffffff;
+  --color-card: #262626;
   --color-card-foreground: #1c283e;
-  --color-popover: #ffffff;
+  --color-popover: #262626;
   --color-popover-foreground: #1c283e;
-  --color-primary: #4e89fe;
-  --color-primary-400: #4e89fe;
-  --color-primary-450: #4e89fe;
-  --color-primary-500: #4e89fe;
+  --color-primary: #111111;
+  --color-primary-400: #111111;
+  --color-primary-450: #111111;
+  --color-primary-500: #111111;
   --color-primary-foreground: #ffffff;
   --color-secondary: #f0f7ff;
-  --color-secondary-foreground: #4e89fe;
+  --color-secondary-foreground: #111111;
   --color-muted: #f8fafc;
   --color-muted-foreground: #64748b;
-  --color-accent: #eff6ff;
-  --color-accent-foreground: #3b82f6;
+  --color-accent: #111111;
+  --color-accent-foreground: #ffffff;
   --color-destructive: #ef4444;
   --color-destructive-foreground: #ffffff;
-  --color-border: #e2e8f0;
+  --color-border: #313131;
   --color-input: #f1f5f9;
-  --color-ring: #4e89fe;
-  --color-chart-1: #4e89fe;
+  --color-ring: #2b2b2b;
+  --color-chart-1: #111111;
   --color-chart-2: #8b5cf6;
   --color-chart-3: #06b6d4;
   --color-chart-4: #f59e0b;
@@ -83,8 +84,8 @@
   /* 、、、 */
 
   --color-atext-500: #111111;
-  --color-atext-460: #444444;
-  --color-atext-450: #999999;
+  --color-atext-460: #858585;
+  --color-atext-450: #464646;
   --color-atext-400: #666666;
   --color-atext-300: #bfbfbf;
 }
@@ -104,7 +105,8 @@
 .notion-comment-editor .milkdown {
   font-size: var(--base-font-size);
   line-height: var(--line-height);
-  color: #222;
+  color: #ffffff;
+  background-color: #111111 !important;
 }
 
 /* 编辑区域 */

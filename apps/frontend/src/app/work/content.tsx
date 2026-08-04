@@ -14,7 +14,7 @@ export default function Content() {
   const { viewMode } = useData();
 
   return (
-    <div className="flex h-full flex-col text-white">
+    <div className="flex h-full flex-col bg-[#111111] text-white">
       {viewMode === "kanban" && (
         <>
           <WindowTitleBar />
