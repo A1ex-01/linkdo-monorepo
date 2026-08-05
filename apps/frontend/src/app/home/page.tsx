@@ -66,28 +66,30 @@ export default function page() {
   };
 
   return (
-    <div className="text-foreground flex min-h-screen flex-col bg-[#f7f8fc]">
+    <div className="text-foreground flex min-h-screen flex-col bg-background">
       <HomeWindowTitleBar />
       <div className="flex w-full flex-1">
-        <div className="left w-[280px] bg-white px-4 text-black">
+        <div className="left bg-card text-foreground w-[280px] px-4">
           <div className="flex flex-col items-start gap-4 pt-4">
             <div className="mb-1 flex items-center gap-2">
               <IconCheck strokeWidth={4} />
-              <span className="text-2xl leading-tight font-extrabold text-zinc-900">
+              <span className="text-foreground text-2xl leading-tight font-extrabold">
                 LinkDo
               </span>
             </div>
-            <span className="-mt-2 mb-2 text-[15px] font-medium text-zinc-400">
+            <span className="text-atext-460 -mt-2 mb-2 text-[15px] font-medium">
               v1.0.0
             </span>
-            <div className="flex w-full flex-col rounded-xl border border-[#FFE7C2] bg-[#FFF8F1] px-4 py-3">
+            <div className="border-[#363636] bg-background flex w-full flex-col rounded-xl border px-4 py-3">
               <div className="mb-1 flex items-center gap-2">
-                <IconStarFilled size={18} color="#BA821C" />
-                <span className="text-base font-bold text-[#BA821C]">
+                <IconStarFilled size={18} className="text-atext-450" />
+                <span className="text-atext-450 text-base font-bold">
                   Unlimited Monthly
                 </span>
               </div>
-              <span className="text-sm text-[#BA821C]">无限制使用所有功能</span>
+              <span className="text-atext-460 text-sm">
+                无限制使用所有功能
+              </span>
             </div>
           </div>
 
@@ -135,20 +137,18 @@ export default function page() {
                   {[1, 2, 3].map((i) => (
                     <div
                       key={i}
-                      className="h-[303px] animate-pulse rounded-xl"
+                      className="bg-card h-[303px] animate-pulse rounded-xl"
                     />
                   ))}
                 </div>
               ) : collections.length === 0 ? (
-                <div className="border-muted-foreground/30 flex flex-col items-center justify-center rounded-2xl border border-dashed py-20">
-                  <p className="text-muted-foreground mb-4 text-lg font-medium">
-                    No lists yet
-                  </p>
+                <div className="border-muted-foreground/30 text-muted-foreground flex flex-col items-center justify-center rounded-2xl border border-dashed py-20">
+                  <p className="mb-4 text-lg font-medium">No lists yet</p>
                   <button
                     onClick={handleCreate}
-                    className="text-muted-foreground hover:text-foreground flex items-center gap-2 text-sm font-medium transition-colors"
+                    className="hover:text-foreground flex items-center gap-2 text-sm font-medium transition-colors"
                   >
-                    <IconPlus className="text-muted-foreground h-5 w-5" />
+                    <IconPlus className="h-5 w-5" />
                     Create your first list
                   </button>
                 </div>
@@ -167,7 +167,7 @@ export default function page() {
                   {/* Create List Card */}
                   <div
                     onClick={handleCreate}
-                    className="border-muted-foreground/20 hover:bg-muted flex h-[303px] cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed bg-transparent transition-all"
+                    className="border-muted-foreground/20 hover:bg-muted bg-card flex h-[303px] cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed transition-all"
                   >
                     <svg
                       width={52}
@@ -183,7 +183,7 @@ export default function page() {
                           width={48}
                           height={56}
                           rx={4}
-                          fill="white"
+                          fill="#262626"
                         />
                         <rect
                           x={2.5}
@@ -191,7 +191,7 @@ export default function page() {
                           width={47}
                           height={55}
                           rx={3.5}
-                          stroke="#DBEAFE"
+                          stroke="#363636"
                         />
                         <g opacity={0.4}>
                           <rect
@@ -200,7 +200,7 @@ export default function page() {
                             width={34}
                             height={4}
                             rx={2}
-                            fill="#60A5FA"
+                            fill="#6f98e8"
                           />
                         </g>
                         <g opacity={0.2}>
@@ -210,7 +210,7 @@ export default function page() {
                             width={22.6641}
                             height={4}
                             rx={2}
-                            fill="#60A5FA"
+                            fill="#6f98e8"
                           />
                         </g>
                         <g opacity={0.2}>
@@ -220,7 +220,7 @@ export default function page() {
                             width={17}
                             height={4}
                             rx={2}
-                            fill="#60A5FA"
+                            fill="#6f98e8"
                           />
                         </g>
                       </g>
@@ -280,7 +280,7 @@ export default function page() {
                           <feGaussianBlur stdDeviation={1} />
                           <feColorMatrix
                             type="matrix"
-                            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.05 0"
+                            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.2 0"
                           />
                           <feBlend
                             mode="normal"
@@ -296,7 +296,7 @@ export default function page() {
                         </filter>
                       </defs>
                     </svg>
-                    <span className="text-primary-500 mt-4 text-sm font-medium">
+                    <span className="text-atext-450 mt-4 text-sm font-medium">
                       + 创建新列表
                     </span>
                     <div className="text-atext-450 mt-4 text-xs">

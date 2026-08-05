@@ -15,11 +15,11 @@ export default function CollectionCard({
   return (
     <div
       onClick={onClick}
-      className="group flex h-[303px] cursor-pointer flex-col rounded-xl border border-[rgba(77,67,84,0.1)] bg-white p-6 transition-all hover:border-[rgba(77,67,84,0.2)]"
+      className="group flex h-[303px] cursor-pointer flex-col rounded-xl border border-[#363636] bg-card p-6 transition-all hover:border-[#525252]"
     >
       <div className="mb-6 flex items-start justify-between">
         <div className="flex items-center gap-3">
-          <div className="flex size-8 items-center justify-center rounded-lg bg-[#EBF0FF]">
+          <div className="flex size-8 items-center justify-center rounded-lg bg-[#363636]">
             <IconBrandNotion className="text-atext-500 h-5 w-5" />
           </div>
           <h3 className="text-atext-500 font-medium">{collection.name}</h3>
@@ -30,7 +30,7 @@ export default function CollectionCard({
             e.stopPropagation();
           }}
         >
-          <IconDotsVertical className="h-5 w-5 text-[#988d9f]" />
+          <IconDotsVertical className="text-atext-460 h-5 w-5" />
         </button>
       </div>
 
@@ -38,12 +38,12 @@ export default function CollectionCard({
         <p className="text-atext-400 text-sm">No tasks yet</p>
       </div>
 
-      <div className="mt-4 flex items-center justify-between border-t border-[rgba(77,67,84,0.1)] pt-4">
-        <span className="text-primary-500 text-xs font-bold tracking-wide uppercase">
+      <div className="mt-4 flex items-center justify-between border-t border-[#363636] pt-4">
+        <span className="text-atext-450 text-xs font-bold tracking-wide uppercase">
           {collection.pending_count} pending tasks
         </span>
         {estimated && (
-          <span className="rounded bg-[#2a2a2b] px-2 py-1 text-xs text-[#cfc2d6]">
+          <span className="bg-muted rounded px-2 py-1 text-xs text-atext-460">
             Est: {estimated}
           </span>
         )}

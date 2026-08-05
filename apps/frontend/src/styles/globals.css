@@ -20,29 +20,28 @@
 }
 
 @theme {
-  --color-background: #262626;
-
-  --color-foreground: #1c283e;
+  --color-background: #181818;
+  --color-foreground: #f5f5f5;
   --color-card: #262626;
-  --color-card-foreground: #1c283e;
+  --color-card-foreground: #f5f5f5;
   --color-popover: #262626;
-  --color-popover-foreground: #1c283e;
+  --color-popover-foreground: #f5f5f5;
   --color-primary: #111111;
   --color-primary-400: #111111;
   --color-primary-450: #111111;
   --color-primary-500: #111111;
   --color-primary-foreground: #ffffff;
-  --color-secondary: #f0f7ff;
-  --color-secondary-foreground: #111111;
-  --color-muted: #f8fafc;
-  --color-muted-foreground: #64748b;
-  --color-accent: #111111;
+  --color-secondary: #2b2b2b;
+  --color-secondary-foreground: #f5f5f5;
+  --color-muted: #2b2b2b;
+  --color-muted-foreground: #a3a3a3;
+  --color-accent: #363636;
   --color-accent-foreground: #ffffff;
   --color-destructive: #ef4444;
   --color-destructive-foreground: #ffffff;
-  --color-border: #313131;
-  --color-input: #f1f5f9;
-  --color-ring: #2b2b2b;
+  --color-border: #363636;
+  --color-input: #1c1c1c;
+  --color-ring: #525252;
   --color-chart-1: #111111;
   --color-chart-2: #8b5cf6;
   --color-chart-3: #06b6d4;
@@ -83,11 +82,11 @@
   --spacing: 0.25rem;
   /* 、、、 */
 
-  --color-atext-500: #111111;
-  --color-atext-460: #858585;
-  --color-atext-450: #464646;
+  --color-atext-500: #f5f5f5;
+  --color-atext-460: #a3a3a3;
+  --color-atext-450: #858585;
   --color-atext-400: #666666;
-  --color-atext-300: #bfbfbf;
+  --color-atext-300: #cccccc;
 }
 
 /* ===== Notion Comment Mini Typography ===== */
@@ -185,14 +184,16 @@
   font-size: 13px !important;
   margin: 4px 0 !important;
   padding-left: 8px !important;
-  color: #666 !important;
+  color: #a3a3a3 !important;
   line-height: 1.5 !important;
+  border-left: 2px solid #363636;
 }
 
 /* ===== code ===== */
 .notion-comment-editor .milkdown code {
   font-size: 12px !important;
-  background: #f5f5f5 !important;
+  background: #2b2b2b !important;
+  color: #f5f5f5 !important;
   padding: 2px 4px !important;
   border-radius: 4px !important;
   line-height: 1.5 !important;
@@ -212,7 +213,7 @@
 .notion-comment-editor .milkdown hr {
   margin: 6px 0 !important;
   border: none !important;
-  border-top: 1px solid #eee;
+  border-top: 1px solid #363636;
   line-height: 1.5 !important;
 }
 
@@ -231,7 +232,7 @@
 .notion-comment-editor .milkdown .placeholder::before,
 .notion-comment-editor .ProseMirror:empty::before {
   content: "Write a comment...";
-  color: #999 !important;
+  color: #6b7280 !important;
   font-size: 14px !important;
   pointer-events: none !important ;
   line-height: 1.5 !important;

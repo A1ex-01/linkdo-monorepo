@@ -129,7 +129,7 @@ export function HomeWindowTitleBar() {
     >
       {/* Traffic Lights */}
       <div
-        className="flex h-full w-[280px] items-center gap-2 bg-white px-3"
+        className="bg-card flex h-full w-[280px] items-center gap-2 px-3"
         data-tauri-drag-region
       >
         {/* Close */}

@@ -144,7 +144,7 @@ export default function TaskCardItem({ item, ...props }: TaskCardItemProps) {
             <IconSquareCheck
               className={cn(
                 "hover:text-atext-400 size-full text-[#808080] transition-colors",
-                item.status === "done" ? "text-primary-500" : "",
+                item.status === "done" ? "text-[#7ba4e8]" : "",
               )}
             />
           </div>
@@ -172,7 +172,7 @@ export default function TaskCardItem({ item, ...props }: TaskCardItemProps) {
               }}
               onBlur={() => void commitTitle()}
               onClick={(e) => e.stopPropagation()}
-              className="bg-atext-500 h-6 w-full rounded-md px-2 text-sm text-white shadow-sm outline-none"
+              className="bg-background text-atext-500 h-6 w-full rounded-md px-2 text-sm shadow-sm outline-none"
             />
           ) : (
             item.title
@@ -380,7 +380,7 @@ function ScheduledDateChip({
           className={cn(
             "inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[11px] font-medium transition-colors",
             hasDate
-              ? "text-atext-460 bg-atext-500 border-[#363636]"
+              ? "text-atext-500 border-[#363636] bg-[#363636]"
               : "text-atext-460 border-[#363636]",
           )}
         >
@@ -424,7 +424,7 @@ function ScheduledDateChip({
             type="button"
             size="sm"
             onClick={apply}
-            className="bg-atext-500 h-7 rounded-md px-3 text-[11px] text-white"
+            className="bg-primary h-7 rounded-md px-3 text-[11px] text-white"
           >
             Save
           </Button>
@@ -476,8 +476,10 @@ export function CardSimpleItem({
   const { timerInfo } = useData();
   const wrapperRef = useRef<HTMLDivElement>(null);
   const isHover = useHover(wrapperRef);
-  const itemClassName = "cursor-pointer hover:text-[#1c283e]";
-  const mergedClassName = className ?? "bg-secondary text-[#1c283e]";
+  const itemClassName = "cursor-pointer text-atext-460 hover:text-atext-500";
+  const mergedClassName =
+    className ?? "bg-card text-atext-500 border border-[#363636]";
+
   return (
     <div
       ref={wrapperRef}
@@ -488,7 +490,7 @@ export function CardSimpleItem({
 
         <StopWatch
           seconds={timerInfo?.duration ?? 0}
-          color="#f0f7ff"
+          color="#2b2b2b"
           fontSize={16}
           onTick={() => {}}
         />
@@ -505,7 +507,7 @@ export function CardSimpleItem({
       >
         <div
           data-tauri-drag-region
-          className="actions ml-auto flex size-full items-center justify-center gap-2 text-[#64748b]"
+          className="actions text-atext-460 ml-auto flex size-full items-center justify-center gap-2"
         >
           <div className={`${itemClassName} `} onClick={() => {}}>
             <IconDeviceGamepad2 className="size-5" />
@@ -540,8 +542,9 @@ export function CapsuleItem({
   const { timerInfo } = useData();
   const wrapperRef = useRef<HTMLDivElement>(null);
   const isHover = useHover(wrapperRef);
-  const itemClassName = "cursor-pointer hover:text-[#1c283e]";
-  const mergedClassName = className ?? "bg-secondary text-[#1c283e]";
+  const itemClassName = "cursor-pointer text-atext-460 hover:text-atext-500";
+  const mergedClassName =
+    className ?? "bg-card text-atext-500 border border-[#363636]";
   return (
     <div
       ref={wrapperRef}
@@ -551,7 +554,7 @@ export function CapsuleItem({
         <div className="truncate">{item.title}</div>
         <StopWatch
           seconds={timerInfo?.duration ?? 0}
-          color="#f0f7ff"
+          color="#2b2b2b"
           fontSize={16}
           onTick={() => {}}
         />
@@ -568,7 +571,7 @@ export function CapsuleItem({
       >
         <div
           data-tauri-drag-region
-          className="actions ml-auto flex size-full items-center justify-center gap-2 text-[#64748b]"
+          className="actions text-atext-460 ml-auto flex size-full items-center justify-center gap-2"
         >
           <div className={`${itemClassName} `} onClick={() => {}}>
             <IconDeviceGamepad2 className="size-5" />

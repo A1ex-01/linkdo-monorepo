@@ -23,8 +23,8 @@ export default function Sidebar({ onCreateCollection }: ISidebarProps) {
         className={cn(
           "flex items-center gap-3 rounded-xl px-4 py-2.5 text-sm font-medium transition-colors",
           !showArchived
-            ? "text-atext-500 bg-[#EEF2FF]"
-            : "text-[#988d9f] hover:bg-[#262626] hover:text-white",
+            ? "text-atext-500 bg-[#262626]"
+            : "text-atext-460 hover:bg-[#262626] hover:text-atext-500",
         )}
       >
         <IconGridScan className="text-atext-450 h-5 w-5" />

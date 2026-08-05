@@ -28,7 +28,7 @@ export function SidebarBoard({}: SidebarBoardProps) {
       <div className="flex h-full justify-center gap-6">
         <div
           className={cn(
-            "bg-card text-card-foreground relative flex h-full flex-1 flex-col overflow-hidden overflow-y-scroll rounded-2xl border border-[#e2e8f0] p-4 shadow-sm",
+            "bg-card text-card-foreground relative flex h-full flex-1 flex-col overflow-hidden overflow-y-scroll rounded-2xl border border-[#363636] p-4 shadow-sm",
           )}
         >
           <div
@@ -37,11 +37,13 @@ export function SidebarBoard({}: SidebarBoardProps) {
           >
             <div className="flex items-center gap-2">
               <span className="bg-primary size-2 rounded-full" />
-              <div className="text-xl font-bold text-[#1c283e]">{"Today"}</div>
+              <div className="text-card-foreground text-xl font-bold">
+                {"Today"}
+              </div>
             </div>
             <div className="actions">
               <IconHome
-                className="cursor-pointer text-[#64748b] transition-colors hover:text-[#1c283e]"
+                className="text-atext-460 cursor-pointer transition-colors hover:text-atext-500"
                 onClick={async () => {
                   exitSidebar();
                   if (timerInfo) {
