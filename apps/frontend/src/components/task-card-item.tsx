@@ -522,7 +522,7 @@ export function CardSimpleItem({
             <IconPlayerPlay className="size-5" />
           </div>
           <div className={`${itemClassName} `} onClick={() => {}}>
-            <IconCircleCheck className="text-primary-400 size-5" />
+            <IconCircleCheck className="text-[#6f98e8] size-5" />
           </div>
         </div>
       </motion.div>
@@ -586,7 +586,7 @@ export function CapsuleItem({
             <IconPlayerPlay className="size-5" />
           </div>
           <div className={`${itemClassName} `} onClick={() => {}}>
-            <IconCircleCheck className="text-primary-400 size-5" />
+            <IconCircleCheck className="text-[#6f98e8] size-5" />
           </div>
           <div
             className={`${itemClassName} `}
@@ -594,7 +594,7 @@ export function CapsuleItem({
               onAction("maximize");
             }}
           >
-            <IconMaximize className="text-primary-400 size-5" />
+            <IconMaximize className="text-[#6f98e8] size-5" />
           </div>
         </div>
       </motion.div>
