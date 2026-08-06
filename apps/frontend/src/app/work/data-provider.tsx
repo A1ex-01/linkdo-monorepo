@@ -43,6 +43,7 @@ interface IDataContext {
   exitCapsule: () => void;
   toNextTaskStatus: (task: ITask) => void;
   toPrevTaskStatus: (task: ITask) => void;
+  markAsDone: (task: ITask) => void;
   updateTaskTitle: (task: ITask, title: string) => Promise<boolean>;
   updateTaskContent: (task: ITask, content: string) => Promise<boolean>;
   updateTaskScheduledDate: (
@@ -165,6 +166,15 @@ export const DataProvider = ({ children }: DataProviderProps) => {
       getTasks();
     }
   };
+
+  const markAsDone = async (task: ITask) => {
+    console.log("🐽🐽 ~ data-provider.tsx ~ markAsDone ~ task:", task);
+    if (task.status === "done") return;
+    const res = await updateTaskStatus(task.uuid, "done");
+    if (res.success) {
+      getTasks();
+    }
+  };
   const toPrevTaskStatus = async (task: ITask) => {
     const prevStatusMap: Record<TaskStatus, TaskStatus> = {
       backlog: "backlog",
@@ -262,6 +272,7 @@ export const DataProvider = ({ children }: DataProviderProps) => {
         exitCapsule,
         toNextTaskStatus,
         toPrevTaskStatus,
+        markAsDone,
         updateTaskTitle,
         updateTaskContent,
         updateTaskScheduledDate,

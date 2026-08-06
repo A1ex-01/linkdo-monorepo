@@ -61,6 +61,7 @@ export default function TaskCardItem({
     collection,
     toNextTaskStatus,
     toPrevTaskStatus,
+    markAsDone,
     updateTaskTitle,
     updateTaskContent,
     updateTaskScheduledDate,
@@ -146,7 +147,10 @@ export default function TaskCardItem({
           }}
           className="shrink-0"
         >
-          <div className="size-4 cursor-pointer">
+          <div
+            className="size-4 cursor-pointer"
+            onClick={() => markAsDone(item)}
+          >
             <IconSquareCheck
               className={cn(
                 "hover:text-atext-400 size-full text-[#808080] transition-colors",
@@ -159,6 +163,7 @@ export default function TaskCardItem({
           className={cn(
             "min-w-0 flex-1 truncate",
             isHover && !isEditingTitle ? "cursor-text" : "",
+            isDone && "text-atext-460 line-through",
           )}
           onClick={startEditingTitle}
         >
@@ -216,11 +221,26 @@ export default function TaskCardItem({
                 onStartFocus(item);
               }}
               title="Start focus on this task"
-              className="text-[#7ba4e8] size-5 cursor-pointer rounded-md p-0.5 hover:bg-[#444444] hover:text-[#6f98e8]"
+              className="size-5 cursor-pointer rounded-md p-0.5 text-[#7ba4e8] hover:bg-[#444444] hover:text-[#6f98e8]"
             >
               <IconRocket className="size-full" />
             </div>
           )}
+          <div
+            className={cn(
+              "size-5 cursor-pointer rounded-md p-0.5 transition-colors",
+              isDone
+                ? "text-[#7ba4e8] hover:bg-[#444444]"
+                : "text-atext-460 hover:bg-[#444444] hover:text-white",
+            )}
+            onClick={(e) => {
+              e.stopPropagation();
+              markAsDone(item);
+            }}
+            title={isDone ? "Mark as not done" : "Mark as done"}
+          >
+            <IconCircleCheck className="size-full" />
+          </div>
           <div
             className="text-atext-460 size-5 cursor-pointer rounded-md p-0.5 hover:bg-[#444444] hover:text-white"
             onClick={() => {
@@ -496,6 +516,7 @@ export function CardSimpleItem({
   const { timerInfo } = useData();
   const wrapperRef = useRef<HTMLDivElement>(null);
   const isHover = useHover(wrapperRef);
+  const isDone = useMemo(() => item.status === "done", [item.status]);
   const itemClassName = "cursor-pointer text-atext-460 hover:text-atext-500";
   const mergedClassName =
     className ?? "bg-card text-atext-500 border border-[#363636]";
@@ -506,7 +527,11 @@ export function CardSimpleItem({
       className={`relative flex h-12 flex-col justify-center gap-2 overflow-hidden rounded-lg px-3 text-sm select-none ${mergedClassName}`}
     >
       <div className={cn("flex w-full items-center justify-between")}>
-        <div className="truncate">{item.title}</div>
+        <div
+          className={cn("truncate", isDone && "text-atext-460 line-through")}
+        >
+          {item.title}
+        </div>
 
         <StopWatch
           seconds={timerInfo?.duration ?? 0}
@@ -531,7 +556,7 @@ export function CardSimpleItem({
         >
           {onStartFocus && (
             <div
-              className="text-[#7ba4e8] cursor-pointer hover:text-[#6f98e8]"
+              className="cursor-pointer text-[#7ba4e8] hover:text-[#6f98e8]"
               onClick={(e) => {
                 e.stopPropagation();
                 onStartFocus(item);
@@ -554,7 +579,7 @@ export function CardSimpleItem({
             <IconPlayerPlay className="size-5" />
           </div>
           <div className={`${itemClassName} `} onClick={() => {}}>
-            <IconCircleCheck className="text-[#6f98e8] size-5" />
+            <IconCircleCheck className="size-5 text-[#6f98e8]" />
           </div>
         </div>
       </motion.div>
@@ -574,6 +599,7 @@ export function CapsuleItem({
   const { timerInfo } = useData();
   const wrapperRef = useRef<HTMLDivElement>(null);
   const isHover = useHover(wrapperRef);
+  const isDone = useMemo(() => item.status === "done", [item.status]);
   const itemClassName = "cursor-pointer text-atext-460 hover:text-atext-500";
   const mergedClassName =
     className ?? "bg-card text-atext-500 border border-[#363636]";
@@ -583,7 +609,11 @@ export function CapsuleItem({
       className={`relative flex h-12 flex-col justify-center gap-2 overflow-hidden rounded-lg px-3 text-sm select-none ${mergedClassName}`}
     >
       <div className={cn("flex w-full items-center justify-between")}>
-        <div className="truncate">{item.title}</div>
+        <div
+          className={cn("truncate", isDone && "text-atext-460 line-through")}
+        >
+          {item.title}
+        </div>
         <StopWatch
           seconds={timerInfo?.duration ?? 0}
           color="#2b2b2b"
@@ -618,7 +648,7 @@ export function CapsuleItem({
             <IconPlayerPlay className="size-5" />
           </div>
           <div className={`${itemClassName} `} onClick={() => {}}>
-            <IconCircleCheck className="text-[#6f98e8] size-5" />
+            <IconCircleCheck className="size-5 text-[#6f98e8]" />
           </div>
           <div
             className={`${itemClassName} `}
@@ -626,7 +656,7 @@ export function CapsuleItem({
               onAction("maximize");
             }}
           >
-            <IconMaximize className="text-[#6f98e8] size-5" />
+            <IconMaximize className="size-5 text-[#6f98e8]" />
           </div>
         </div>
       </motion.div>
