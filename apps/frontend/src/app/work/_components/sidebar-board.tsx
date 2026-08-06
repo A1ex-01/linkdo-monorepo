@@ -15,6 +15,7 @@ export function SidebarBoard({}: SidebarBoardProps) {
     exitSidebar,
     timerInfo,
     handleStopFocus,
+    handleSwitchFocus,
     getTasks,
     setViewMode,
     enterCapsule,
@@ -57,9 +58,17 @@ export function SidebarBoard({}: SidebarBoardProps) {
           <div className="mt-4 flex flex-1 flex-col gap-3 overflow-x-hidden overflow-y-auto">
             {todayTasks.map((task) =>
               task.uuid === timerInfo?.task_uuid ? (
-                <CardSimpleItem item={task} />
+                <CardSimpleItem
+                  key={task.uuid}
+                  item={task}
+                  onStartFocus={handleSwitchFocus}
+                />
               ) : (
-                <TaskCardItem item={task} key={task.uuid} />
+                <TaskCardItem
+                  item={task}
+                  key={task.uuid}
+                  onStartFocus={handleSwitchFocus}
+                />
               ),
             )}
           </div>

@@ -31,6 +31,7 @@ import {
   IconMaximize,
   IconMusicPause,
   IconPlayerPlay,
+  IconRocket,
   IconSquareCheck,
   IconTrash,
   IconX,
@@ -44,9 +45,14 @@ import { StopWatch } from "./timer";
 
 interface TaskCardItemProps extends React.HTMLAttributes<HTMLDivElement> {
   item: ITask;
+  onStartFocus?: (item: ITask) => void;
 }
 
-export default function TaskCardItem({ item, ...props }: TaskCardItemProps) {
+export default function TaskCardItem({
+  item,
+  onStartFocus,
+  ...props
+}: TaskCardItemProps) {
   const [showContentEditor, setShowContentEditor] = useState(false);
   const [markdownContent, setMarkdownContent] = useState("");
   const [isSavingContent, setIsSavingContent] = useState(false);
@@ -203,6 +209,18 @@ export default function TaskCardItem({ item, ...props }: TaskCardItemProps) {
           }
           transition={{ type: "spring", stiffness: 400, damping: 26 }}
         >
+          {onStartFocus && (
+            <div
+              onClick={(e) => {
+                e.stopPropagation();
+                onStartFocus(item);
+              }}
+              title="Start focus on this task"
+              className="text-[#7ba4e8] size-5 cursor-pointer rounded-md p-0.5 hover:bg-[#444444] hover:text-[#6f98e8]"
+            >
+              <IconRocket className="size-full" />
+            </div>
+          )}
           <div
             className="text-atext-460 size-5 cursor-pointer rounded-md p-0.5 hover:bg-[#444444] hover:text-white"
             onClick={() => {
@@ -469,9 +487,11 @@ function formatScheduledLabel(value?: string): string {
 export function CardSimpleItem({
   item,
   className,
+  onStartFocus,
 }: {
   item: ITask;
   className?: string;
+  onStartFocus?: (item: ITask) => void;
 }) {
   const { timerInfo } = useData();
   const wrapperRef = useRef<HTMLDivElement>(null);
@@ -509,6 +529,18 @@ export function CardSimpleItem({
           data-tauri-drag-region
           className="actions text-atext-460 ml-auto flex size-full items-center justify-center gap-2"
         >
+          {onStartFocus && (
+            <div
+              className="text-[#7ba4e8] cursor-pointer hover:text-[#6f98e8]"
+              onClick={(e) => {
+                e.stopPropagation();
+                onStartFocus(item);
+              }}
+              title="Switch focus to another task"
+            >
+              <IconRocket className="size-5" />
+            </div>
+          )}
           <div className={`${itemClassName} `} onClick={() => {}}>
             <IconDeviceGamepad2 className="size-5" />
           </div>

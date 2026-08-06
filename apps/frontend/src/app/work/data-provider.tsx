@@ -36,6 +36,7 @@ interface IDataContext {
   exitSidebar: () => void;
   handleStartFocus: (task: ITask) => void;
   handleStopFocus: () => Promise<void>;
+  handleSwitchFocus: (task: ITask) => Promise<void>;
   timerInfo: ITimeSession | undefined;
   setViewMode: (mode: "kanban" | "sidebar" | "capsule") => void;
   enterCapsule: () => void;
@@ -146,6 +147,12 @@ export const DataProvider = ({ children }: DataProviderProps) => {
     }
   };
 
+  const handleSwitchFocus = async (task: ITask) => {
+    if (timerInfo?.task_uuid === task.uuid) return;
+    await handleStopFocus();
+    await handleStartFocus(task);
+  };
+
   const toNextTaskStatus = async (task: ITask) => {
     const nextStatusMap: Record<TaskStatus, TaskStatus> = {
       backlog: "this_week",
@@ -250,6 +257,7 @@ export const DataProvider = ({ children }: DataProviderProps) => {
         handleStartFocus,
         timerInfo,
         handleStopFocus,
+        handleSwitchFocus,
         enterCapsule,
         exitCapsule,
         toNextTaskStatus,
