@@ -6,7 +6,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { cn } from "@/lib/utils";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 
@@ -67,7 +66,7 @@ export default function CreateCollectionModal({
       <DialogContent className="max-w-md rounded-2xl bg-[#1c1b1c] p-6 text-white">
         <DialogHeader className="mb-6 flex flex-row items-center justify-between">
           <DialogTitle className="text-lg font-bold text-white">
-            Create New List
+            新建列表
           </DialogTitle>
         </DialogHeader>
 
@@ -93,7 +92,7 @@ export default function CreateCollectionModal({
             )}
           </div>
 
-          <div>
+          {/* <div>
             <label className="mb-2 block text-sm font-medium text-[#cfc2d6]">
               Icon
             </label>
@@ -116,11 +115,11 @@ export default function CreateCollectionModal({
               ))}
             </div>
             <input type="hidden" {...register("icon", { required: true })} />
-          </div>
+          </div> */}
 
           <button
             type="submit"
-            className="mt-2 w-full cursor-pointer rounded-full border-none bg-gradient-to-r from-[#cc97ff] to-[#9c48ea] py-3 text-sm font-bold text-black transition-opacity hover:opacity-90"
+            className="mt-2 w-full cursor-pointer rounded-full border border-solid border-[#3a3a3a] bg-[#2b2b2b] py-3 text-sm font-bold text-black text-white transition-opacity hover:opacity-90"
           >
             Create List
           </button>

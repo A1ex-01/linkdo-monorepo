@@ -29,7 +29,7 @@ export function SidebarBoard({}: SidebarBoardProps) {
       <div className="flex h-full justify-center gap-6">
         <div
           className={cn(
-            "bg-card text-card-foreground relative flex h-full flex-1 flex-col overflow-hidden overflow-y-scroll rounded-2xl border border-[#363636] p-4 shadow-sm",
+            "text-card-foreground relative flex h-full flex-1 flex-col overflow-hidden overflow-y-scroll rounded-2xl border border-[#2a2a2a] bg-[#1d1d1d] p-5 shadow-sm",
           )}
         >
           <div
@@ -40,6 +40,9 @@ export function SidebarBoard({}: SidebarBoardProps) {
               <span className="bg-primary size-2 rounded-full" />
               <div className="text-card-foreground text-xl font-bold">
                 {"Today"}
+              </div>
+              <div className="text-atext-460 ml-1 text-xs font-normal">
+                {`${todayTasks.length} tasks`}
               </div>
             </div>
             <div className="actions">
@@ -55,7 +58,7 @@ export function SidebarBoard({}: SidebarBoardProps) {
               />
             </div>
           </div>
-          <div className="mt-4 flex flex-1 flex-col gap-3 overflow-x-hidden overflow-y-auto">
+          <div className="mt-5 flex flex-1 flex-col gap-4 overflow-x-hidden overflow-y-auto">
             {todayTasks.map((task) =>
               task.uuid === timerInfo?.task_uuid ? (
                 <CardSimpleItem
@@ -78,7 +81,7 @@ export function SidebarBoard({}: SidebarBoardProps) {
               setViewMode("capsule");
               enterCapsule();
             }}
-            className="bg-primary-400 hover:bg-primary-400/90 mt-2 rounded-full text-white shadow-sm"
+            className="bg-primary-400 hover:bg-primary-400/90 mt-4 rounded-full text-white shadow-sm"
           >
             Focus on task
           </Button>

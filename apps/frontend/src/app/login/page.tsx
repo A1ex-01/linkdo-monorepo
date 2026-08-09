@@ -6,6 +6,9 @@ import { authService } from "@/services/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   IconBrandNotion,
+  IconChartPie,
+  IconClock,
+  IconList,
   IconLock,
   IconMail,
   IconShieldCheck,
@@ -108,7 +111,7 @@ export default function LoginPage() {
 
   return (
     <div className="bg-background text-foreground m-0 flex h-full min-h-screen w-full items-center justify-center overflow-hidden p-0 font-sans antialiased">
-      <div className="absolute top-0 left-0 z-10 w-full overflow-hidden rounded-t-md">
+      <div className="bg-card absolute top-0 left-0 z-10 w-full overflow-hidden rounded-t-md">
         <WindowTitleBar />
       </div>
       {/* 主窗口容器 */}
@@ -116,14 +119,16 @@ export default function LoginPage() {
         {/* 主体布局 */}
         <div className="flex flex-1">
           {/* ================= 左侧面板 ================= */}
-          <div className="relative flex flex-1 flex-col justify-center overflow-hidden bg-gradient-to-br from-[#1f2937] via-[#1c283e] to-[#111827] p-20">
+          <div className="relative flex flex-1 flex-col justify-center overflow-hidden p-20">
             {/* --- 左侧内容区 --- */}
             <div className="relative z-20 flex h-full flex-col justify-center">
               {/* Logo */}
-              <div className="text-foreground mb-12 flex items-center gap-2.5 text-[20px] font-bold">
-                <div className="bg-primary text-foreground flex h-7 w-7 items-center justify-center rounded-md text-sm">
-                  &#x2713;
-                </div>
+              <div className="text-foreground mb-12 flex items-center gap-2.5 text-[24px] font-bold">
+                <img
+                  className="size-10 rounded-sm"
+                  src="/logo.png"
+                  alt="link-do"
+                />
                 LinkDo
               </div>
 
@@ -141,9 +146,7 @@ export default function LoginPage() {
               <div className="flex flex-col gap-6">
                 {/* 功能 1 */}
                 <div className="flex items-start gap-4">
-                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg border-2 border-[#9c48ea] bg-[#2a1f3a] text-[20px] text-[#cc97ff]">
-                    &#x1F551;
-                  </div>
+                  <IconClock className="text-foreground size-10" />
                   <div className="mt-0.5">
                     <h3 className="text-foreground m-0 text-[15px] font-semibold">
                       专注计时
@@ -156,9 +159,7 @@ export default function LoginPage() {
 
                 {/* 功能 2 */}
                 <div className="flex items-start gap-4">
-                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg border-2 border-[#6f98e8] bg-[#1f2a3f] text-[20px] text-[#6f98e8]">
-                    &#x2611;
-                  </div>
+                  <IconList className="text-foreground size-10" />
                   <div className="mt-0.5">
                     <h3 className="text-foreground m-0 text-[15px] font-semibold">
                       任务管理
@@ -171,9 +172,7 @@ export default function LoginPage() {
 
                 {/* 功能 3 */}
                 <div className="flex items-start gap-4">
-                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg border-2 border-green-500 bg-[#1f2937] text-[20px] text-green-500">
-                    &#x25D4;
-                  </div>
+                  <IconChartPie className="text-foreground size-10" />
                   <div className="mt-0.5">
                     <h3 className="text-foreground m-0 text-[15px] font-semibold">
                       数据洞察
@@ -187,7 +186,7 @@ export default function LoginPage() {
 
               {/* 轮播指示器 */}
               <div className="absolute bottom-10 left-0 flex gap-2">
-                <div className="bg-primary h-2 w-4 rounded-full"></div>
+                <div className="bg-foreground h-2 w-4 rounded-full"></div>
                 <div className="bg-muted-foreground/40 h-2 w-2 rounded-full"></div>
                 <div className="bg-muted-foreground/40 h-2 w-2 rounded-full"></div>
               </div>
@@ -199,7 +198,7 @@ export default function LoginPage() {
             {/* 登录卡片 */}
             <div className="w-[380px] text-center">
               <h2 className="text-foreground m-0 mb-2 text-[24px] font-bold">
-                登录到 <span className="text-[#6f98e8]">Blitzit</span>
+                登录到 <span className="text-blue-400">Blitzit</span>
               </h2>
               <p className="text-atext-460 mt-0 mb-8 text-[14px]">
                 {step === "email"
@@ -215,8 +214,8 @@ export default function LoginPage() {
                       <div
                         className={`bg-muted text-foreground flex items-center rounded-md border px-3 py-3 ${
                           emailForm.formState.errors.email
-                            ? "border-red-500"
-                            : "border-[#363636]"
+                            ? "border-destructive"
+                            : "border-border"
                         }`}
                       >
                         <IconMail className="text-atext-460 mr-3 h-5 w-5" />
@@ -228,7 +227,7 @@ export default function LoginPage() {
                         />
                       </div>
                       {emailForm.formState.errors.email && (
-                        <p className="mt-1 text-left text-[12px] text-red-500">
+                        <p className="text-destructive mt-1 text-left text-[12px]">
                           {emailForm.formState.errors.email.message}
                         </p>
                       )}
@@ -238,7 +237,7 @@ export default function LoginPage() {
                     <button
                       type="submit"
                       disabled={sendingCode}
-                      className="bg-primary text-foreground flex w-full cursor-pointer items-center justify-center gap-3 rounded-md py-3.5 text-[14px] font-semibold transition-colors duration-200 hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-50"
+                      className="bg-foreground text-background hover:bg-foreground/90 flex w-full cursor-pointer items-center justify-center gap-3 rounded-md py-3.5 text-[14px] font-semibold transition-colors duration-200 disabled:cursor-not-allowed disabled:opacity-50"
                     >
                       {sendingCode ? "发送中..." : "发送验证码"}
                     </button>
@@ -247,7 +246,7 @@ export default function LoginPage() {
                   {/* Notion 按钮 */}
                   <button
                     type="button"
-                    className="bg-muted text-foreground border-[#363636] hover:bg-accent mt-3 flex w-full cursor-pointer items-center justify-center gap-3 rounded-md border py-3.5 text-[14px] font-semibold transition-colors duration-200"
+                    className="bg-muted text-foreground border-border hover:bg-accent mt-3 flex w-full cursor-pointer items-center justify-center gap-3 rounded-md border py-3.5 text-[14px] font-semibold transition-colors duration-200"
                   >
                     <IconBrandNotion />
                     使用 Notion 继续
@@ -266,7 +265,7 @@ export default function LoginPage() {
                   <button
                     type="button"
                     onClick={handleBack}
-                    className="mb-4 text-[13px] text-[#6f98e8] hover:text-[#5a86d8]"
+                    className="mb-4 text-[13px] text-blue-400 hover:text-blue-300"
                   >
                     &larr; 返回重新输入邮箱
                   </button>
@@ -277,8 +276,8 @@ export default function LoginPage() {
                       <div
                         className={`bg-muted text-foreground flex items-center rounded-md border px-3 py-3 ${
                           codeForm.formState.errors.code
-                            ? "border-red-500"
-                            : "border-[#363636]"
+                            ? "border-destructive"
+                            : "border-border"
                         }`}
                       >
                         <IconLock className="text-atext-460 mr-3 h-5 w-5" />
@@ -294,7 +293,7 @@ export default function LoginPage() {
                         />
                       </div>
                       {codeForm.formState.errors.code && (
-                        <p className="mt-1 text-left text-[12px] text-red-500">
+                        <p className="text-destructive mt-1 text-left text-[12px]">
                           {codeForm.formState.errors.code.message}
                         </p>
                       )}
@@ -313,7 +312,7 @@ export default function LoginPage() {
                           })();
                         }}
                         disabled={countdown > 0 || sendingCode}
-                        className="text-[#6f98e8] hover:text-[#5a86d8] disabled:text-atext-460"
+                        className="disabled:text-atext-460 text-blue-400 hover:text-blue-300"
                       >
                         {countdown > 0
                           ? `${countdown}s 后可重新发送`
@@ -325,7 +324,7 @@ export default function LoginPage() {
                     <button
                       type="submit"
                       disabled={verifyingCode}
-                      className="bg-primary text-foreground flex w-full cursor-pointer items-center justify-center gap-3 rounded-md py-3.5 text-[14px] font-semibold transition-colors duration-200 hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-50"
+                      className="bg-foreground text-background hover:bg-foreground/90 flex w-full cursor-pointer items-center justify-center gap-3 rounded-md py-3.5 text-[14px] font-semibold transition-colors duration-200 disabled:cursor-not-allowed disabled:opacity-50"
                     >
                       {verifyingCode ? "验证中..." : "验证并登录"}
                     </button>
@@ -334,8 +333,8 @@ export default function LoginPage() {
               )}
 
               {/* 信息提示框 */}
-              <div className="border-[#6f98e8]/40 bg-muted mt-6 flex items-start gap-3 rounded-lg border p-4 text-left">
-                <IconShieldCheck className="text-primary h-4 w-4 shrink-0" />
+              <div className="bg-muted mt-6 flex items-start gap-3 rounded-lg border border-blue-400/40 p-4 text-left">
+                <IconShieldCheck className="mt-0.5 h-4 w-4 shrink-0 text-blue-400" />
                 <div className="flex-1">
                   <h4 className="text-foreground m-0 text-[13px] font-semibold">
                     我们不会访问你的 Notion 内容
@@ -351,7 +350,7 @@ export default function LoginPage() {
                 没有 Notion 账号？
                 <a
                   href="#"
-                  className="flex items-center font-semibold text-[#6f98e8] transition-colors hover:text-[#5a86d8]"
+                  className="flex items-center font-semibold text-blue-400 transition-colors hover:text-blue-300"
                 >
                   了解更多
                   <svg
@@ -376,14 +375,14 @@ export default function LoginPage() {
               继续即表示你同意
               <a
                 href="#"
-                className="px-1 text-[#6f98e8] transition-colors hover:text-[#5a86d8]"
+                className="px-1 text-blue-400 transition-colors hover:text-blue-300"
               >
                 服务条款
               </a>{" "}
               和
               <a
                 href="#"
-                className="px-1 text-[#6f98e8] transition-colors hover:text-[#5a86d8]"
+                className="px-1 text-blue-400 transition-colors hover:text-blue-300"
               >
                 隐私政策
               </a>

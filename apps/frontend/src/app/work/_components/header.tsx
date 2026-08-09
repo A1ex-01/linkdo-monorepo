@@ -5,18 +5,47 @@
 import { NotionDropdown } from "@/app/work/_components/notion-dropdown";
 import { useData } from "@/app/work/data-provider";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { TOKEN_KEY } from "@/config";
+import { logout } from "@/services/base";
 import { useUserStore } from "@/stores/user";
 import {
   IconChevronDown,
   IconChevronLeft,
-  IconSearch,
+  IconLogout,
 } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 
 export function WorkHeader() {
   const router = useRouter();
   const { collection } = useData();
-  const { user } = useUserStore();
+  const { user, clearUser } = useUserStore();
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+    } catch (err) {
+      // 出错也继续走本地退出流程
+      console.error("Logout request failed:", err);
+    } finally {
+      try {
+        localStorage.removeItem(TOKEN_KEY);
+      } catch {
+        // ignore
+      }
+      clearUser();
+      toast.success("Logged out");
+      router.replace("/login");
+    }
+  };
 
   return (
     <header
@@ -48,23 +77,47 @@ export function WorkHeader() {
         </div>
       </div>
 
-      {/* Right: Quick search + Notion + Avatar */}
+      {/* Right: Notion + Avatar dropdown */}
       <div className="flex items-center gap-3">
         <NotionDropdown className="w-full" />
 
-        <div className="text-atext-460 flex items-center gap-4 rounded-xs bg-[#181818] px-4 py-2">
-          <IconSearch />
-          <Avatar size="default" className="ring-1 ring-white/10">
-            <AvatarImage
-              src={user?.avatar_url}
-              className="size-9 object-cover"
-            />
-            <AvatarFallback className="bg-[#2f2f2f] text-xs text-white">
-              {user?.name?.slice(0, 2)?.toUpperCase() ?? "U"}
-            </AvatarFallback>
-          </Avatar>
-          <IconChevronDown className="-ml-3 size-4" />
-        </div>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild data-tauri-drag-region="false">
+            <button
+              type="button"
+              className="text-atext-460 flex cursor-pointer items-center gap-2 rounded-xs bg-[#181818] px-3 py-1.5 transition-colors hover:bg-[#222] focus-visible:outline-none"
+            >
+              <Avatar size="default" className="ring-1 ring-white/10">
+                <AvatarImage
+                  src={user?.avatar_url}
+                  className="size-9 object-cover"
+                />
+                <AvatarFallback className="bg-[#2f2f2f] text-xs text-white">
+                  {user?.name?.slice(0, 2)?.toUpperCase() ?? "U"}
+                </AvatarFallback>
+              </Avatar>
+              <IconChevronDown className="size-4" />
+            </button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="min-w-44">
+            {user?.name ? (
+              <>
+                <DropdownMenuLabel>{user.name}</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+              </>
+            ) : null}
+            <DropdownMenuItem
+              variant="destructive"
+              onSelect={async (e) => {
+                e.preventDefault();
+                await handleLogout();
+              }}
+            >
+              <IconLogout />
+              Log out
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
     </header>
   );

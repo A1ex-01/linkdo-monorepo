@@ -161,6 +161,9 @@ export default function page() {
                       onClick={() => {
                         router.push(`/work?uuid=${collection.uuid}`);
                       }}
+                      onDeleted={() => {
+                        refresh();
+                      }}
                     />
                   ))}
 

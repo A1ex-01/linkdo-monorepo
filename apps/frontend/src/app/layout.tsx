@@ -13,9 +13,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="h-screen">
+    <html lang="en" className="dark h-screen">
       <body
-        className={`${inter.className} text-pr flex h-screen flex-col overflow-hidden`}
+        className={`${inter.className} text-pr flex h-screen flex-col overflow-hidden bg-background`}
       >
         <Providers>
           <div className="bg-background flex-1 overflow-y-scroll">

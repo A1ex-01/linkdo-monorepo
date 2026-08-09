@@ -56,6 +56,7 @@ export default function TaskCardItem({
   const [showContentEditor, setShowContentEditor] = useState(false);
   const [markdownContent, setMarkdownContent] = useState("");
   const [isSavingContent, setIsSavingContent] = useState(false);
+  const [deleteConfirming, setDeleteConfirming] = useState(false);
   const wrapperRef = useRef<HTMLDivElement>(null);
   const {
     collection,
@@ -266,7 +267,11 @@ export default function TaskCardItem({
               <IconArrowRight className="size-full" />
             </div>
           )}
-          <DropdownMenu>
+          <DropdownMenu
+            onOpenChange={(open) => {
+              if (!open) setDeleteConfirming(false);
+            }}
+          >
             <DropdownMenuTrigger asChild>
               <button
                 type="button"
@@ -285,25 +290,55 @@ export default function TaskCardItem({
             >
               <DropdownMenuItem
                 disabled={!item.notion_page_id}
-                onSelect={() => void openTaskInNotion(item)}
+                onSelect={() => openTaskInNotion(item)}
                 className="gap-2 px-2 py-1.5 text-xs text-white"
               >
                 <IconExternalLink className="size-3.5" />
                 Open in Notion
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem
-                variant="destructive"
-                onSelect={() => {
-                  if (window.confirm("Delete this task?")) {
-                    void deleteTask(item);
-                  }
-                }}
-                className="gap-2 px-2 py-1.5 text-xs"
-              >
-                <IconTrash className="size-3.5" />
-                Delete
-              </DropdownMenuItem>
+              {deleteConfirming ? (
+                <div
+                  className="flex items-center gap-1 px-1 py-1"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <button
+                    type="button"
+                    autoFocus
+                    onClick={(e) => {
+                      e.preventDefault();
+                      deleteTask(item);
+                    }}
+                    className="bg-destructive text-destructive-foreground hover:bg-destructive/90 flex flex-1 cursor-pointer items-center justify-center gap-1.5 rounded-sm px-2 py-1 text-xs font-medium transition-colors"
+                  >
+                    <IconTrash className="size-3.5" />
+                    Confirm delete
+                  </button>
+                  <button
+                    type="button"
+                    aria-label="Cancel delete"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setDeleteConfirming(false);
+                    }}
+                    className="text-atext-460 hover:bg-accent hover:text-foreground flex size-7 shrink-0 cursor-pointer items-center justify-center rounded-sm transition-colors"
+                  >
+                    <IconX className="size-3.5" />
+                  </button>
+                </div>
+              ) : (
+                <DropdownMenuItem
+                  variant="destructive"
+                  onSelect={(e) => {
+                    e.preventDefault();
+                    setDeleteConfirming(true);
+                  }}
+                  className="gap-2 px-2 py-1.5 text-xs"
+                >
+                  <IconTrash className="size-3.5" />
+                  Delete
+                </DropdownMenuItem>
+              )}
             </DropdownMenuContent>
           </DropdownMenu>
         </motion.div>
@@ -323,7 +358,9 @@ export default function TaskCardItem({
                 updateTaskScheduledDate(item, next);
               }}
             />
-            <span className="text-atext-460">{item?.estimated_time}</span>
+            <span className="text-atext-460">
+              {formatEstimated(item.estimated_time)}
+            </span>
           </div>
         </div>
       )}

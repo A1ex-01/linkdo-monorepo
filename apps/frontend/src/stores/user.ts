@@ -9,6 +9,7 @@ interface IST {
   isFetchedUser: boolean;
   user: IUser | undefined;
   fetchUser: () => Promise<ApiResponse<MeResponse>>;
+  clearUser: () => void;
 }
 
 export const useUserStore = create<IST>((set) => ({
@@ -28,5 +29,9 @@ export const useUserStore = create<IST>((set) => ({
       set({ isFetchedUser: true });
     }
     return response;
+  },
+  clearUser: () => {
+    localStorage.removeItem(TOKEN_KEY);
+    set({ user: undefined, isFetchedUser: false });
   },
 }));
