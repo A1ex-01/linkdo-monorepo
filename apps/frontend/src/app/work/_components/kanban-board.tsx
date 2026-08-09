@@ -5,6 +5,7 @@ import { AddTask } from "@/components/add-task";
 import AIChat from "@/components/ai-chat";
 import TaskCardItem from "@/components/task-card-item";
 import { Button } from "@/components/ui/button";
+import { Progress } from "@/components/ui/progress";
 import { cn } from "@/lib/utils";
 import { updateTaskStatus } from "@/services/task";
 import type { TaskStatus } from "@/types/base";
@@ -96,12 +97,34 @@ export function KanbanBoard({}: KanbanBoardProps) {
       <div className="flex h-full flex-col gap-8">
         <div className="flex h-full justify-center gap-6">
           {COLUMNS.map((col) => {
-            const colTasks = groupedTasks[col.value];
+            const colTasks = groupedTasks[col.value] || [];
+
+            const completedTasks = colTasks.filter(
+              (task) => task.initial_status === "done",
+            ).length;
 
             return (
               <Droppable key={col.value} droppableId={col.value}>
                 {(provided: DroppableProvided, snapshot) => {
                   const isOver = snapshot.isDraggingOver && activeId !== null;
+
+                  const allTasks = tasks?.filter(
+                    (task) => task.initial_status === col.value,
+                  );
+
+                  const isDoneTasks = allTasks?.filter(
+                    (task) => task.status === "done",
+                  );
+
+                  const progress =
+                    isDoneTasks?.length && allTasks?.length
+                      ? (isDoneTasks?.length / allTasks?.length) * 100
+                      : 0;
+
+                  const showProgress =
+                    allTasks &&
+                    allTasks?.length > 0 &&
+                    !["backlog", "done"].includes(col.value);
 
                   return (
                     <div
@@ -127,6 +150,14 @@ export function KanbanBoard({}: KanbanBoardProps) {
                             <IconPlus className="size-5" />
                           </div>
                         </div>
+                        {showProgress && (
+                          <div className="text-atext-450 mt-2 flex w-full items-center gap-4 text-xs">
+                            <Progress className="h-2" value={progress} />
+                            <div className="shrink-0">
+                              {isDoneTasks?.length}/{allTasks?.length} Done
+                            </div>
+                          </div>
+                        )}
                         <div className="relative mt-4 flex flex-1 flex-col gap-3 overflow-x-hidden overflow-y-auto">
                           {colTasks?.map((task, index) => {
                             const isActive = activeId === task.uuid;

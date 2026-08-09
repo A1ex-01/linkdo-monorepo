@@ -18,6 +18,7 @@ export interface ITask {
   title: string;
   content: string;
   status: TaskStatus;
+  initial_status?: TaskStatus;
   notion_page_id?: string;
   notion_uuid?: string;
   estimated_time: number;
