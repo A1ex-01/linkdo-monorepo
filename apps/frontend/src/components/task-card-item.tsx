@@ -20,7 +20,6 @@ import { formatEstimated } from "@/utils/base";
 import {
   IconArrowLeft,
   IconArrowRight,
-  IconBrandNotion,
   IconCalendar,
   IconCalendarPlus,
   IconCircleCheck,
@@ -203,7 +202,11 @@ export default function TaskCardItem({
           <div className="flex aspect-square size-4.5 items-center justify-center rounded-sm bg-[#6f98e8] text-xs text-white">
             {collection?.name?.slice(0, 1)}
           </div>
-          <IconBrandNotion className="-ml-2" />
+          <img
+            src="/notion-brand-logo.svg"
+            alt="Notion"
+            className="-ml-1 size-4.5"
+          />
         </motion.div>
         <motion.div
           className="actions flex items-center gap-1"

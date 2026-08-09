@@ -94,7 +94,7 @@ export function NotionDropdown({ className }: IProps) {
           size={"icon"}
           className="border-border bg-card hover:bg-accent"
         >
-          <IconBrandNotion className="text-atext-500 size-5" />
+          <img src="/notion-brand-logo.svg" alt="Notion" className="size-5" />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent
@@ -115,10 +115,10 @@ export function NotionDropdown({ className }: IProps) {
             <IconUser className="text-atext-450 size-4" />
           </div>
           <div className="flex flex-col">
-            <span className="text-xs font-semibold text-popover-foreground">
+            <span className="text-popover-foreground text-xs font-semibold">
               {user?.notion_user_id ? user.name : "Not connected"}
             </span>
-            <span className="text-[10px] text-muted-foreground">
+            <span className="text-muted-foreground text-[10px]">
               {user ? "Notion account" : "Click to connect Notion"}
             </span>
           </div>
@@ -141,7 +141,7 @@ export function NotionDropdown({ className }: IProps) {
 
               await open(authUrl!); // 打开系统浏览器
             }}
-            className="mr-2 ml-auto flex cursor-pointer items-center gap-2 text-sm text-muted-foreground hover:text-popover-foreground"
+            className="text-muted-foreground hover:text-popover-foreground mr-2 ml-auto flex cursor-pointer items-center gap-2 text-sm"
           >
             <IconLink className="size-3" />
             {user?.notion_user_id ? "ReLink" : "Connect Notion"}
@@ -151,7 +151,7 @@ export function NotionDropdown({ className }: IProps) {
         <DropdownMenuSeparator />
 
         {/* Databases Section */}
-        <div className="flex items-center gap-1.5 py-2 text-[10px] font-medium tracking-wider text-muted-foreground uppercase">
+        <div className="text-muted-foreground flex items-center gap-1.5 py-2 text-[10px] font-medium tracking-wider uppercase">
           <IconDatabase />
           My Databases
           <div className="ml-auto">
@@ -173,7 +173,7 @@ export function NotionDropdown({ className }: IProps) {
                 <div className="bg-muted flex h-6 w-6 items-center justify-center rounded">
                   <IconBrandNotion className="text-atext-450 h-3.5 w-3.5" />
                 </div>
-                <span className="truncate text-sm text-popover-foreground">
+                <span className="text-popover-foreground truncate text-sm">
                   {db.name}
                 </span>
                 <div
@@ -185,7 +185,7 @@ export function NotionDropdown({ className }: IProps) {
                   }}
                   className="cursor-pointer"
                 >
-                  <IconExternalLink className="size-4 text-muted-foreground" />
+                  <IconExternalLink className="text-muted-foreground size-4" />
                 </div>
                 <div
                   onClick={(e) => {
@@ -197,7 +197,7 @@ export function NotionDropdown({ className }: IProps) {
                     e.stopPropagation();
                   }}
                   className={cn(
-                    "ml-auto flex h-5 w-5 cursor-pointer items-center justify-center rounded text-muted-foreground transition-all hover:bg-accent hover:text-accent-foreground",
+                    "text-muted-foreground hover:bg-accent hover:text-accent-foreground ml-auto flex h-5 w-5 cursor-pointer items-center justify-center rounded transition-all",
                     showDetailItem?.uuid === db.uuid ? "rotate-90" : "",
                   )}
                 >
@@ -212,7 +212,7 @@ export function NotionDropdown({ className }: IProps) {
                     e.stopPropagation();
                   }}
                 >
-                  <div className="flex items-center gap-1 text-popover-foreground">
+                  <div className="text-popover-foreground flex items-center gap-1">
                     Status Mapping
                     <IconInfoCircle />
                   </div>
@@ -227,7 +227,7 @@ export function NotionDropdown({ className }: IProps) {
                         className="item flex w-full items-center"
                         key={item.value}
                       >
-                        <div className="label w-20 text-popover-foreground">
+                        <div className="label text-popover-foreground w-20">
                           {item.label}
                         </div>
                         <StatusOptionSelector
@@ -265,7 +265,7 @@ export function NotionDropdown({ className }: IProps) {
           ))
         ) : (
           <DropdownMenuItem disabled className="py-2">
-            <span className="text-xs text-muted-foreground">
+            <span className="text-muted-foreground text-xs">
               No synced databases
             </span>
           </DropdownMenuItem>
@@ -362,14 +362,14 @@ function UpdateDatabasesButton() {
           <div className="text-sm">
             <div className="flex items-center justify-between">
               <div className="text-popover-foreground">Select databases</div>
-              <div className="text-xs text-muted-foreground">
+              <div className="text-muted-foreground text-xs">
                 {user?.name ?? "-"}
               </div>
             </div>
             <div className="my-3 flex items-center justify-between">
               <div className="text-popover-foreground">Notion databases</div>
               <div
-                className="flex cursor-pointer items-center gap-1 text-xs text-muted-foreground hover:text-popover-foreground"
+                className="text-muted-foreground hover:text-popover-foreground flex cursor-pointer items-center gap-1 text-xs"
                 onClick={() => {
                   fetchNotionDatabases();
                 }}
@@ -389,7 +389,7 @@ function UpdateDatabasesButton() {
                     <Field orientation="horizontal" key={db.id}>
                       <FieldLabel
                         htmlFor={db.id}
-                        className="cursor-pointer font-normal text-popover-foreground"
+                        className="text-popover-foreground cursor-pointer font-normal"
                       >
                         {db.title}
                       </FieldLabel>
