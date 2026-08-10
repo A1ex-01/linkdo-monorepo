@@ -19,7 +19,7 @@ import {
   type DroppableProvided,
   type DropResult,
 } from "@hello-pangea/dnd";
-import { IconPlus } from "@tabler/icons-react";
+import { IconCircleCheck, IconPlus } from "@tabler/icons-react";
 import { useCallback, useState } from "react";
 
 const COLUMNS: Array<{
@@ -208,6 +208,12 @@ export function KanbanBoard({}: KanbanBoardProps) {
 
                           {provided.placeholder}
                           <AddTask status={col.value} />
+                          {colTasks?.length === 0 && (
+                            <div className="flex h-full w-full flex-col items-center justify-center gap-2 text-[#796186]">
+                              <IconCircleCheck className="size-10" />
+                              <div className="text-atext-460">All Clear</div>
+                            </div>
+                          )}
                           {col.isHighlighted && (
                             <Button
                               className="mt-auto rounded-full border border-[#3a3a3a] bg-[#2b2b2b] py-6! text-white"

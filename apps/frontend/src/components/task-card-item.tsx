@@ -548,10 +548,12 @@ export function CardSimpleItem({
   item,
   className,
   onStartFocus,
+  onComplete,
 }: {
   item: ITask;
   className?: string;
   onStartFocus?: (item: ITask) => void;
+  onComplete?: (item: ITask) => void;
 }) {
   const { timerInfo } = useData();
   const wrapperRef = useRef<HTMLDivElement>(null);
@@ -618,8 +620,20 @@ export function CardSimpleItem({
           <div className={`${itemClassName} `} onClick={() => {}}>
             <IconPlayerPlay className="size-5" />
           </div>
-          <div className={`${itemClassName} `} onClick={() => {}}>
-            <IconCircleCheck className="size-5 text-[#6f98e8]" />
+          <div
+            className={`${itemClassName} `}
+            onClick={() => {
+              if (isDone) return;
+              onComplete?.(item);
+            }}
+            title={isDone ? "Already done" : "Mark as done"}
+          >
+            <IconCircleCheck
+              className={cn(
+                "size-5 transition-colors",
+                isDone ? "text-atext-460" : "text-[#6f98e8]",
+              )}
+            />
           </div>
         </div>
       </motion.div>

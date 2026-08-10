@@ -34,7 +34,7 @@ interface IDataContext {
   handleToSideBar: () => void;
   enterSidebar: () => void;
   exitSidebar: () => void;
-  handleStartFocus: (task: ITask) => void;
+  handleStartFocus: (task: ITask) => Promise<void>;
   handleStopFocus: () => Promise<void>;
   handleSwitchFocus: (task: ITask) => Promise<void>;
   timerInfo: ITimeSession | undefined;
@@ -43,7 +43,7 @@ interface IDataContext {
   exitCapsule: () => void;
   toNextTaskStatus: (task: ITask) => void;
   toPrevTaskStatus: (task: ITask) => void;
-  markAsDone: (task: ITask) => void;
+  markAsDone: (task: ITask) => Promise<void>;
   updateTaskTitle: (task: ITask, title: string) => Promise<boolean>;
   updateTaskContent: (task: ITask, content: string) => Promise<boolean>;
   updateTaskScheduledDate: (
@@ -168,7 +168,6 @@ export const DataProvider = ({ children }: DataProviderProps) => {
   };
 
   const markAsDone = async (task: ITask) => {
-    console.log("🐽🐽 ~ data-provider.tsx ~ markAsDone ~ task:", task);
     if (task.status === "done") return;
     const res = await updateTaskStatus(task.uuid, "done");
     if (res.success) {
