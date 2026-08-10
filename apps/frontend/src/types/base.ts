@@ -67,3 +67,44 @@ export interface IUser {
   created_at: string;
   updated_at: string;
 }
+
+// ============================================================================
+// Reports
+// ============================================================================
+
+/**
+ * Query parameters shared by all reports endpoints.
+ * `start_date` / `end_date` are inclusive ISO date strings (YYYY-MM-DD).
+ */
+export interface IReportQuery {
+  collection_uuids?: string[];
+  start_date?: string;
+  end_date?: string;
+}
+
+export interface IReportSummary {
+  total_work_days: number;
+  completed_tasks: number;
+  total_tasks: number;
+  estimated_time_minutes: number;
+  actual_time_minutes: number;
+}
+
+export interface ICollectionBreakdown {
+  collection_uuid: string;
+  collection_name: string;
+  collection_icon?: string;
+  total: number;
+  completed: number;
+  in_progress: number;
+  backlog: number;
+  estimated_minutes: number;
+  actual_minutes: number;
+}
+
+export interface ITimelinePoint {
+  date: string; // YYYY-MM-DD
+  started_count: number;
+  completed_count: number;
+  focus_minutes: number;
+}
