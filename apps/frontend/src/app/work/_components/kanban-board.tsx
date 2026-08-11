@@ -7,7 +7,6 @@ import TaskCardItem from "@/components/task-card-item";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { cn } from "@/lib/utils";
-import { updateTaskStatus } from "@/services/task";
 import type { TaskStatus } from "@/types/base";
 import { toGroupedTasks } from "@/utils/base";
 import {
@@ -54,7 +53,8 @@ const DropZone = ({
 };
 
 export function KanbanBoard({}: KanbanBoardProps) {
-  const { tasks, enterSidebar, handleStartFocus, getTasks } = useData();
+  const { tasks, enterSidebar, handleStartFocus, moveTaskOptimistic } =
+    useData();
   const groupedTasks = toGroupedTasks(tasks);
 
   const [activeId, setActiveId] = useState<string | null>(null);
@@ -82,10 +82,34 @@ export function KanbanBoard({}: KanbanBoardProps) {
 
     const taskUuid = result.draggableId;
     const newStatus = destination.droppableId as TaskStatus;
-    const res = await updateTaskStatus(taskUuid, newStatus);
-    if (res.success) {
-      getTasks();
-    }
+
+    // Compute the ranks of the items immediately above and below the drop
+    // position in the destination column. Empty neighbours mean "no rank on
+    // that side yet" and the server will treat them as virtual bounds.
+    //
+    // hello-pangea/dnd gives us the index in the *post-move* list, so the
+    // item at destination.index in destinationTasks is the neighbour that
+    // sits *below* the drop position (or the task itself if it's still
+    // there). We skip the moving task itself when scanning so we get the
+    // real neighbours regardless of whether source and destination live in
+    // the same column.
+    const destinationTasks = groupedTasks[newStatus] || [];
+    const remaining = destinationTasks.filter((t) => t.uuid !== taskUuid);
+    const insertAt = Math.max(0, Math.min(destination.index, remaining.length));
+    const above = remaining[insertAt - 1];
+    const below = remaining[insertAt];
+    const prevRank = above?.sort_order ?? "";
+    const nextRank = below?.sort_order ?? "";
+
+    await moveTaskOptimistic({
+      taskUuid,
+      newStatus,
+      prevRank,
+      nextRank,
+      destinationIndex: destination.index,
+      sourceIndex: source.index,
+      sourceStatus: source.droppableId as TaskStatus,
+    });
   };
 
   return (
@@ -99,9 +123,6 @@ export function KanbanBoard({}: KanbanBoardProps) {
           {COLUMNS.map((col) => {
             const colTasks = groupedTasks[col.value] || [];
 
-            const completedTasks = colTasks.filter(
-              (task) => task.initial_status === "done",
-            ).length;
 
             return (
               <Droppable key={col.value} droppableId={col.value}>

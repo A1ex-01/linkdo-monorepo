@@ -92,31 +92,6 @@ export default function CreateCollectionModal({
             )}
           </div>
 
-          {/* <div>
-            <label className="mb-2 block text-sm font-medium text-[#cfc2d6]">
-              Icon
-            </label>
-            <div className="flex flex-wrap gap-2">
-              {EMOJI_OPTIONS.map((emoji) => (
-                <button
-                  key={emoji}
-                  type="button"
-                  onClick={() => setValue("icon", emoji)}
-                  className={cn(
-                    "flex h-10 w-10 items-center justify-center rounded-lg text-xl transition-colors",
-                    icon === emoji
-                      ? "bg-[#ddb7ff] text-black"
-                      : "bg-[#262626] text-white hover:bg-[#2a2a2b]",
-                  )}
-                  aria-pressed={icon === emoji}
-                >
-                  {emoji}
-                </button>
-              ))}
-            </div>
-            <input type="hidden" {...register("icon", { required: true })} />
-          </div> */}
-
           <button
             type="submit"
             className="mt-2 w-full cursor-pointer rounded-full border border-solid border-[#3a3a3a] bg-[#2b2b2b] py-3 text-sm font-bold text-black text-white transition-opacity hover:opacity-90"

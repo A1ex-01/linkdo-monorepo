@@ -35,10 +35,21 @@ export function updateTask(taskUuid: string, data: UpdateTaskDTO) {
 }
 
 export function updateTaskStatus(taskUuid: string, status: TaskStatus) {
-  return request<void>({
+  return request<{ sort_order?: string }>({
     url: `/api/tasks/${taskUuid}/status`,
     method: "patch",
     data: { status },
+  });
+}
+
+export function moveTask(
+  taskUuid: string,
+  data: { status: TaskStatus; prev_rank: string; next_rank: string },
+) {
+  return request<{ sort_order: string }>({
+    url: `/api/tasks/${taskUuid}/move`,
+    method: "patch",
+    data,
   });
 }
 

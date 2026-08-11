@@ -25,6 +25,7 @@ export interface ITask {
   actual_time: number;
   scheduled_date?: string;
   completed_at?: string;
+  sort_order?: string;
   created_at: string;
   updated_at: string;
 }
