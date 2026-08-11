@@ -72,7 +72,7 @@ export default function page() {
         <div className="left bg-card text-foreground w-[280px] px-4">
           <div className="flex flex-col items-start gap-4 pt-4">
             <div className="mb-1 flex items-center gap-2">
-              <IconCheck strokeWidth={4} />
+              <img src={"/logo.png"} className="size-10 rounded-md" />
               <span className="text-foreground text-2xl leading-tight font-extrabold">
                 LinkDo
               </span>
