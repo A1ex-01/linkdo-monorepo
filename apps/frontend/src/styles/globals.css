@@ -248,3 +248,19 @@
 .milkdown .milkdown-block:hover {
   background: transparent !important;
 }
+
+/* 组件保护类名 */
+
+/* text-shimmer-utility (equivalent to bg-[length:200%_100%] bg-clip-text text-transparent bg-[linear-gradient(110deg,var(--muted-foreground)_30%,var(--foreground)_50%,var(--muted-foreground)_70%)]) */
+.text-shimmer {
+  background-size: 200% 100%;
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  background-image: linear-gradient(
+    110deg,
+    var(--color-muted-foreground) 30%,
+    var(--color-foreground) 50%,
+    var(--color-muted-foreground) 70%
+  );
+}

@@ -1,15 +1,23 @@
 "use client";
 
 import { useData } from "@/app/work/data-provider";
-import {
-  confirmAgentPlan,
-  sendAgentMessage,
-  type PlanStep,
-} from "@/services/agent";
-import { IconAi, IconAiAgent, IconAiAgents, IconSend, IconX } from "@tabler/icons-react";
+import { confirmAgentPlan, type PlanStep } from "@/services/agent";
+import { IconAi, IconX } from "@tabler/icons-react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useCallback, useEffect, useRef, useState } from "react";
-import Markdown from "react-markdown";
+import { ReasoningText } from "../agents/loading-states/reasoning-text";
+import {
+  Message,
+  MessageAvatar,
+  MessageBubble,
+  MessageBubbleContent,
+  MessageContent,
+  MessageGroup,
+  MessageScroller,
+} from "../agents/message";
+import { PromptInput } from "../agents/prompt-input";
+import { ToolApproval, ToolApprovalStatus } from "../agents/tool-approval";
+import { Input } from "../ui/input";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -17,10 +25,13 @@ import Markdown from "react-markdown";
 
 type MessageRole = "user" | "assistant";
 
-interface Message {
+interface AIChatMessage {
   id: string;
   role: MessageRole;
   content: string;
+  loading?: boolean;
+  needConfirm?: boolean;
+  status?: ToolApprovalStatus;
 }
 
 interface ConfirmState {
@@ -43,7 +54,46 @@ function genId() {
 // ---------------------------------------------------------------------------
 
 export default function AIChat() {
-  const [messages, setMessages] = useState<Message[]>([]);
+  const [messages, setMessages] = useState<AIChatMessage[]>([
+    { id: genId(), role: "assistant", content: "你好，有什么可以帮您的吗？" },
+    { id: genId(), role: "user", content: "我需要帮助处理我的项目" },
+    {
+      id: genId(),
+      role: "assistant",
+      content: "好的，我可以协助您。您具体需要哪方面的帮助？",
+    },
+    { id: genId(), role: "user", content: "我需要帮助处理我的项目" },
+    { id: genId(), role: "assistant", content: "你好，有什么可以帮您的吗？" },
+    { id: genId(), role: "user", content: "我需要帮助处理我的项目" },
+    {
+      id: genId(),
+      role: "assistant",
+      content: "好的，我可以协助您。您具体需要哪方面的帮助？",
+    },
+    { id: genId(), role: "user", content: "我需要帮助处理我的项目" },
+    { id: genId(), role: "assistant", content: "你好，有什么可以帮您的吗？" },
+    { id: genId(), role: "user", content: "我需要帮助处理我的项目" },
+    {
+      id: genId(),
+      role: "assistant",
+      content: "好的，我可以协助您。您具体需要哪方面的帮助？",
+    },
+    { id: genId(), role: "user", content: "我需要帮助处理我的项目" },
+    {
+      id: genId(),
+      role: "assistant",
+      content: "",
+      needConfirm: true,
+      status: "pending",
+    },
+  ]);
+  const [confirmData, setConfirmData] = useState<{
+    uuid: string;
+    content: string;
+  }>({
+    uuid: "a-b-c",
+    content: "这是内容",
+  });
   const [input, setInput] = useState("");
   const { getTasks } = useData();
   const [streaming, setStreaming] = useState(false);
@@ -87,39 +137,39 @@ export default function AIChat() {
     setDraftText("");
     setConfirm(null);
 
-    await sendAgentMessage({
-      message: trimmed,
-      onConfirmRequired: (intent, summary, steps, sessionId) => {
-        setConfirm({ sessionId, intent, summary, steps });
-        setStreaming(false);
-      },
-      onExecuteStart: () => {
-        setDraftText("");
-      },
-      onText: (content) => {
-        setDraftText(content);
-      },
-      onDone: (message) => {
-        setMessages((prev) => [
-          ...prev,
-          { id: genId(), role: "assistant", content: message },
-        ]);
-        setDraftText("");
-        setStreaming(false);
-      },
-      onError: (code, message) => {
-        setMessages((prev) => [
-          ...prev,
-          {
-            id: genId(),
-            role: "assistant",
-            content: `错误 [${code}]: ${message}`,
-          },
-        ]);
-        setDraftText("");
-        setStreaming(false);
-      },
-    });
+    // await sendAgentMessage({
+    //   message: trimmed,
+    //   onConfirmRequired: (intent, summary, steps, sessionId) => {
+    //     setConfirm({ sessionId, intent, summary, steps });
+    //     setStreaming(false);
+    //   },
+    //   onExecuteStart: () => {
+    //     setDraftText("");
+    //   },
+    //   onText: (content) => {
+    //     setDraftText(content);
+    //   },
+    //   onDone: (message) => {
+    //     setMessages((prev) => [
+    //       ...prev,
+    //       { id: genId(), role: "assistant", content: message },
+    //     ]);
+    //     setDraftText("");
+    //     setStreaming(false);
+    //   },
+    //   onError: (code, message) => {
+    //     setMessages((prev) => [
+    //       ...prev,
+    //       {
+    //         id: genId(),
+    //         role: "assistant",
+    //         content: `错误 [${code}]: ${message}`,
+    //       },
+    //     ]);
+    //     setDraftText("");
+    //     setStreaming(false);
+    //   },
+    // });
   };
 
   // -------------------------------------------------------------------------
@@ -167,13 +217,6 @@ export default function AIChat() {
   // Render
   // -------------------------------------------------------------------------
 
-  const allMessages: Message[] = [
-    ...messages,
-    ...(draftText
-      ? [{ id: "__draft__", role: "assistant" as const, content: draftText }]
-      : []),
-  ];
-
   const toggleChat = useCallback(() => {
     setIsOpen((prev) => !prev);
   }, []);
@@ -208,7 +251,7 @@ export default function AIChat() {
             </div>
 
             {/* Message list */}
-            {allMessages.length === 0 ? (
+            {messages.length === 0 ? (
               <motion.div
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -231,99 +274,138 @@ export default function AIChat() {
               </motion.div>
             ) : (
               <div className="list flex-1 overflow-y-auto px-4 py-3">
-                <AnimatePresence initial={false}>
-                  {allMessages.map((msg) => (
-                    <motion.div
-                      key={msg.id}
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -10 }}
-                      transition={{ duration: 0.15 }}
-                      className={`mb-3 flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}
-                    >
-                      <div
-                        className={`max-w-[80%] rounded-2xl px-4 py-2 text-sm ${
-                          msg.role === "user"
-                            ? "bg-primary-500 text-white"
-                            : "bg-[#2a2830] text-[#e5e2e3]"
-                        } prose prose-invert prose-sm break-words`}
-                        style={{ wordBreak: "break-word" }}
-                      >
-                        <Markdown
-                          components={{
-                            a: ({ node, ...props }) => (
-                              <a
-                                {...props}
-                                className="text-blue-400 underline hover:text-blue-300"
-                              />
-                            ),
-                            code: ({
-                              node,
-                              inline,
-                              className,
-                              children,
-                              ...props
-                            }) =>
-                              inline ? (
-                                <code
-                                  {...props}
-                                  className="rounded bg-[#232136] px-1 py-0.5 text-[13px] text-[#e5e2e3]"
-                                >
-                                  {children}
-                                </code>
-                              ) : (
-                                <pre
-                                  {...props}
-                                  className="overflow-x-auto rounded-lg bg-[#232136] p-2 text-[13px] text-[#e5e2e3]"
-                                >
-                                  <code>{children}</code>
-                                </pre>
-                              ),
-                          }}
-                        >
-                          {msg.content}
-                        </Markdown>
-                      </div>
-                    </motion.div>
-                  ))}
-                </AnimatePresence>
-
-                {/* Confirm panel */}
-                {confirm && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="mb-3 flex justify-start"
-                  >
-                    <div className="max-w-[85%] rounded-2xl border border-[rgba(99,92,123,0.5)] bg-[#201f25] px-4 py-3">
-                      <p className="mb-2 text-xs font-semibold text-[#c7b9d7]">
-                        执行计划确认
-                      </p>
-                      <p className="mb-2 text-sm text-white">
-                        {confirm.summary}
-                      </p>
-                      <ol className="mb-3 list-inside list-decimal space-y-1 text-xs text-[#a8a3b3]">
-                        {confirm.steps.map((step) => (
-                          <li key={step.step}>{step.action}</li>
-                        ))}
-                      </ol>
-                      <div className="flex gap-2">
-                        <button
-                          onClick={handleConfirm}
-                          className="hover:bg-fun-600 bg-primary-500 rounded px-3 py-1.5 text-xs font-medium text-white transition"
-                        >
-                          确认执行
-                        </button>
-                        <button
-                          onClick={() => setConfirm(null)}
-                          className="rounded bg-[#2a2830] px-3 py-1.5 text-xs font-medium text-[#a8a3b3] transition hover:bg-[#35323d]"
-                        >
-                          取消
-                        </button>
-                      </div>
-                    </div>
-                  </motion.div>
-                )}
+                <MessageScroller
+                  navigation="rail"
+                  className="h-[520px]"
+                  viewportClassName="px-4 py-5"
+                  contentClassName="min-h-full"
+                >
+                  <MessageGroup spacing="default">
+                    {messages.map((msg) => {
+                      let content = null;
+                      if (msg?.loading) {
+                        content = (
+                          <div>
+                            <ReasoningText
+                              variant={"swap"}
+                              phrases={[
+                                "Thinking",
+                                "Reading the request",
+                                "Working through the details",
+                                "Preparing the answer",
+                              ]}
+                              className="text-sm"
+                            />
+                          </div>
+                        );
+                      }
+                      if (msg?.needConfirm) {
+                        content = (
+                          <div>
+                            <ToolApproval
+                              tool="是否执行该任务"
+                              title={
+                                msg?.status === "pending"
+                                  ? "是否执行该任务"
+                                  : "已执行"
+                              }
+                              description="是否执行该任务"
+                              status={msg?.status}
+                              open={true}
+                              onOpenChange={() => {}}
+                              parameters={[
+                                {
+                                  id: "uuid",
+                                  label: "UUID",
+                                  value: (
+                                    <Input
+                                      onChange={(e) =>
+                                        setConfirmData({
+                                          ...confirmData,
+                                          uuid: e.target.value,
+                                        })
+                                      }
+                                      disabled={msg?.status === "approved"}
+                                      defaultValue={confirmData?.uuid}
+                                    />
+                                  ),
+                                },
+                                {
+                                  id: "content",
+                                  label: "Content",
+                                  value: (
+                                    <Input
+                                      onChange={(e) =>
+                                        setConfirmData({
+                                          ...confirmData,
+                                          content: e.target.value,
+                                        })
+                                      }
+                                      disabled={msg?.status === "approved"}
+                                      defaultValue={confirmData?.content}
+                                    />
+                                  ),
+                                },
+                              ]}
+                              onApprove={() => {
+                                const lastMessage =
+                                  messages[messages.length - 1];
+                                setMessages((prev) => [
+                                  ...prev.slice(0, -1),
+                                  {
+                                    ...lastMessage,
+                                    status: "approved",
+                                  },
+                                  {
+                                    id: genId(),
+                                    role: "assistant",
+                                    content: `批准了 UUID: ${confirmData?.uuid}，内容: ${confirmData?.content}`,
+                                  },
+                                ]);
+                                // clearTimers();
+                                // setStatus("approving");
+                                // timers.current = [
+                                //   window.setTimeout(() => setStatus("approved"), 600),
+                                //   window.setTimeout(() => setStatus("running"), 1150),
+                                //   window.setTimeout(() => setStatus("complete"), 2200),
+                                // ];
+                              }}
+                              onDeny={() => {
+                                setMessages((prev) => [
+                                  ...prev,
+                                  {
+                                    id: genId(),
+                                    role: "assistant",
+                                    content: "拒绝成功",
+                                    status: "denied",
+                                  },
+                                ]);
+                              }}
+                            />
+                          </div>
+                        );
+                      }
+                      return (
+                        <Message key={msg?.id} from={msg?.role} animateIn>
+                          <MessageAvatar>
+                            {msg?.role === "user" ? "Ax" : "AI"}
+                          </MessageAvatar>
+                          <MessageContent>
+                            <MessageBubble
+                              variant={
+                                msg?.role === "user" ? "solid" : "outline"
+                              }
+                            >
+                              <MessageBubbleContent>
+                                {content || msg?.content}
+                              </MessageBubbleContent>
+                            </MessageBubble>
+                          </MessageContent>
+                        </Message>
+                      );
+                    })}
+                  </MessageGroup>
+                </MessageScroller>
 
                 {streaming && !draftText && !confirm && (
                   <motion.div
@@ -340,33 +422,16 @@ export default function AIChat() {
             )}
 
             {/* Input */}
-            <div className="border-t border-[rgba(77,67,84,0.13)] bg-[#151518] px-3 py-3">
-              <form
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  handleSend(input);
-                }}
-                className="flex items-center gap-2 rounded-xl border border-[rgba(99,92,123,0.36)] bg-[#18171b] px-3 py-[7px]"
-              >
-                <input
-                  ref={inputRef}
-                  name="message"
-                  type="text"
-                  placeholder="Enter your message"
-                  className="flex-1 border-none bg-transparent text-[15px] text-white outline-none placeholder:text-[rgba(229,226,227,0.43)] disabled:opacity-50"
-                  value={input}
-                  onChange={(e) => setInput(e.target.value)}
-                  disabled={streaming}
-                  autoComplete="off"
-                />
-                <button
-                  type="submit"
-                  className="rounded p-1.5 shadow-sm transition hover:bg-[rgba(255,255,255,0.1)] disabled:opacity-50"
-                  disabled={streaming || !input.trim()}
-                >
-                  <IconSend size={18} className="text-white" />
-                </button>
-              </form>
+            <div className="p-3">
+              <PromptInput
+                models={[]}
+                actions={[]}
+                defaultValue=""
+                loading={false}
+                onSubmit={handleSend}
+                onStop={() => {}}
+                onAction={(action) => {}}
+              />
             </div>
           </motion.div>
         )}
@@ -384,7 +449,7 @@ export default function AIChat() {
             whileTap={{ scale: 0.95 }}
             transition={{ type: "spring", stiffness: 400, damping: 25 }}
             onClick={toggleChat}
-            className="bg-[#7ba4e8] border border-accent hover:border-accent-hover fixed right-8 bottom-20 z-50 flex size-12 items-center justify-center rounded-full shadow-lg"
+            className="border-accent hover:border-accent-hover fixed right-8 bottom-20 z-50 flex size-12 items-center justify-center rounded-full border bg-[#7ba4e8] shadow-lg"
           >
             <IconAi size={32} className="text-white" />
           </motion.button>
