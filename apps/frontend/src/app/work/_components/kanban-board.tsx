@@ -179,7 +179,7 @@ export function KanbanBoard({}: KanbanBoardProps) {
                             </div>
                           </div>
                         )}
-                        <div className="relative mt-4 flex flex-1 flex-col gap-3 overflow-x-hidden overflow-y-auto">
+                        <div className="relative mt-4 scrollbar-none flex flex-1 flex-col gap-3 overflow-x-hidden overflow-y-auto">
                           {colTasks?.map((task, index) => {
                             const isActive = activeId === task.uuid;
                             const targetIndex = overIndex;
@@ -257,7 +257,7 @@ export function KanbanBoard({}: KanbanBoardProps) {
             );
           })}
         </div>
-        <AIChat />
+        {/* <AIChat /> */}
       </div>
     </DragDropContext>
   );

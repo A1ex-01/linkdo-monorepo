@@ -8,6 +8,7 @@ import {
   BarChart,
   CartesianGrid,
   Legend,
+  ReferenceLine,
   ResponsiveContainer,
   Tooltip,
   XAxis,
@@ -27,6 +28,7 @@ export function ReportTimelineChart({ data }: ReportTimelineChartProps) {
     const label = `${d.toLocaleString("en-US", { month: "short" })} ${d.getDate()}`;
     return {
       ...p,
+      total_count: p.started_count + p.completed_count,
       label,
     };
   });
@@ -111,6 +113,14 @@ export function ReportTimelineChart({ data }: ReportTimelineChartProps) {
               radius={[4, 4, 0, 0]}
               maxBarSize={28}
             />
+            <Bar
+              dataKey="total_count"
+              name="Total"
+              fill="#ffffff"
+              radius={[4, 4, 0, 0]}
+              maxBarSize={28}
+            />
+
           </BarChart>
         </ResponsiveContainer>
       </div>

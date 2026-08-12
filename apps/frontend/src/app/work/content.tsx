@@ -9,6 +9,7 @@ import { CapsuleBoard } from "./_components/capsule-board";
 import { KanbanBoard } from "./_components/kanban-board";
 import { SidebarBoard } from "./_components/sidebar-board";
 import { useData } from "./data-provider";
+import BottomNav from "@/components/bottom-nav";
 
 export default function Content() {
   const { viewMode } = useData();
@@ -36,7 +37,7 @@ export default function Content() {
           <CapsuleBoard />
         )}
       </main>
-      {/* {viewMode === "kanban" && <BottomNav />} */}
+      {viewMode === "kanban" && <BottomNav />}
     </div>
   );
 }

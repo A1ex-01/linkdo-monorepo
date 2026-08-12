@@ -5,7 +5,7 @@
 import { ReportCollectionTable } from "@/app/reports/_components/report-collection-table";
 import { ReportSummaryCards } from "@/app/reports/_components/report-summary-cards";
 import { ReportTimelineChart } from "@/app/reports/_components/report-timeline-chart";
-import { HomeWindowTitleBar } from "@/components/window-title-bar";
+import { HomeWindowTitleBar, WindowTitleBar } from "@/components/window-title-bar";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import {
@@ -121,6 +121,7 @@ export default function ReportsPage() {
       },
       { refreshDeps: [query] },
     );
+  console.log('🐽🐽 ~ page.tsx ~ ReportsPage ~ timeline:', timeline);
 
   const { data: breakdown, loading: breakdownLoading, refresh: refreshBreakdown } =
     useRequest(
@@ -150,7 +151,7 @@ export default function ReportsPage() {
 
   return (
     <div className="text-foreground flex h-screen flex-col bg-[#111111]">
-      <HomeWindowTitleBar />
+      <WindowTitleBar />
 
       {/* Header */}
       <div className="flex w-full items-center justify-between px-10 pt-6 pb-2">
@@ -158,13 +159,13 @@ export default function ReportsPage() {
           <button
             type="button"
             onClick={() => router.push("/home")}
-            className="text-atext-460 hover:text-atext-500 flex items-center gap-1 rounded-md px-2 py-1 text-sm font-semibold transition-colors"
+            className="text-atext-460 hover:text-atext-500 bg-transparent hover:bg-accent flex items-center gap-1 rounded-md px-2 py-1 text-sm font-semibold transition-colors"
           >
             <IconChevronLeft className="size-4" />
             BACK
           </button>
           <div>
-            <h1 className="text-atext-500 text-2xl font-extrabold tracking-tight">
+            <h1 className="text-atext-500 text-xl font-bold tracking-tight">
               Reports
             </h1>
             <p className="text-atext-460 mt-0.5 text-xs">
