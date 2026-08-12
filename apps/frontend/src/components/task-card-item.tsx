@@ -3,13 +3,6 @@ import { useData } from "@/app/work/data-provider";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import {
   Popover,
   PopoverContent,
   PopoverTrigger,
@@ -56,6 +49,8 @@ export default function TaskCardItem({
   const [markdownContent, setMarkdownContent] = useState("");
   const [isSavingContent, setIsSavingContent] = useState(false);
   const [deleteConfirming, setDeleteConfirming] = useState(false);
+  const [actionsMenuOpen, setActionsMenuOpen] = useState(false);
+  const actionsMenuRef = useRef<HTMLDivElement>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
   const {
     collection,
@@ -71,6 +66,12 @@ export default function TaskCardItem({
   const isHovered = useHover(wrapperRef);
   const isHover = useMemo(() => isHovered, [isHovered]);
   const isDone = useMemo(() => item.status === "done", [item.status]);
+
+  useEffect(() => {
+    if(!isHover){
+      setActionsMenuOpen(false)
+    }
+  }, [isHover])
 
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [titleDraft, setTitleDraft] = useState(item.title);
@@ -88,6 +89,29 @@ export default function TaskCardItem({
       setTitleDraft(item.title);
     }
   }, [item.title, isEditingTitle]);
+
+  useEffect(() => {
+    if (!actionsMenuOpen) return;
+    const onPointerDown = (e: MouseEvent) => {
+      const target = e.target as Node | null;
+      if (target && actionsMenuRef.current && !actionsMenuRef.current.contains(target)) {
+        setActionsMenuOpen(false);
+        setDeleteConfirming(false);
+      }
+    };
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setActionsMenuOpen(false);
+        setDeleteConfirming(false);
+      }
+    };
+    document.addEventListener("mousedown", onPointerDown);
+    document.addEventListener("keydown", onKeyDown);
+    return () => {
+      document.removeEventListener("mousedown", onPointerDown);
+      document.removeEventListener("keydown", onKeyDown);
+    };
+  }, [actionsMenuOpen]);
 
   const startEditingTitle = () => {
     if (!isHover) return;
@@ -270,80 +294,93 @@ export default function TaskCardItem({
               <IconArrowRight className="size-full" />
             </div>
           )}
-          <DropdownMenu
-            onOpenChange={(open) => {
-              if (!open) setDeleteConfirming(false);
-            }}
+          <div
+            ref={actionsMenuRef}
+            className="relative"
           >
-            <DropdownMenuTrigger asChild>
-              <button
-                type="button"
-                aria-label="Task actions"
-                onClick={(e) => e.stopPropagation()}
-                className="text-atext-460 flex size-5 cursor-pointer items-center justify-center rounded-md p-0.5"
-              >
-                <IconDotsVertical className="size-full" />
-              </button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent
-              align="end"
-              sideOffset={6}
-              className="w-44 p-1"
-              onClick={(e) => e.stopPropagation()}
+            <button
+              type="button"
+              aria-label="Task actions"
+              aria-haspopup="menu"
+              aria-expanded={actionsMenuOpen}
+              onClick={(e) => {
+                e.stopPropagation();
+                setActionsMenuOpen((prev) => {
+                  const next = !prev;
+                  if (!next) setDeleteConfirming(false);
+                  return next;
+                });
+              }}
+              className="text-atext-460 hover:bg-[#444444] flex size-5 cursor-pointer items-center justify-center rounded-md p-0.5"
             >
-              <DropdownMenuItem
-                disabled={!item.notion_page_id}
-                onSelect={() => openTaskInNotion(item)}
-                className="gap-2 px-2 py-1.5 text-xs text-white"
+              <IconDotsVertical className="size-full" />
+            </button>
+            {actionsMenuOpen && (
+              <div
+                role="menu"
+                onClick={(e) => e.stopPropagation()}
+                className="bg-popover text-popover-foreground ring-foreground/10 absolute right-full top-full z-50 mr-1.5 w-44 overflow-hidden rounded-lg p-1 shadow-md ring-1"
               >
-                <IconExternalLink className="size-3.5" />
-                Open in Notion
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              {deleteConfirming ? (
-                <div
-                  className="flex items-center gap-1 px-1 py-1"
-                  onClick={(e) => e.stopPropagation()}
+                <button
+                  type="button"
+                  role="menuitem"
+                  disabled={!item.notion_page_id}
+                  onClick={() => {
+                    setActionsMenuOpen(false);
+                    setDeleteConfirming(false);
+                    openTaskInNotion(item);
+                  }}
+                  className={cn(
+                    "hover:bg-accent  relative flex w-full cursor-pointer items-center gap-2 rounded-md px-2 py-1.5 text-xs text-white outline-hidden select-none disabled:pointer-events-none disabled:opacity-50",
+                  )}
                 >
+                  <IconExternalLink className="size-3.5" />
+                  Open in Notion
+                </button>
+                <div className="bg-border -mx-1 my-1 h-px" />
+                {deleteConfirming ? (
+                  <div
+                    className="flex items-center gap-1 px-1 py-1"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <button
+                      type="button"
+                      autoFocus
+                      onClick={(e) => {
+                        e.preventDefault();
+                        deleteTask(item);
+                      }}
+                      className="bg-destructive text-destructive-foreground hover:bg-destructive/90 flex flex-1 cursor-pointer items-center justify-center gap-1.5 rounded-sm px-2 py-1 text-xs font-medium transition-colors"
+                    >
+                      <IconTrash className="size-3.5" />
+                      Confirm delete
+                    </button>
+                    <button
+                      type="button"
+                      aria-label="Cancel delete"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        setDeleteConfirming(false);
+                      }}
+                      className="text-atext-460 hover:bg-accent hover:text-foreground flex size-7 shrink-0 cursor-pointer items-center justify-center rounded-sm transition-colors"
+                    >
+                      <IconX className="size-3.5" />
+                    </button>
+                  </div>
+                ) : (
                   <button
                     type="button"
-                    autoFocus
-                    onClick={(e) => {
-                      e.preventDefault();
-                      deleteTask(item);
-                    }}
-                    className="bg-destructive text-destructive-foreground hover:bg-destructive/90 flex flex-1 cursor-pointer items-center justify-center gap-1.5 rounded-sm px-2 py-1 text-xs font-medium transition-colors"
+                    role="menuitem"
+                    onClick={() => setDeleteConfirming(true)}
+                    className="text-destructive hover:bg-destructive/10 hover:text-destructive relative flex w-full cursor-pointer items-center gap-2 rounded-md px-2 py-1.5 text-xs outline-hidden select-none"
                   >
                     <IconTrash className="size-3.5" />
-                    Confirm delete
+                    Delete
                   </button>
-                  <button
-                    type="button"
-                    aria-label="Cancel delete"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      setDeleteConfirming(false);
-                    }}
-                    className="text-atext-460 hover:bg-accent hover:text-foreground flex size-7 shrink-0 cursor-pointer items-center justify-center rounded-sm transition-colors"
-                  >
-                    <IconX className="size-3.5" />
-                  </button>
-                </div>
-              ) : (
-                <DropdownMenuItem
-                  variant="destructive"
-                  onSelect={(e) => {
-                    e.preventDefault();
-                    setDeleteConfirming(true);
-                  }}
-                  className="gap-2 px-2 py-1.5 text-xs"
-                >
-                  <IconTrash className="size-3.5" />
-                  Delete
-                </DropdownMenuItem>
-              )}
-            </DropdownMenuContent>
-          </DropdownMenu>
+                )}
+              </div>
+            )}
+          </div>
         </motion.div>
       </div>
       {/* desc */}

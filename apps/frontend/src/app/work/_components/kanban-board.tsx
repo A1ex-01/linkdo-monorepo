@@ -46,7 +46,7 @@ const DropZone = ({
     <div
       className={cn(
         "absolute top-0 h-[72px] w-full shrink-0 rounded-lg border-2 border-dashed border-[#515151] transition-all",
-        isDraggingOver ? "border-[#6bff8f] bg-white opacity-100" : "opacity-60",
+        isDraggingOver ? "border-[#363636] bg-[#232323] opacity-100" : "opacity-60",
       )}
     />
   );
