@@ -6,7 +6,7 @@ import {
   sendAgentMessage,
   type PlanStep,
 } from "@/services/agent";
-import { IconSend, IconX } from "@tabler/icons-react";
+import { IconAi, IconAiAgent, IconAiAgents, IconSend, IconX } from "@tabler/icons-react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useCallback, useEffect, useRef, useState } from "react";
 import Markdown from "react-markdown";
@@ -48,7 +48,7 @@ export default function AIChat() {
   const { getTasks } = useData();
   const [streaming, setStreaming] = useState(false);
   const [confirm, setConfirm] = useState<ConfirmState | null>(null);
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(true);
   // accumulated text for the current streaming assistant message
   const [draftText, setDraftText] = useState("");
   const chatRef = useRef<HTMLDivElement>(null);
@@ -384,20 +384,9 @@ export default function AIChat() {
             whileTap={{ scale: 0.95 }}
             transition={{ type: "spring", stiffness: 400, damping: 25 }}
             onClick={toggleChat}
-            className="bg-primary-500 fixed right-4 bottom-4 z-50 flex h-14 w-14 items-center justify-center rounded-full shadow-lg"
+            className="bg-[#7ba4e8] border border-accent hover:border-accent-hover fixed right-8 bottom-20 z-50 flex size-12 items-center justify-center rounded-full shadow-lg"
           >
-            <svg
-              width="28"
-              height="28"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="white"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm3 13h-2v2a1 1 0 0 1-2 0v-2H9a1 1 0 0 1 0-2h2V9a1 1 0 0 1 2 0v2h2a1 1 0 0 1 0 2z" />
-            </svg>
+            <IconAi size={32} className="text-white" />
           </motion.button>
         )}
       </AnimatePresence>

@@ -257,7 +257,7 @@ export function KanbanBoard({}: KanbanBoardProps) {
             );
           })}
         </div>
-        {/* <AIChat /> */}
+        <AIChat />
       </div>
     </DragDropContext>
   );
