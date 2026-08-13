@@ -1,9 +1,0 @@
-# Environment variables (contains API keys)
-.env
-
-# Python
-__pycache__/
-*.py[cod]
-*.so
-.venv/
-*.egg-info/
