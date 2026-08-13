@@ -43,6 +43,10 @@ instance.interceptors.response.use(
     return res;
   },
   (error: AxiosError<ApiResponse<unknown>>) => {
+    if (error.response?.status === 401) {
+      localStorage.removeItem(TOKEN_KEY);
+      window.location.href = "/login";
+    }
     if (error.response?.data?.error) {
       toast.error(error.response.data.error);
     }
