@@ -2,11 +2,16 @@
 import { useData } from "@/app/work/data-provider";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
+import { Input } from "@/components/ui/input";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import {
+  toScheduledDateInput,
+  toScheduledDateRequest,
+} from "@/lib/scheduled-date";
 import { cn } from "@/lib/utils";
 import { ITask } from "@/types/base";
 import { formatEstimated } from "@/utils/base";
@@ -68,10 +73,10 @@ export default function TaskCardItem({
   const isDone = useMemo(() => item.status === "done", [item.status]);
 
   useEffect(() => {
-    if(!isHover){
-      setActionsMenuOpen(false)
+    if (!isHover) {
+      setActionsMenuOpen(false);
     }
-  }, [isHover])
+  }, [isHover]);
 
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [titleDraft, setTitleDraft] = useState(item.title);
@@ -94,7 +99,11 @@ export default function TaskCardItem({
     if (!actionsMenuOpen) return;
     const onPointerDown = (e: MouseEvent) => {
       const target = e.target as Node | null;
-      if (target && actionsMenuRef.current && !actionsMenuRef.current.contains(target)) {
+      if (
+        target &&
+        actionsMenuRef.current &&
+        !actionsMenuRef.current.contains(target)
+      ) {
         setActionsMenuOpen(false);
         setDeleteConfirming(false);
       }
@@ -294,10 +303,7 @@ export default function TaskCardItem({
               <IconArrowRight className="size-full" />
             </div>
           )}
-          <div
-            ref={actionsMenuRef}
-            className="relative"
-          >
+          <div ref={actionsMenuRef} className="relative">
             <button
               type="button"
               aria-label="Task actions"
@@ -311,7 +317,7 @@ export default function TaskCardItem({
                   return next;
                 });
               }}
-              className="text-atext-460 hover:bg-[#444444] flex size-5 cursor-pointer items-center justify-center rounded-md p-0.5"
+              className="text-atext-460 flex size-5 cursor-pointer items-center justify-center rounded-md p-0.5 hover:bg-[#444444]"
             >
               <IconDotsVertical className="size-full" />
             </button>
@@ -319,7 +325,7 @@ export default function TaskCardItem({
               <div
                 role="menu"
                 onClick={(e) => e.stopPropagation()}
-                className="bg-popover text-popover-foreground ring-foreground/10 absolute right-full top-full z-50 mr-1.5 w-44 overflow-hidden rounded-lg p-1 shadow-md ring-1"
+                className="bg-popover text-popover-foreground ring-foreground/10 absolute top-full right-full z-50 mr-1.5 w-44 overflow-hidden rounded-lg p-1 shadow-md ring-1"
               >
                 <button
                   type="button"
@@ -331,7 +337,7 @@ export default function TaskCardItem({
                     openTaskInNotion(item);
                   }}
                   className={cn(
-                    "hover:bg-accent  relative flex w-full cursor-pointer items-center gap-2 rounded-md px-2 py-1.5 text-xs text-white outline-hidden select-none disabled:pointer-events-none disabled:opacity-50",
+                    "hover:bg-accent relative flex w-full cursor-pointer items-center gap-2 rounded-md px-2 py-1.5 text-xs text-white outline-hidden select-none disabled:pointer-events-none disabled:opacity-50",
                   )}
                 >
                   <IconExternalLink className="size-3.5" />
@@ -457,21 +463,26 @@ function ScheduledDateChip({
   onChange: (next: string | null) => void;
 }) {
   const [open, setOpen] = useState(false);
-  const [draft, setDraft] = useState(toInputValue(value));
+  const [draft, setDraft] = useState(toScheduledDateInput(value));
 
   useEffect(() => {
     if (open) {
-      setDraft(toInputValue(value));
+      setDraft(toScheduledDateInput(value));
     }
   }, [open, value]);
 
   const display = formatScheduledLabel(value);
   const hasDate = Boolean(value);
-  const selectedDate = draft ? new Date(`${draft}T00:00:00`) : undefined;
+  const selectedDate = draft
+    ? new Date(`${draft.slice(0, 10)}T00:00:00`)
+    : undefined;
 
   const apply = () => {
-    const next = draft ? new Date(`${draft}T00:00:00`).toISOString() : null;
-    if (next === value) {
+    const next = draft ? toScheduledDateRequest(draft) : null;
+    const current = value
+      ? toScheduledDateRequest(toScheduledDateInput(value))
+      : null;
+    if (next === current) {
       setOpen(false);
       return;
     }
@@ -520,9 +531,22 @@ function ScheduledDateChip({
           selected={selectedDate}
           defaultMonth={selectedDate}
           onSelect={(date) => {
-            setDraft(date ? format(date, "yyyy-MM-dd") : "");
+            setDraft(
+              date
+                ? `${format(date, "yyyy-MM-dd")}T${draft.slice(11) || "00:00:00"}`
+                : "",
+            );
           }}
         />
+        <div className="px-3 pb-3">
+          <Input
+            type="datetime-local"
+            step="1"
+            value={draft}
+            onChange={(event) => setDraft(event.target.value)}
+            className="border border-[#363636] bg-[#1c1c1c] text-white"
+          />
+        </div>
         <div className="flex items-center justify-between gap-2 px-3 pb-3">
           <Button
             type="button"
@@ -547,16 +571,6 @@ function ScheduledDateChip({
       </PopoverContent>
     </Popover>
   );
-}
-
-function toInputValue(value?: string): string {
-  if (!value) return "";
-  const d = new Date(value);
-  if (Number.isNaN(d.getTime())) return "";
-  const yyyy = d.getFullYear();
-  const mm = String(d.getMonth() + 1).padStart(2, "0");
-  const dd = String(d.getDate()).padStart(2, "0");
-  return `${yyyy}-${mm}-${dd}`;
 }
 
 function formatScheduledLabel(value?: string): string {

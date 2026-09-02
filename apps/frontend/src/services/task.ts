@@ -8,6 +8,7 @@ export interface CreateTaskDTO {
   estimated_time?: number;
   notion_database_uuid?: string;
   status?: TaskStatus;
+  /** Local datetime in `YYYY-MM-DD HH:mm:ss` format. */
   scheduled_date?: string;
 }
 
@@ -15,6 +16,7 @@ export interface UpdateTaskDTO {
   title?: string;
   content?: string;
   estimated_time?: number;
+  /** Local datetime in `YYYY-MM-DD HH:mm:ss` format, or null to clear it. */
   scheduled_date?: string | null;
 }
 

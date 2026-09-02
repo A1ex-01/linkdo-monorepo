@@ -1,4 +1,5 @@
 import { useData } from "@/app/work/data-provider";
+import { toScheduledDateRequest } from "@/lib/scheduled-date";
 import { cn } from "@/lib/utils";
 import { createTask } from "@/services/task";
 import { useCommonStore } from "@/stores/common";
@@ -58,7 +59,7 @@ export function AddTask({ className, status }: IProps) {
         parseInt(data.estimated_time.split(":")[1]),
       status: status,
       scheduled_date: data.scheduled_date
-        ? new Date(`${data.scheduled_date}T00:00:00`).toISOString()
+        ? toScheduledDateRequest(data.scheduled_date)
         : undefined,
       content: "-",
     };
@@ -113,7 +114,7 @@ export function AddTask({ className, status }: IProps) {
                   control={control}
                   render={({ field }) => {
                     const selectedDate = field.value
-                      ? new Date(`${field.value}T00:00:00`)
+                      ? new Date(`${field.value.slice(0, 10)}T00:00:00`)
                       : undefined;
 
                     return (
@@ -143,10 +144,19 @@ export function AddTask({ className, status }: IProps) {
                             defaultMonth={selectedDate}
                             onSelect={(date) => {
                               field.onChange(
-                                date ? format(date, "yyyy-MM-dd") : "",
+                                date
+                                  ? `${format(date, "yyyy-MM-dd")}T${field.value.slice(11) || "00:00:00"}`
+                                  : "",
                               );
                               setIsDatePickerOpen(false);
                             }}
+                          />
+                          <Input
+                            type="datetime-local"
+                            step="1"
+                            value={field.value}
+                            onChange={field.onChange}
+                            className="mt-2 border border-[#363636] bg-[#1c1c1c] text-white"
                           />
                         </PopoverContent>
                       </Popover>
