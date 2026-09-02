@@ -1,8 +1,8 @@
 "use client";
 
 import { WindowTitleBar } from "@/components/window-title-bar";
-import { TOKEN_KEY } from "@/config";
 import { authService } from "@/services/auth";
+import { setToken } from "@/services/auth-session";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   IconBrandNotion,
@@ -75,7 +75,7 @@ export default function LoginPage() {
         code: codeToVerify,
       });
       if (res.success && res.data?.token) {
-        localStorage.setItem(TOKEN_KEY, res.data.token);
+        setToken(res.data.token);
         toast.success("登录成功");
         router.push("/home");
       }

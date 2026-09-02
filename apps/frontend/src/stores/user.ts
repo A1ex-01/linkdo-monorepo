@@ -1,8 +1,9 @@
 // frontend/src/stores/use-auth-store.ts
 
 import { TOKEN_KEY } from "@/config";
-import { ApiResponse, getMe, MeResponse } from "@/services/base";
-import { IUser } from "@/types/base";
+import { clearToken } from "@/services/auth-session";
+import { type ApiResponse, getMe, type MeResponse } from "@/services/base";
+import type { IUser } from "@/types/base";
 import { create } from "zustand";
 
 interface IST {
@@ -25,13 +26,13 @@ export const useUserStore = create<IST>((set) => ({
     if (response.success) {
       set({ user: response.data, isFetchedUser: true });
     } else {
-      localStorage.removeItem(TOKEN_KEY);
+      clearToken();
       set({ isFetchedUser: true });
     }
     return response;
   },
   clearUser: () => {
-    localStorage.removeItem(TOKEN_KEY);
+    clearToken();
     set({ user: undefined, isFetchedUser: false });
   },
 }));
