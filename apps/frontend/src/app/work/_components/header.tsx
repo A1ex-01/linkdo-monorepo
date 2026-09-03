@@ -3,6 +3,7 @@
 "use client";
 
 import { NotionDropdown } from "@/app/work/_components/notion-dropdown";
+import { TaskSearch } from "@/app/work/_components/task-search";
 import { useData } from "@/app/work/data-provider";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -72,6 +73,9 @@ export function WorkHeader() {
                 aria-label="Switch list"
                 className="group/collection flex items-center gap-1.5 rounded-md bg-[#181818] px-4 py-1 text-lg font-medium text-white transition-colors hover:bg-[#242424] focus-visible:ring-2 focus-visible:ring-white/30 focus-visible:outline-none"
               >
+                <span className="flex size-5 shrink-0 items-center justify-center rounded-md bg-[#6f98e8]/15 text-xs font-semibold text-[#8eaeef]">
+                  {collection.name.trim().charAt(0).toUpperCase()}
+                </span>
                 <span className="max-w-[28ch] truncate">{collection.name}</span>
                 <IconChevronDown className="size-4 text-[#858585] transition-transform group-data-[state=open]/collection:rotate-180" />
               </button>
@@ -83,6 +87,9 @@ export function WorkHeader() {
                   disabled={item.uuid === collection.uuid}
                   onSelect={() => router.replace(`/work?uuid=${item.uuid}`)}
                 >
+                  <span className="flex size-5 shrink-0 items-center justify-center rounded-md bg-[#6f98e8]/15 text-xs font-semibold text-[#8eaeef]">
+                    {item.name.trim().charAt(0).toUpperCase()}
+                  </span>
                   <span className="truncate">{item.name}</span>
                 </DropdownMenuItem>
               ))}
@@ -102,6 +109,7 @@ export function WorkHeader() {
       {/* Right: Notion + Avatar dropdown */}
       <div className="flex items-center gap-3">
         <NotionDropdown className="w-full" />
+        <TaskSearch />
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild data-tauri-drag-region="false">

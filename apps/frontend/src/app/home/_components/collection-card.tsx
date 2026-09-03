@@ -9,6 +9,7 @@ import { deleteCollection, getTasks } from "@/services/collection";
 import { ICollection, TaskStatus } from "@/types/base";
 import { formatEstimated } from "@/utils/base";
 import {
+  IconArrowUpRight,
   IconBrandNotion,
   IconDotsVertical,
   IconTrash,
@@ -59,9 +60,9 @@ export default function CollectionCard({
   return (
     <div
       onClick={onClick}
-      className="group bg-card flex h-[303px] cursor-pointer flex-col rounded-xl border border-[#363636] p-6 transition-all hover:border-[#525252]"
+      className="group bg-card relative flex h-[303px] cursor-pointer flex-col overflow-hidden rounded-xl border border-[#363636] p-6 transition-all hover:border-[#525252]"
     >
-      <div className="mb-6 flex items-start justify-between">
+      <div className="relative z-10 mb-6 flex items-start justify-between">
         <div className="flex items-center gap-3">
           <div className="flex size-8 items-center justify-center rounded-lg bg-[#363636]">
             <IconBrandNotion className="text-atext-500 h-5 w-5" />
@@ -110,7 +111,21 @@ export default function CollectionCard({
         ))}
       </div>
 
-      <div className="mt-4 flex items-center justify-between border-t border-[#363636] pt-4">
+      <div className="pointer-events-none absolute inset-0 flex items-center justify-center bg-[#141414]/70 opacity-0 backdrop-blur-[1px] transition-opacity duration-200 group-hover:opacity-100">
+        <button
+          type="button"
+          onClick={(event) => {
+            event.stopPropagation();
+            onClick();
+          }}
+          className="pointer-events-auto flex items-center gap-1.5 rounded-full border border-white/15 bg-[#252525] px-4 py-2 text-sm font-medium text-white shadow-lg transition-transform duration-200 hover:scale-[1.03] hover:bg-[#303030] focus-visible:ring-2 focus-visible:ring-white/40 focus-visible:outline-none"
+        >
+          Open
+          <IconArrowUpRight className="size-4" />
+        </button>
+      </div>
+
+      <div className="relative z-10 mt-4 flex items-center justify-between border-t border-[#363636] pt-4">
         <span className="text-atext-450 text-xs font-bold tracking-wide uppercase">
           {collection.pending_count} pending tasks
         </span>
