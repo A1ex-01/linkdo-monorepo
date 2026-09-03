@@ -306,6 +306,11 @@ export default function AIChat() {
   const [isOpen, setIsOpen] = useState(true);
   const chatRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const sessionIdRef = useRef(
+    typeof crypto !== "undefined" && "randomUUID" in crypto
+      ? crypto.randomUUID()
+      : genId(),
+  );
   const { getTasks } = useData();
 
   // Tracks running placeholders so the matching `end` event can replace them.
@@ -450,6 +455,7 @@ export default function AIChat() {
     try {
       await sendAgentMessage({
         message: trimmed,
+        sessionId: sessionIdRef.current,
         onEvent: handleEvent,
         onError: (code, message) => {
           append({
