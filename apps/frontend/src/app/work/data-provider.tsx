@@ -4,6 +4,7 @@
 import { useFocusModeTransition } from "@/hooks/use-focus-mode-transition";
 import {
   getCollection as getCollectionService,
+  getCollections as getCollectionsService,
   getTasks as getTasksService,
 } from "@/services/collection";
 import {
@@ -29,6 +30,7 @@ import toast from "react-hot-toast";
 
 interface IDataContext {
   collection?: ICollection;
+  collections: ICollection[];
   getCollection: (collectionUuid: string) => Promise<ICollection | undefined>;
   tasks?: ITask[];
   getTasks: () => Promise<ITask[]>;
@@ -172,9 +174,7 @@ export const DataProvider = ({ children }: DataProviderProps) => {
       const sourceCol = columnTasks(params.sourceStatus).filter(
         (t) => t.uuid !== params.taskUuid,
       );
-      const destCol = sameColumn
-        ? sourceCol
-        : columnTasks(params.newStatus);
+      const destCol = sameColumn ? sourceCol : columnTasks(params.newStatus);
       const updatedMoving = { ...moving, status: params.newStatus };
       const insertIndex = Math.max(
         0,
@@ -256,6 +256,11 @@ export const DataProvider = ({ children }: DataProviderProps) => {
     },
   );
 
+  const { data: collections = [] } = useRequest(async () => {
+    const res = await getCollectionsService();
+    return res.data ?? [];
+  });
+
   const handleToSideBar = useCallback(() => {
     setViewMode("sidebar");
     enterSidebar();
@@ -312,7 +317,10 @@ export const DataProvider = ({ children }: DataProviderProps) => {
       today: "done",
       done: "done",
     };
-    const res = await updateTaskStatusService(task.uuid, nextStatusMap[task.status]);
+    const res = await updateTaskStatusService(
+      task.uuid,
+      nextStatusMap[task.status],
+    );
     if (res.success) {
       getTasks();
     }
@@ -332,7 +340,10 @@ export const DataProvider = ({ children }: DataProviderProps) => {
       today: "this_week",
       done: "today",
     };
-    const res = await updateTaskStatusService(task.uuid, prevStatusMap[task.status]);
+    const res = await updateTaskStatusService(
+      task.uuid,
+      prevStatusMap[task.status],
+    );
     if (res.success) {
       getTasks();
     }
@@ -411,6 +422,7 @@ export const DataProvider = ({ children }: DataProviderProps) => {
         updateTaskStatusOptimistic,
         moveTaskOptimistic,
         collection,
+        collections,
         getCollection,
         viewMode,
         setViewMode,

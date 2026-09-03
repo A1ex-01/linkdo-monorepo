@@ -16,6 +16,7 @@ import {
 import { TOKEN_KEY } from "@/config";
 import { logout } from "@/services/base";
 import { useUserStore } from "@/stores/user";
+import { formatEstimated } from "@/utils/base";
 import {
   IconChevronDown,
   IconChevronLeft,
@@ -26,7 +27,7 @@ import toast from "react-hot-toast";
 
 export function WorkHeader() {
   const router = useRouter();
-  const { collection } = useData();
+  const { collection, collections } = useData();
   const { user, clearUser } = useUserStore();
 
   const handleLogout = async () => {
@@ -64,17 +65,38 @@ export function WorkHeader() {
         </button>
 
         {collection?.name ? (
-          <button
-            type="button"
-            className="group/collection flex items-center gap-1.5 rounded-md bg-[#181818] px-4 py-1 text-lg font-medium text-white transition-colors"
-          >
-            <span className="max-w-[28ch] truncate">{collection.name}</span>
-            <IconChevronDown className="size-4 text-[#858585] transition-transform group-hover/collection:rotate-180" />
-          </button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild data-tauri-drag-region="false">
+              <button
+                type="button"
+                aria-label="Switch list"
+                className="group/collection flex items-center gap-1.5 rounded-md bg-[#181818] px-4 py-1 text-lg font-medium text-white transition-colors hover:bg-[#242424] focus-visible:ring-2 focus-visible:ring-white/30 focus-visible:outline-none"
+              >
+                <span className="max-w-[28ch] truncate">{collection.name}</span>
+                <IconChevronDown className="size-4 text-[#858585] transition-transform group-data-[state=open]/collection:rotate-180" />
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="start" className="max-h-72 w-64">
+              {collections.map((item) => (
+                <DropdownMenuItem
+                  key={item.uuid}
+                  disabled={item.uuid === collection.uuid}
+                  onSelect={() => router.replace(`/work?uuid=${item.uuid}`)}
+                >
+                  <span className="truncate">{item.name}</span>
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
         ) : null}
-        <div className="text-atext-460 text-sm">
-          This list has 6 pending tasks, Est:1hr
-        </div>
+        {collection ? (
+          <div className="text-atext-460 text-sm">
+            This list has {collection.pending_count} pending tasks
+            {formatEstimated(collection.estimated_total)
+              ? `, Est: ${formatEstimated(collection.estimated_total)}`
+              : ""}
+          </div>
+        ) : null}
       </div>
 
       {/* Right: Notion + Avatar dropdown */}

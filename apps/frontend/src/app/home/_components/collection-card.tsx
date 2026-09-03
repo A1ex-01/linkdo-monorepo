@@ -4,15 +4,17 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { deleteCollection } from "@/services/collection";
-import { ICollection } from "@/types/base";
+import { getTaskPreview } from "@/lib/collection-tasks";
+import { deleteCollection, getTasks } from "@/services/collection";
+import { ICollection, TaskStatus } from "@/types/base";
 import { formatEstimated } from "@/utils/base";
 import {
   IconBrandNotion,
   IconDotsVertical,
   IconTrash,
 } from "@tabler/icons-react";
-import { useState } from "react";
+import { useRequest } from "ahooks";
+import { useMemo, useState } from "react";
 import toast from "react-hot-toast";
 
 interface ICollectionCardProps {
@@ -27,6 +29,11 @@ export default function CollectionCard({
 }: ICollectionCardProps) {
   const estimated = formatEstimated(collection.estimated_total);
   const [deleting, setDeleting] = useState(false);
+  const { data: tasks = [] } = useRequest(async () => {
+    const res = await getTasks(collection.uuid);
+    return res.data ?? [];
+  });
+  const taskPreview = useMemo(() => getTaskPreview(tasks), [tasks]);
 
   const handleDelete = async (e: Event) => {
     e.preventDefault();
@@ -86,8 +93,21 @@ export default function CollectionCard({
         </DropdownMenu>
       </div>
 
-      <div className="flex flex-1 flex-col items-center justify-center">
-        <p className="text-atext-400 text-sm">No tasks yet</p>
+      <div className="flex flex-1 flex-col justify-center gap-2 overflow-hidden">
+        {taskPreview.map((task) => (
+          <div key={task.uuid} className="flex items-center gap-2">
+            <span
+              className={`size-2 shrink-0 rounded-full ${STATUS_DOT_CLASS[task.status]}`}
+              aria-hidden
+            />
+            <span className="text-atext-400 truncate text-sm">
+              {task.title}
+            </span>
+            <span className="text-atext-460 ml-auto shrink-0 text-xs">
+              {STATUS_LABEL[task.status]}
+            </span>
+          </div>
+        ))}
       </div>
 
       <div className="mt-4 flex items-center justify-between border-t border-[#363636] pt-4">
@@ -103,3 +123,17 @@ export default function CollectionCard({
     </div>
   );
 }
+
+const STATUS_LABEL: Record<TaskStatus, string> = {
+  backlog: "Backlog",
+  this_week: "This week",
+  today: "Today",
+  done: "Done",
+};
+
+const STATUS_DOT_CLASS: Record<TaskStatus, string> = {
+  backlog: "bg-zinc-500",
+  this_week: "bg-blue-400",
+  today: "bg-amber-400",
+  done: "bg-emerald-400",
+};

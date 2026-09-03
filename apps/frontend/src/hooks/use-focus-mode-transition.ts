@@ -1,3 +1,4 @@
+import { setWindowTopmost } from "@/lib/window-topmost";
 import { invoke } from "@tauri-apps/api/core";
 import {
   getCurrentWindow,
@@ -155,6 +156,7 @@ export function useFocusModeTransition(): FocusModeTransitionReturn {
       return;
     }
 
+    await setWindowTopmost(true);
     await animateWindow(current, {
       targetX: screenFrame.x,
       targetY: screenFrame.y,
@@ -175,6 +177,7 @@ export function useFocusModeTransition(): FocusModeTransitionReturn {
       targetWidth: 343,
       targetHeight: DEFAULT_HEIGHT,
     });
+    await setWindowTopmost(false);
   }, [animateWindow, getCurrentBounds]);
 
   return {
