@@ -50,7 +50,7 @@ export function createNotionDatabase(data: CreateNotionDatabaseDTO) {
 export function getStatusMapping(notionDbUuid: string) {
   return request<{
     notion_options: string[];
-    mapping: Record<string, string[]>;
+    mapping: Record<string, string>;
   }>({
     url: `/api/notion-databases/${notionDbUuid}/status-mapping`,
     method: "get",

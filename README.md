@@ -148,6 +148,7 @@ cd services/backend && go run main.go
 | `REDIS_ADDR` | Redis 地址 |
 | `NOTION_CLIENT_ID` | Notion OAuth Client ID |
 | `NOTION_CLIENT_SECRET` | Notion OAuth Client Secret |
+| `NOTION_TOKEN_ENCRYPTION_KEY` | Base64 编码的 32 字节 AES-256-GCM 密钥；仅放在部署 Secret 中，使用 `openssl rand -base64 32` 生成 |
 | `JWT_SECRET` | JWT 签名密钥 |
 
 ### Admin — `apps/admin/`
