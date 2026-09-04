@@ -128,7 +128,12 @@ export function NotionDropdown({ className }: IProps) {
               await onUrl(async (url) => {
                 const urlObj = new URL(url);
                 const code = urlObj.searchParams.get("code");
-                const res = await exchangeCode(code!);
+                const state = urlObj.searchParams.get("state");
+                if (!code || !state) {
+                  toast.error("Notion authorization response is incomplete");
+                  return;
+                }
+                const res = await exchangeCode(code, state);
                 if (res.success) {
                   toast.success("Auth successfully");
                 } else {
