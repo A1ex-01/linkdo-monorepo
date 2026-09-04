@@ -479,10 +479,7 @@ function ScheduledDateChip({
 
   const apply = () => {
     const next = draft ? toScheduledDateRequest(draft) : null;
-    const current = value
-      ? toScheduledDateRequest(toScheduledDateInput(value))
-      : null;
-    if (next === current) {
+    if (draft === toScheduledDateInput(value)) {
       setOpen(false);
       return;
     }
