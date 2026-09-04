@@ -23,9 +23,7 @@ import {
 import { cn } from "@/lib/utils";
 import {
   createNotionDatabase,
-  exchangeCode,
   fetchStatusOptions,
-  getOAuthUrl,
   getStatusMapping,
   removeNotionDatabase,
   searchNotionDatabases,
@@ -34,7 +32,6 @@ import {
 import { useCommonStore } from "@/stores/common";
 import { useUserStore } from "@/stores/user";
 import { INotionDatabase } from "@/types/base";
-import { onUrl, start } from "@fabianlars/tauri-plugin-oauth";
 import {
   IconBrandNotion,
   IconChevronRight,
@@ -51,11 +48,12 @@ import { useRequest } from "ahooks";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useData } from "../data-provider";
+import { launchDesktopLinkOAuth } from "./link-oauth";
 interface IProps {
   className: string;
 }
 export function NotionDropdown({ className }: IProps) {
-  const { user } = useUserStore();
+  const { user, fetchUser } = useUserStore();
   const { currCollectionNotionDbs, isFetchingCurrCollectionNotionDbs } =
     useCommonStore();
   const [showDetailItem, setShowDetailItem] = useState<INotionDatabase>();
@@ -124,27 +122,11 @@ export function NotionDropdown({ className }: IProps) {
           </div>
           <div
             onClick={async () => {
-              const port = await start({ ports: [2222] });
-              await onUrl(async (url) => {
-                const urlObj = new URL(url);
-                const code = urlObj.searchParams.get("code");
-                const state = urlObj.searchParams.get("state");
-                if (!code || !state) {
-                  toast.error("Notion authorization response is incomplete");
-                  return;
-                }
-                const res = await exchangeCode(code, state);
-                if (res.success) {
-                  toast.success("Auth successfully");
-                } else {
-                  toast.error("Failed to auth");
-                }
-              });
-
-              const authUrlRes = await getOAuthUrl();
-              const authUrl = authUrlRes.data?.url;
-
-              await open(authUrl!); // 打开系统浏览器
+              try {
+                await launchDesktopLinkOAuth("notion", fetchUser);
+              } catch {
+                toast.error("Unable to open Notion authorization");
+              }
             }}
             className="text-muted-foreground hover:text-popover-foreground mr-2 ml-auto flex cursor-pointer items-center gap-2 text-sm"
           >

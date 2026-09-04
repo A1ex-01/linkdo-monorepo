@@ -2,6 +2,7 @@
 
 "use client";
 
+import { ClickUpConnectButton } from "@/app/work/_components/clickup-connect-button";
 import { NotionDropdown } from "@/app/work/_components/notion-dropdown";
 import { TaskSearch } from "@/app/work/_components/task-search";
 import { useData } from "@/app/work/data-provider";
@@ -106,9 +107,10 @@ export function WorkHeader() {
         ) : null}
       </div>
 
-      {/* Right: Notion + Avatar dropdown */}
+      {/* Right: Link providers + Avatar dropdown */}
       <div className="flex items-center gap-3">
         <NotionDropdown className="w-full" />
+        <ClickUpConnectButton />
         <TaskSearch />
 
         <DropdownMenu>

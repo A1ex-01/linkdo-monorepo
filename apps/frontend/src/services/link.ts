@@ -3,10 +3,17 @@ import { request } from "./base";
 export type LinkPlatform = "notion" | "clickup";
 
 export function getLinkOAuthUrl(platform: LinkPlatform) {
-  return request<{ url: string }>({ url: `/api/link/${platform}/url`, method: "get" });
+  return request<{ url: string }>({
+    url: `/api/link/${platform}/url`,
+    method: "get",
+  });
 }
 
-export function exchangeLinkCode(platform: LinkPlatform, code: string, state: string) {
+export function exchangeLinkCode(
+  platform: LinkPlatform,
+  code: string,
+  state: string,
+) {
   return request<void>({
     url: `/api/link/${platform}/callback`,
     method: "get",
