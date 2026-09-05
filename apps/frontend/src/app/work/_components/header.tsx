@@ -8,6 +8,7 @@ import { NotionDropdown } from "@/app/work/_components/notion-dropdown";
 import { TaskSearch } from "@/app/work/_components/task-search";
 import { useData } from "@/app/work/data-provider";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { AccountSettingsDialog } from "@/components/account-settings-dialog";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -18,20 +19,24 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { TOKEN_KEY } from "@/config";
 import { logout } from "@/services/base";
+import { resolveFilePath } from "@/services/file";
 import { useUserStore } from "@/stores/user";
 import { formatEstimated } from "@/utils/base";
 import {
   IconChevronDown,
   IconChevronLeft,
   IconLogout,
+  IconSettings,
 } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
+import { useState } from "react";
 
 export function WorkHeader() {
   const router = useRouter();
   const { collection, collections } = useData();
   const { user, clearUser } = useUserStore();
+  const [settingsOpen, setSettingsOpen] = useState(false);
 
   const handleLogout = async () => {
     try {
@@ -123,7 +128,7 @@ export function WorkHeader() {
             >
               <Avatar size="default" className="ring-1 ring-white/10">
                 <AvatarImage
-                  src={user?.avatar_url}
+                  src={resolveFilePath(user?.avatar_url)}
                   className="size-9 object-cover"
                 />
                 <AvatarFallback className="bg-[#2f2f2f] text-xs text-white">
@@ -141,6 +146,15 @@ export function WorkHeader() {
               </>
             ) : null}
             <DropdownMenuItem
+              onSelect={(event) => {
+                event.preventDefault();
+                setSettingsOpen(true);
+              }}
+            >
+              <IconSettings />
+              Account settings
+            </DropdownMenuItem>
+            <DropdownMenuItem
               variant="destructive"
               onSelect={async (e) => {
                 e.preventDefault();
@@ -153,6 +167,10 @@ export function WorkHeader() {
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
+      <AccountSettingsDialog
+        open={settingsOpen}
+        onOpenChange={setSettingsOpen}
+      />
     </header>
   );
 }

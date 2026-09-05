@@ -2,6 +2,7 @@ export interface ICollection {
   uuid: string;
   name: string;
   icon: string;
+  cover?: string;
   pending_count: number;
   estimated_total: number;
   is_archived: boolean;
@@ -79,6 +80,7 @@ export interface IUser {
   notion_user_id: string;
   clickup_connected: boolean;
   name: string;
+  email?: string;
   avatar_url?: string;
   created_at: string;
   updated_at: string;

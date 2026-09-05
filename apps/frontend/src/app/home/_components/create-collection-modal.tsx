@@ -8,18 +8,20 @@ import {
 } from "@/components/ui/dialog";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
+import { uploadImage } from "@/services/file";
 
 const EMOJI_OPTIONS = ["📋", "💼", "🏠", "📚", "🎯", "✨", "🔧", "📝"];
 
 interface ICreateModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (data: { name: string; icon: string }) => void;
+  onSubmit: (data: { name: string; icon: string; cover?: string }) => void;
 }
 
 interface FormValues {
   name: string;
   icon: string;
+  cover?: string;
 }
 
 export default function CreateCollectionModal({
@@ -51,7 +53,7 @@ export default function CreateCollectionModal({
 
   const onFormSubmit = (data: FormValues) => {
     if (!data.name.trim()) return;
-    onSubmit({ name: data.name.trim(), icon: data.icon });
+    onSubmit({ name: data.name.trim(), icon: data.icon, cover: data.cover });
     reset({ name: "", icon: "📋" });
     onClose();
   };
@@ -90,6 +92,26 @@ export default function CreateCollectionModal({
                 This field is required
               </span>
             )}
+          </div>
+          <div>
+            <label className="mb-2 block text-sm font-medium text-[#cfc2d6]">
+              Cover image
+            </label>
+            <input
+              type="file"
+              accept="image/png,image/jpeg,image/webp,image/gif"
+              className="block w-full text-sm text-[#cfc2d6] file:mr-3 file:rounded-md file:border-0 file:bg-[#363636] file:px-3 file:py-2 file:text-white"
+              onChange={async (event) => {
+                const file = event.target.files?.[0];
+                if (!file) return;
+                const result = await uploadImage(file, "collection-covers");
+                if (result.success && result.data?.path)
+                  setValue("cover", result.data.path);
+              }}
+            />
+            {watch("cover") ? (
+              <p className="mt-1 text-xs text-emerald-400">Cover uploaded</p>
+            ) : null}
           </div>
 
           <button

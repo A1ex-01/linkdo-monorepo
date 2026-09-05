@@ -20,6 +20,7 @@ export function getCollection(uuid: string) {
 export interface CreateCollectionDTO {
   name: string;
   icon?: string;
+  cover?: string;
 }
 
 export function createCollection(data: CreateCollectionDTO) {
@@ -33,6 +34,7 @@ export function createCollection(data: CreateCollectionDTO) {
 export interface UpdateCollectionDTO {
   name?: string;
   icon?: string;
+  cover?: string;
   archived?: boolean;
 }
 

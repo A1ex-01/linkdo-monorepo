@@ -7,7 +7,9 @@ import {
   AvatarImage,
 } from "@/components/ui/avatar";
 import { HomeWindowTitleBar } from "@/components/window-title-bar";
+import { AccountSettingsDialog } from "@/components/account-settings-dialog";
 import { createCollection, getCollections } from "@/services/collection";
+import { resolveFilePath } from "@/services/file";
 import { useUserStore } from "@/stores/user";
 import { getGreeting, getGreetingMessage } from "@/utils/base";
 import { IconCheck, IconPlus, IconStarFilled } from "@tabler/icons-react";
@@ -26,6 +28,7 @@ export default function page() {
   const router = useRouter();
   const { user } = useUserStore();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
   const {
     loading,
@@ -42,7 +45,7 @@ export default function page() {
   );
 
   const { runAsync: submitCreate } = useRequest(
-    async (data: { name: string; icon: string }) => {
+    async (data: { name: string; icon: string; cover?: string }) => {
       const res = await createCollection(data);
       return res;
     },
@@ -87,9 +90,7 @@ export default function page() {
                   Unlimited Monthly
                 </span>
               </div>
-              <span className="text-atext-460 text-sm">
-                无限制使用所有功能
-              </span>
+              <span className="text-atext-460 text-sm">无限制使用所有功能</span>
             </div>
           </div>
 
@@ -107,16 +108,23 @@ export default function page() {
             </div>
 
             <div className="flex items-center gap-6">
-              <Avatar>
-                <AvatarImage
-                  src={user?.avatar_url}
-                  className="size-10 object-cover"
-                />
-                <AvatarFallback className="bg-primary-500">
-                  {user?.name.slice(0, 2) ?? "U"}
-                </AvatarFallback>
-                <AvatarBadge className="bg-green-600" />
-              </Avatar>
+              <button
+                type="button"
+                aria-label="Open account settings"
+                onClick={() => setIsSettingsOpen(true)}
+                className="rounded-full focus-visible:ring-2 focus-visible:ring-white/60 focus-visible:outline-none"
+              >
+                <Avatar>
+                  <AvatarImage
+                    src={resolveFilePath(user?.avatar_url)}
+                    className="size-10 object-cover"
+                  />
+                  <AvatarFallback className="bg-primary-500">
+                    {user?.name.slice(0, 2) ?? "U"}
+                  </AvatarFallback>
+                  <AvatarBadge className="bg-green-600" />
+                </Avatar>
+              </button>
             </div>
           </header>
 
@@ -317,6 +325,10 @@ export default function page() {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onSubmit={handleSubmitCreate}
+      />
+      <AccountSettingsDialog
+        open={isSettingsOpen}
+        onOpenChange={setIsSettingsOpen}
       />
     </div>
   );

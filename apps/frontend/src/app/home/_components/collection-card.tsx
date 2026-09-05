@@ -6,6 +6,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { getTaskPreview } from "@/lib/collection-tasks";
 import { deleteCollection, getTasks } from "@/services/collection";
+import { resolveFilePath } from "@/services/file";
 import { ICollection, TaskStatus } from "@/types/base";
 import { formatEstimated } from "@/utils/base";
 import {
@@ -62,6 +63,13 @@ export default function CollectionCard({
       onClick={onClick}
       className="group bg-card relative flex h-[303px] cursor-pointer flex-col overflow-hidden rounded-xl border border-[#363636] p-6 transition-all hover:border-[#525252]"
     >
+      {collection.cover ? (
+        <img
+          src={resolveFilePath(collection.cover)}
+          alt=""
+          className="absolute inset-0 h-full w-full object-cover opacity-20"
+        />
+      ) : null}
       <div className="relative z-10 mb-6 flex items-start justify-between">
         <div className="flex items-center gap-3">
           <div className="flex size-8 items-center justify-center rounded-lg bg-[#363636]">

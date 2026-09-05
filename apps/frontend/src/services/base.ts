@@ -9,6 +9,7 @@ export interface MeResponse {
   notion_user_id: string;
   clickup_connected: boolean;
   name: string;
+  email?: string;
   avatar_url?: string;
   created_at: string;
   updated_at: string;
@@ -19,6 +20,10 @@ export function getMe(): Promise<ApiResponse<MeResponse>> {
     url: "/api/auth/me",
     method: "get",
   });
+}
+
+export function updateProfile(data: { name?: string; avatar_path?: string }) {
+  return request<MeResponse>({ url: "/api/auth/me", method: "patch", data });
 }
 
 export function logout(): Promise<ApiResponse<void>> {
