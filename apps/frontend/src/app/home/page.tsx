@@ -1,5 +1,7 @@
 "use client";
 
+import { AccountSettingsDialog } from "@/components/account-settings-dialog";
+import { LoadingScreen } from "@/components/motion/loading-screen";
 import {
   Avatar,
   AvatarBadge,
@@ -7,12 +9,11 @@ import {
   AvatarImage,
 } from "@/components/ui/avatar";
 import { HomeWindowTitleBar } from "@/components/window-title-bar";
-import { AccountSettingsDialog } from "@/components/account-settings-dialog";
 import { createCollection, getCollections } from "@/services/collection";
 import { resolveFilePath } from "@/services/file";
 import { useUserStore } from "@/stores/user";
 import { getGreeting, getGreetingMessage } from "@/utils/base";
-import { IconCheck, IconPlus, IconStarFilled } from "@tabler/icons-react";
+import { IconPlus, IconStarFilled } from "@tabler/icons-react";
 import { useRequest } from "ahooks";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -20,9 +21,6 @@ import toast from "react-hot-toast";
 import CollectionCard from "./_components/collection-card";
 import CreateCollectionModal from "./_components/create-collection-modal";
 import Sidebar from "./_components/sidebar";
-
-const AVATAR_URL =
-  "https://picx.zhimg.com/v2-0ad38053cbe09a5066b16c0a129fac10_xl.jpg?source=32738c0c&needBackground=1";
 
 export default function page() {
   const router = useRouter();
@@ -68,8 +66,30 @@ export default function page() {
     }
   };
 
+  const [isLoadingScreen, setIsLoadingScreen] = useState(true);
+
+  if (isLoadingScreen) {
+    return (
+      <LoadingScreen
+        icons={[
+          {
+            type: "linkdo",
+          },
+          {
+            type: "name",
+            value: "P",
+          },
+        ]}
+        loadId="home"
+        onComplete={() => {
+          setIsLoadingScreen(false);
+        }}
+      />
+    );
+  }
+
   return (
-    <div className="text-foreground flex min-h-screen flex-col bg-background">
+    <div className="text-foreground bg-background flex min-h-screen flex-col">
       <HomeWindowTitleBar />
       <div className="flex w-full flex-1">
         <div className="left bg-card text-foreground w-[280px] px-4">
@@ -83,7 +103,7 @@ export default function page() {
             <span className="text-atext-460 -mt-2 mb-2 text-[15px] font-medium">
               v1.0.0
             </span>
-            <div className="border-[#363636] bg-background flex w-full flex-col rounded-xl border px-4 py-3">
+            <div className="bg-background flex w-full flex-col rounded-xl border border-[#363636] px-4 py-3">
               <div className="mb-1 flex items-center gap-2">
                 <IconStarFilled size={18} className="text-atext-450" />
                 <span className="text-atext-450 text-base font-bold">
