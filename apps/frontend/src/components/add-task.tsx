@@ -1,4 +1,5 @@
 import { useData } from "@/app/work/data-provider";
+import { buildTaskLinkTargets, splitTaskLinkTarget } from "@/lib/link-targets";
 import { toScheduledDateRequest } from "@/lib/scheduled-date";
 import { cn } from "@/lib/utils";
 import { createTask } from "@/services/task";
@@ -6,7 +7,7 @@ import { useCommonStore } from "@/stores/common";
 import { TaskStatus } from "@/types/base";
 import { IconCalendar, IconPlus, IconX } from "@tabler/icons-react";
 import { format } from "date-fns";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { Button } from "./ui/button";
@@ -29,31 +30,52 @@ interface IProps {
 interface IAddTaskForm {
   title: string;
   estimated_time: string;
-  notion_database_uuid: string;
+  link_target: string;
   scheduled_date: string;
 }
 
 export function AddTask({ className, status }: IProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
-  const { currCollectionNotionDbs } = useCommonStore();
+  const { currCollectionNotionDbs, currCollectionClickUpLists } =
+    useCommonStore();
   const { collection, getTasks } = useData();
+  const linkTargets = useMemo(
+    () =>
+      buildTaskLinkTargets(currCollectionNotionDbs, currCollectionClickUpLists),
+    [currCollectionClickUpLists, currCollectionNotionDbs],
+  );
 
   const {
     register,
     handleSubmit,
     formState: { errors },
     control,
+    setValue,
+    watch,
   } = useForm<IAddTaskForm>({
     defaultValues: {
       estimated_time: "00:30",
-      notion_database_uuid: currCollectionNotionDbs[0]?.uuid || "",
+      link_target: "",
       scheduled_date: "",
     },
   });
+  const selectedTarget = watch("link_target");
+
+  useEffect(() => {
+    if (!selectedTarget && linkTargets[0]) {
+      setValue("link_target", linkTargets[0].value);
+    }
+  }, [linkTargets, selectedTarget, setValue]);
+
   const onSubmit: SubmitHandler<IAddTaskForm> = async (data) => {
+    const target = splitTaskLinkTarget(data.link_target);
+    if (!target) {
+      toast.error("Please select a Notion database or ClickUp list");
+      return;
+    }
     const params = {
-      ...data,
+      title: data.title,
       estimated_time:
         parseInt(data.estimated_time.split(":")[0]) * 60 +
         parseInt(data.estimated_time.split(":")[1]),
@@ -62,6 +84,9 @@ export function AddTask({ className, status }: IProps) {
         ? toScheduledDateRequest(data.scheduled_date)
         : undefined,
       content: "-",
+      notion_database_uuid:
+        target.platform === "notion" ? target.uuid : undefined,
+      clickup_list_uuid: target.platform === "clickup" ? target.uuid : undefined,
     };
     // 新建任务
     const res = await createTask(collection?.uuid ?? "", params);
@@ -172,8 +197,9 @@ export function AddTask({ className, status }: IProps) {
               )}
               <div className="mt-4 flex items-center gap-4">
                 <Controller
-                  name="notion_database_uuid"
+                  name="link_target"
                   control={control}
+                  rules={{ required: true }}
                   render={({ field, fieldState }) => (
                     <Field
                       orientation="responsive"
@@ -189,19 +215,22 @@ export function AddTask({ className, status }: IProps) {
                           aria-invalid={fieldState.invalid}
                           className="min-w-[120px] border border-[#363636] bg-[#1c1c1c] text-white data-[placeholder]:text-[#808080]"
                         >
-                          <SelectValue placeholder="Select" />
+                          <SelectValue placeholder="Select target" />
                         </SelectTrigger>
                         <SelectContent
                           position="item-aligned"
                           className="border-[#363636] bg-[#262626] text-white"
                         >
-                          {currCollectionNotionDbs.map((db) => (
+                          {linkTargets.map((target) => (
                             <SelectItem
-                              key={db.uuid}
-                              value={db.uuid}
+                              key={target.value}
+                              value={target.value}
                               className="text-white focus:bg-[#363636] focus:text-white"
                             >
-                              {db.name}
+                              {target.platform === "notion"
+                                ? "Notion"
+                                : "ClickUp"}{" "}
+                              / {target.label}
                             </SelectItem>
                           ))}
                         </SelectContent>

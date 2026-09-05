@@ -7,6 +7,7 @@ export interface CreateTaskDTO {
   title: string;
   estimated_time?: number;
   notion_database_uuid?: string;
+  clickup_list_uuid?: string;
   status?: TaskStatus;
   /** Local datetime in `YYYY-MM-DD HH:mm:ss` format. */
   scheduled_date?: string;

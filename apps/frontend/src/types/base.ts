@@ -7,6 +7,7 @@ export interface ICollection {
   estimated_total: number;
   is_archived: boolean;
   notion_databases?: INotionDatabase[];
+  clickup_lists?: IClickUpList[];
   created_at: string;
   updated_at: string;
 }
@@ -15,12 +16,14 @@ export interface ITask {
   uuid: string;
   collection_uuid: string;
   notion_database_uuid?: string;
+  clickup_list_uuid?: string;
   title: string;
   content: string;
   status: TaskStatus;
   initial_status?: TaskStatus;
   notion_page_id?: string;
   notion_uuid?: string;
+  clickup_task_id?: string;
   estimated_time: number;
   actual_time: number;
   scheduled_date?: string;
@@ -51,6 +54,19 @@ export interface INotionDatabase {
   updated_at: string;
   title: string;
   name: string;
+}
+
+export interface IClickUpList {
+  uuid: string;
+  collection_uuid: string;
+  workspace_id: string;
+  space_id: string;
+  folder_id?: string;
+  clickup_list_id: string;
+  name: string;
+  status_mapping?: Record<string, string>;
+  created_at: string;
+  updated_at: string;
 }
 
 export interface IStatusMapping {
