@@ -2,6 +2,7 @@
 
 "use client";
 
+import { AppsDropdown } from "@/app/work/_components/apps-dropdown";
 import { ClickUpDropdown } from "@/app/work/_components/clickup-dropdown";
 import { NotionDropdown } from "@/app/work/_components/notion-dropdown";
 import { TaskSearch } from "@/app/work/_components/task-search";
@@ -112,6 +113,7 @@ export function WorkHeader() {
         <NotionDropdown className="w-full" />
         <ClickUpDropdown />
         <TaskSearch />
+        <AppsDropdown />
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild data-tauri-drag-region="false">

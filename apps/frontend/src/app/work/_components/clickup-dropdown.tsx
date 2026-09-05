@@ -1,5 +1,6 @@
 "use client";
 
+import { AIconClickup } from "@/components/icons/base";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -88,9 +89,13 @@ export function ClickUpDropdown() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" size="sm">
-          <IconChecklist data-icon="inline-start" />
-          ClickUp
+        <Button
+          variant="outline"
+          size="icon"
+          aria-label="ClickUp settings"
+          className="border-border bg-card hover:bg-accent"
+        >
+          <AIconClickup />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent
@@ -293,7 +298,8 @@ function UpdateClickUpListsButton() {
   const [listId, setListId] = useState("");
 
   const selectedList = useMemo(
-    () => [...folderlessLists, ...folderLists].find((item) => item.id === listId),
+    () =>
+      [...folderlessLists, ...folderLists].find((item) => item.id === listId),
     [folderLists, folderlessLists, listId],
   );
 
@@ -343,7 +349,8 @@ function UpdateClickUpListsButton() {
   };
 
   const linkedListIds = useMemo(
-    () => new Set(currCollectionClickUpLists.map((item) => item.clickup_list_id)),
+    () =>
+      new Set(currCollectionClickUpLists.map((item) => item.clickup_list_id)),
     [currCollectionClickUpLists],
   );
 
@@ -365,7 +372,9 @@ function UpdateClickUpListsButton() {
         <DropdownMenuSubContent className="w-72 -translate-x-[168px] p-2">
           <div className="flex flex-col gap-3 text-sm">
             <div className="flex items-center justify-between">
-              <span className="text-popover-foreground">Select ClickUp List</span>
+              <span className="text-popover-foreground">
+                Select ClickUp List
+              </span>
               <button
                 type="button"
                 className="text-muted-foreground hover:text-popover-foreground flex cursor-pointer items-center gap-1 text-xs"

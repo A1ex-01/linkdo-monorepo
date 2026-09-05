@@ -69,7 +69,7 @@ interface IDataContext {
     scheduledDate: string | null,
   ) => Promise<boolean>;
   deleteTask: (task: ITask) => Promise<boolean>;
-  openTaskInNotion: (task: ITask) => Promise<void>;
+  openTaskInExternalApp: (task: ITask) => Promise<void>;
 }
 
 const DataContext = createContext<IDataContext | null>(null);
@@ -398,18 +398,26 @@ export const DataProvider = ({ children }: DataProviderProps) => {
     }
   };
 
-  const openTaskInNotion = async (task: ITask) => {
-    if (!task.notion_page_id) {
-      toast.error("This task is not linked to a Notion page");
+  const openTaskInExternalApp = async (task: ITask) => {
+    const destination = task.clickup_task_id
+      ? {
+          name: "ClickUp",
+          url: `https://app.clickup.com/t/${task.clickup_task_id}`,
+        }
+      : task.notion_page_id
+        ? {
+            name: "Notion",
+            url: `https://www.notion.so/${task.notion_page_id.replaceAll("-", "")}`,
+          }
+        : undefined;
+    if (!destination) {
+      toast.error("This task is not linked to an external app");
       return;
     }
-
     try {
-      await open(
-        `https://www.notion.so/${task.notion_page_id.replaceAll("-", "")}`,
-      );
+      await open(destination.url);
     } catch {
-      toast.error("Failed to open Notion page");
+      toast.error(`Failed to open ${destination.name} task`);
     }
   };
 
@@ -442,7 +450,7 @@ export const DataProvider = ({ children }: DataProviderProps) => {
         updateTaskContent,
         updateTaskScheduledDate,
         deleteTask,
-        openTaskInNotion,
+        openTaskInExternalApp,
       }}
     >
       {children}

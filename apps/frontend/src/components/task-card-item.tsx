@@ -38,6 +38,7 @@ import { format } from "date-fns";
 import { motion } from "framer-motion";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { AMarkdownEditor } from "./a-markdown-editor";
+import { AIconClickup } from "./icons/base";
 import { StopWatch } from "./timer";
 
 interface TaskCardItemProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -66,11 +67,16 @@ export default function TaskCardItem({
     updateTaskContent,
     updateTaskScheduledDate,
     deleteTask,
-    openTaskInNotion,
+    openTaskInExternalApp,
   } = useData();
   const isHovered = useHover(wrapperRef);
   const isHover = useMemo(() => isHovered, [isHovered]);
   const isDone = useMemo(() => item.status === "done", [item.status]);
+  const linkPlatform = item.clickup_task_id
+    ? "clickup"
+    : item.notion_page_id
+      ? "notion"
+      : undefined;
 
   useEffect(() => {
     if (!isHover) {
@@ -235,11 +241,18 @@ export default function TaskCardItem({
           <div className="flex aspect-square size-4.5 items-center justify-center rounded-sm bg-[#6f98e8] text-xs text-white">
             {collection?.name?.slice(0, 1)}
           </div>
-          <img
-            src="/notion-brand-logo.svg"
-            alt="Notion"
-            className="-ml-1 size-4.5"
-          />
+          {linkPlatform === "notion" ? (
+            <img
+              src="/notion-brand-logo.svg"
+              alt="Notion"
+              className="-ml-1 size-4.5"
+            />
+          ) : linkPlatform === "clickup" ? (
+            <AIconClickup
+              alt="ClickUp"
+              className="-ml-1 box-content size-4.5"
+            />
+          ) : null}
         </motion.div>
         <motion.div
           className="actions flex items-center gap-1"
@@ -330,18 +343,18 @@ export default function TaskCardItem({
                 <button
                   type="button"
                   role="menuitem"
-                  disabled={!item.notion_page_id}
+                  disabled={!linkPlatform}
                   onClick={() => {
                     setActionsMenuOpen(false);
                     setDeleteConfirming(false);
-                    openTaskInNotion(item);
+                    openTaskInExternalApp(item);
                   }}
                   className={cn(
                     "hover:bg-accent relative flex w-full cursor-pointer items-center gap-2 rounded-md px-2 py-1.5 text-xs text-white outline-hidden select-none disabled:pointer-events-none disabled:opacity-50",
                   )}
                 >
                   <IconExternalLink className="size-3.5" />
-                  Open in Notion
+                  Open in {linkPlatform === "clickup" ? "ClickUp" : "Notion"}
                 </button>
                 <div className="bg-border -mx-1 my-1 h-px" />
                 {deleteConfirming ? (

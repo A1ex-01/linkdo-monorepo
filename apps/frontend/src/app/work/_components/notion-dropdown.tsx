@@ -1,3 +1,4 @@
+import { AIconNotion } from "@/components/icons/base";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
@@ -92,7 +93,7 @@ export function NotionDropdown({ className }: IProps) {
           size={"icon"}
           className="border-border bg-card hover:bg-accent"
         >
-          <img src="/notion-brand-logo.svg" alt="Notion" className="size-5" />
+          <AIconNotion alt="Notion" className="size-5" />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent
