@@ -4,6 +4,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { CollectionCover } from "@/components/collection-cover";
 import { getTaskPreview } from "@/lib/collection-tasks";
 import { deleteCollection, getTasks } from "@/services/collection";
 import { resolveFilePath } from "@/services/file";
@@ -72,8 +73,13 @@ export default function CollectionCard({
       ) : null}
       <div className="relative z-10 mb-6 flex items-start justify-between">
         <div className="flex items-center gap-3">
-          <div className="flex size-8 items-center justify-center rounded-lg bg-[#363636]">
-            <IconBrandNotion className="text-atext-500 h-5 w-5" />
+          <div className="flex size-8 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-[#363636]">
+            <CollectionCover
+              cover={collection.cover}
+              alt={`${collection.name} cover`}
+              className="size-full object-cover"
+              fallback={<IconBrandNotion className="text-atext-500 h-5 w-5" />}
+            />
           </div>
           <h3 className="text-atext-500 font-medium">{collection.name}</h3>
         </div>

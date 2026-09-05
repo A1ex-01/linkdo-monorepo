@@ -1,6 +1,7 @@
 "use client";
 import { useData } from "@/app/work/data-provider";
 import { Button } from "@/components/ui/button";
+import { CollectionCover } from "@/components/collection-cover";
 import { Calendar } from "@/components/ui/calendar";
 import { Input } from "@/components/ui/input";
 import {
@@ -238,8 +239,13 @@ export default function TaskCardItem({
           }
           transition={{ type: "spring", stiffness: 400, damping: 26 }}
         >
-          <div className="flex aspect-square size-4.5 items-center justify-center rounded-sm bg-[#6f98e8] text-xs text-white">
-            {collection?.name?.slice(0, 1)}
+          <div className="flex aspect-square size-4.5 items-center justify-center overflow-hidden rounded-sm bg-[#6f98e8] text-xs text-white">
+            <CollectionCover
+              cover={collection?.cover}
+              alt=""
+              className="size-full object-cover"
+              fallback={collection?.name?.slice(0, 1)}
+            />
           </div>
           {linkPlatform === "notion" ? (
             <img
