@@ -10,6 +10,7 @@ import {
   Tooltip,
   XAxis,
 } from "recharts";
+import { toTimelineChartData } from "@/lib/report-view";
 import type { ITimelinePoint } from "@/types/base";
 
 interface ReportTimelineChartProps {
@@ -19,22 +20,7 @@ interface ReportTimelineChartProps {
 export function ReportTimelineChart({ data }: ReportTimelineChartProps) {
   const points = data ?? [];
 
-  // Format date as "Aug 10" for x-axis labels.
-  const chartData = points.map((p) => {
-    const d = new Date(p.date);
-    const label = d.toLocaleDateString("en-US", {
-      day: "2-digit",
-      month: "short",
-      weekday: "short",
-    });
-    return {
-      ...p,
-      tasks: p.completed_count,
-      breaks: p.started_count,
-      total: p.focus_minutes,
-      label,
-    };
-  });
+  const chartData = toTimelineChartData(points);
 
   if (chartData.length === 0) {
     return (
@@ -96,8 +82,8 @@ export function ReportTimelineChart({ data }: ReportTimelineChartProps) {
               maxBarSize={68}
             />
             <Bar
-              dataKey="breaks"
-              name="BREAKS"
+              dataKey="newTasks"
+              name="NEW TASKS"
               fill="#91d9cf"
               radius={[3, 3, 0, 0]}
               maxBarSize={68}

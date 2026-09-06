@@ -1,4 +1,32 @@
-import type { IReportSession } from "@/types/base";
+import type { IReportSession, ITimelinePoint } from "@/types/base";
+
+export interface ITimelineChartDatum extends ITimelinePoint {
+  label: string;
+  tasks: number;
+  newTasks: number;
+  total: number;
+}
+
+export function toTimelineChartData(
+  points: ITimelinePoint[],
+): ITimelineChartDatum[] {
+  return points.map((point) => {
+    const date = new Date(point.date);
+    const label = date.toLocaleDateString("en-US", {
+      day: "2-digit",
+      month: "short",
+      weekday: "short",
+    });
+
+    return {
+      ...point,
+      tasks: point.completed_count,
+      newTasks: point.started_count,
+      total: point.focus_minutes,
+      label,
+    };
+  });
+}
 
 export function formatReportMinutes(minutes: number): string {
   if (!minutes || minutes <= 0) return "0min";

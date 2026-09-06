@@ -1,5 +1,10 @@
 "use client";
 
+import { IconPlus, IconStarFilled } from "@tabler/icons-react";
+import { useRequest } from "ahooks";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import toast from "react-hot-toast";
 import { AccountSettingsDialog } from "@/components/account-settings-dialog";
 import { LoadingScreen } from "@/components/motion/loading-screen";
 import {
@@ -16,18 +21,13 @@ import {
 } from "@/services/collection";
 import { resolveFilePath } from "@/services/file";
 import { useUserStore } from "@/stores/user";
-import { ICollection } from "@/types/base";
+import type { ICollection } from "@/types/base";
 import { getGreeting, getGreetingMessage } from "@/utils/base";
-import { IconPlus, IconStarFilled } from "@tabler/icons-react";
-import { useRequest } from "ahooks";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-import toast from "react-hot-toast";
 import CollectionCard from "./_components/collection-card";
 import CreateCollectionModal from "./_components/create-collection-modal";
 import Sidebar from "./_components/sidebar";
 
-export default function page() {
+export default function HomePage() {
   const router = useRouter();
   const { user } = useUserStore();
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -49,7 +49,7 @@ export default function page() {
   );
 
   const { runAsync: submitCreate } = useRequest(
-    async (data: { name: string; icon: string; cover?: string }) => {
+    async (data: { name: string; cover?: string }) => {
       const res = await createCollection(data);
       return res;
     },
@@ -61,11 +61,7 @@ export default function page() {
     setIsModalOpen(true);
   };
 
-  const handleSubmitCreate = async (data: {
-    name: string;
-    icon: string;
-    cover?: string;
-  }) => {
+  const handleSubmitCreate = async (data: { name: string; cover?: string }) => {
     if (editingCollection) {
       const res = await updateCollection(editingCollection.uuid, data);
       if (res.success) {
@@ -118,7 +114,11 @@ export default function page() {
         <div className="left bg-card text-foreground w-[280px] px-4">
           <div className="flex flex-col items-start gap-4 pt-4">
             <div className="mb-1 flex items-center gap-2">
-              <img src={"/logo.png"} className="size-10 rounded-md" />
+              <img
+                src={"/logo.png"}
+                alt="LinkDo"
+                className="size-10 rounded-md"
+              />
               <span className="text-foreground text-2xl leading-tight font-extrabold">
                 LinkDo
               </span>
@@ -196,6 +196,7 @@ export default function page() {
                 <div className="border-muted-foreground/30 text-muted-foreground flex flex-col items-center justify-center rounded-2xl border border-dashed py-20">
                   <p className="mb-4 text-lg font-medium">No lists yet</p>
                   <button
+                    type="button"
                     onClick={handleCreate}
                     className="hover:text-foreground flex items-center gap-2 text-sm font-medium transition-colors"
                   >
@@ -223,11 +224,17 @@ export default function page() {
                   ))}
 
                   {/* Create List Card */}
-                  <div
+                  <button
+                    type="button"
                     onClick={handleCreate}
-                    className="border-muted-foreground/20 hover:bg-muted bg-card flex h-[320px] cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed transition-all"
+                    className="group hover:border-linkdo-blue/80 relative flex h-[320px] cursor-pointer flex-col items-center justify-center overflow-hidden rounded-2xl border border-dashed border-white/[0.17] bg-[#151515] p-5 text-center transition-[border-color,background-color,box-shadow,transform] duration-200 hover:bg-[#19191b] hover:shadow-[0_0_0_1px_rgba(91,132,229,0.32)]"
                   >
+                    <div className="absolute inset-x-5 top-0 h-px bg-white/20 opacity-0 transition-opacity duration-200 group-hover:opacity-100" />
+                    <div className="mb-5 flex size-12 items-center justify-center rounded-2xl border border-white/[0.1] bg-[#242426] text-[#c7c7cc] transition-all duration-200 group-hover:scale-105 group-hover:border-white/25 group-hover:bg-[#2d2d30] group-hover:text-white">
+                      <IconPlus className="size-5" />
+                    </div>
                     <svg
+                      aria-hidden="true"
                       width={52}
                       height={60}
                       viewBox="0 0 52 60"
@@ -354,13 +361,16 @@ export default function page() {
                         </filter>
                       </defs>
                     </svg>
-                    <span className="text-atext-450 mt-4 text-sm font-medium">
-                      + 创建新列表
+                    <span className="mt-5 text-[15px] font-semibold text-[#e7e7ea]">
+                      Create new list
                     </span>
-                    <div className="text-atext-450 mt-4 text-xs">
-                      整理你的任务，高效专注每一天
+                    <div className="mt-2 max-w-[190px] text-xs leading-5 text-[#77777d]">
+                      A focused home for the work you want to move forward.
                     </div>
-                  </div>
+                    <span className="mt-5 text-[11px] font-bold tracking-[0.12em] text-[#c6c6cb] uppercase opacity-0 transition-opacity duration-200 group-hover:opacity-100">
+                      Start building
+                    </span>
+                  </button>
                 </div>
               )}
             </main>

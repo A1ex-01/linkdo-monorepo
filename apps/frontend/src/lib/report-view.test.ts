@@ -5,6 +5,7 @@ import {
   formatReportMinutes,
   getSessionStats,
   groupReportSessionsByDate,
+  toTimelineChartData,
 } from "./report-view";
 
 const sessions: IReportSession[] = [
@@ -51,5 +52,23 @@ describe("report view helpers", () => {
       { date: "Sep 06, 2026", sessions: [sessions[0]] },
       { date: "Sep 05, 2026", sessions: [sessions[1]] },
     ]);
+  });
+
+  it("labels created tasks as new tasks instead of breaks", () => {
+    const [point] = toTimelineChartData([
+      {
+        date: "2026-09-06",
+        started_count: 4,
+        completed_count: 2,
+        focus_minutes: 31,
+      },
+    ]);
+
+    expect(point).toMatchObject({
+      tasks: 2,
+      newTasks: 4,
+      total: 31,
+    });
+    expect(point).not.toHaveProperty("breaks");
   });
 });

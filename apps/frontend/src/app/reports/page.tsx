@@ -93,7 +93,6 @@ export default function ReportsPage() {
   const [selectedCollectionUUIDs, setSelectedCollectionUUIDs] = useState<
     string[]
   >([]);
-  const [hideBreakSessions, setHideBreakSessions] = useState(false);
 
   const query: IReportQuery = useMemo(() => {
     const { start, end } = presetToRange(datePreset, customStart, customEnd);
@@ -147,11 +146,8 @@ export default function ReportsPage() {
       : undefined;
 
   const { start, end } = presetToRange(datePreset, customStart, customEnd);
-  const filteredSessions = hideBreakSessions
-    ? sessions.filter((session) => session.task_uuid)
-    : sessions;
-  const sessionStats = getSessionStats(filteredSessions);
-  const sessionGroups = groupReportSessionsByDate(filteredSessions);
+  const sessionStats = getSessionStats(sessions);
+  const sessionGroups = groupReportSessionsByDate(sessions);
 
   return (
     <div className="flex h-screen flex-col overflow-hidden bg-[#0f0f0f] text-white">
@@ -184,13 +180,7 @@ export default function ReportsPage() {
             />
           </div>
           <div className="flex flex-col items-end gap-5">
-            <ActionBar
-              tab={tab}
-              hideBreakSessions={hideBreakSessions}
-              onToggleBreakSessions={() =>
-                setHideBreakSessions((current) => !current)
-              }
-            />
+            <ActionBar tab={tab} />
             <DateRangeControl
               preset={datePreset}
               start={customStart}
@@ -213,7 +203,7 @@ export default function ReportsPage() {
         ) : (
           <SessionsTab
             loading={sessionsLoading}
-            sessions={filteredSessions}
+            sessions={sessions}
             groups={sessionGroups}
             stats={sessionStats}
             selectedCollection={selectedCollection}
@@ -270,15 +260,7 @@ function SegmentedTabs({
   );
 }
 
-function ActionBar({
-  tab,
-  hideBreakSessions,
-  onToggleBreakSessions,
-}: {
-  tab: ReportTab;
-  hideBreakSessions: boolean;
-  onToggleBreakSessions: () => void;
-}) {
+function ActionBar({ tab }: { tab: ReportTab }) {
   if (tab === "overview") {
     return (
       <Button
@@ -304,16 +286,6 @@ function ActionBar({
         <IconDownload className="size-5" />
         Export .csv
       </Button>
-      <button
-        type="button"
-        onClick={onToggleBreakSessions}
-        className={cn(
-          "h-12 rounded-lg bg-[#202022] px-5 text-base font-bold text-[#ededee] transition-colors hover:bg-[#2b2b2e]",
-          hideBreakSessions && "text-[#58d0c7]",
-        )}
-      >
-        Hide Break sessions
-      </button>
     </div>
   );
 }
