@@ -7,7 +7,9 @@ import {
   getCollections as getCollectionsService,
   getTasks as getTasksService,
 } from "@/services/collection";
+import type { CreateTaskDTO } from "@/services/task";
 import {
+  createTask as createTaskService,
   deleteTask as deleteTaskService,
   moveTask as moveTaskService,
   updateTask,
@@ -35,6 +37,9 @@ interface IDataContext {
   tasks?: ITask[];
   getTasks: () => Promise<ITask[]>;
   setTasks: (tasks: ITask[]) => void;
+  createTaskOptimistic: (
+    task: CreateTaskDTO & { content?: string },
+  ) => Promise<boolean>;
   updateTaskStatusOptimistic: (
     taskUuid: string,
     newStatus: TaskStatus,
@@ -124,23 +129,90 @@ export const DataProvider = ({ children }: DataProviderProps) => {
     taskUuid: string,
     newStatus: TaskStatus,
   ) => {
-    const previousTasks = tasks;
-    const optimisticTasks = tasks?.map((task) =>
+    const previousTasks = tasksRef.current;
+    const optimisticTasks = previousTasks?.map((task) =>
       task.uuid === taskUuid ? { ...task, status: newStatus } : task,
     );
-    if (optimisticTasks) setTasks(optimisticTasks);
+    if (optimisticTasks) {
+      tasksRef.current = optimisticTasks;
+      setTasks(optimisticTasks);
+    }
 
     try {
       const res = await updateTaskStatusService(taskUuid, newStatus);
       if (!res.success) {
-        if (previousTasks) setTasks(previousTasks);
+        if (previousTasks) {
+          tasksRef.current = previousTasks;
+          setTasks(previousTasks);
+        }
         toast.error(res.message ?? "Failed to update task status");
         return false;
       }
       return true;
     } catch (err) {
-      if (previousTasks) setTasks(previousTasks);
+      if (previousTasks) {
+        tasksRef.current = previousTasks;
+        setTasks(previousTasks);
+      }
       toast.error("Failed to update task status");
+      return false;
+    }
+  };
+
+  const createTaskOptimistic = async (
+    task: CreateTaskDTO & { content?: string },
+  ) => {
+    if (!collectionUuid) return false;
+
+    const now = new Date().toISOString();
+    const temporaryId = `optimistic-${globalThis.crypto?.randomUUID?.() ?? Date.now()}`;
+    const optimisticTask: ITask = {
+      uuid: temporaryId,
+      collection_uuid: collectionUuid,
+      title: task.title,
+      content: task.content ?? "",
+      status: task.status ?? "backlog",
+      initial_status: task.status ?? "backlog",
+      notion_database_uuid: task.notion_database_uuid,
+      clickup_list_uuid: task.clickup_list_uuid,
+      estimated_time: task.estimated_time ?? 0,
+      actual_time: 0,
+      scheduled_date: task.scheduled_date,
+      sort_order: now,
+      created_at: now,
+      updated_at: now,
+    };
+    const optimisticTasks = [...(tasksRef.current ?? []), optimisticTask];
+    tasksRef.current = optimisticTasks;
+    setTasks(optimisticTasks);
+
+    try {
+      const res = await createTaskService(collectionUuid, task);
+      if (!res.success) {
+        const revertedTasks = (tasksRef.current ?? []).filter(
+          (currentTask) => currentTask.uuid !== temporaryId,
+        );
+        tasksRef.current = revertedTasks;
+        setTasks(revertedTasks);
+        return false;
+      }
+
+      if (res.data) {
+        const confirmedTasks = (tasksRef.current ?? []).map((currentTask) =>
+          currentTask.uuid === temporaryId ? res.data : currentTask,
+        );
+        tasksRef.current = confirmedTasks;
+        setTasks(confirmedTasks);
+      } else {
+        await getTasks();
+      }
+      return true;
+    } catch {
+      const revertedTasks = (tasksRef.current ?? []).filter(
+        (currentTask) => currentTask.uuid !== temporaryId,
+      );
+      tasksRef.current = revertedTasks;
+      setTasks(revertedTasks);
       return false;
     }
   };
@@ -328,10 +400,7 @@ export const DataProvider = ({ children }: DataProviderProps) => {
 
   const markAsDone = async (task: ITask) => {
     if (task.status === "done") return;
-    const res = await updateTaskStatusService(task.uuid, "done");
-    if (res.success) {
-      getTasks();
-    }
+    await updateTaskStatusOptimistic(task.uuid, "done");
   };
   const toPrevTaskStatus = async (task: ITask) => {
     const prevStatusMap: Record<TaskStatus, TaskStatus> = {
@@ -427,6 +496,7 @@ export const DataProvider = ({ children }: DataProviderProps) => {
         tasks,
         getTasks,
         setTasks,
+        createTaskOptimistic,
         updateTaskStatusOptimistic,
         moveTaskOptimistic,
         collection,

@@ -2,7 +2,6 @@ import { useData } from "@/app/work/data-provider";
 import { buildTaskLinkTargets, splitTaskLinkTarget } from "@/lib/link-targets";
 import { toScheduledDateRequest } from "@/lib/scheduled-date";
 import { cn } from "@/lib/utils";
-import { createTask } from "@/services/task";
 import { useCommonStore } from "@/stores/common";
 import { TaskStatus } from "@/types/base";
 import { IconCalendar, IconPlus, IconX } from "@tabler/icons-react";
@@ -39,7 +38,7 @@ export function AddTask({ className, status }: IProps) {
   const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
   const { currCollectionNotionDbs, currCollectionClickUpLists } =
     useCommonStore();
-  const { collection, getTasks } = useData();
+  const { createTaskOptimistic } = useData();
   const linkTargets = useMemo(
     () =>
       buildTaskLinkTargets(currCollectionNotionDbs, currCollectionClickUpLists),
@@ -86,16 +85,16 @@ export function AddTask({ className, status }: IProps) {
       content: "-",
       notion_database_uuid:
         target.platform === "notion" ? target.uuid : undefined,
-      clickup_list_uuid: target.platform === "clickup" ? target.uuid : undefined,
+      clickup_list_uuid:
+        target.platform === "clickup" ? target.uuid : undefined,
     };
-    // 新建任务
-    const res = await createTask(collection?.uuid ?? "", params);
-    if (res.success) {
+    const creation = createTaskOptimistic(params);
+    setIsOpen(false);
+
+    if (await creation) {
       toast.success("Task created successfully");
-      getTasks();
-      setIsOpen(false);
     } else {
-      toast.error(res.message ?? "Failed to create task");
+      toast.error("Failed to create task");
     }
   };
   return (
