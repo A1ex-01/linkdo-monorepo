@@ -235,7 +235,7 @@ export function NotionDropdown({ className }: IProps) {
                   <Button
                     variant={"default"}
                     size={"lg"}
-                    className="mt-1 h-9 w-full rounded-lg border-0 bg-gradient-to-r from-[#47c9c4] to-[#b4ce70] text-[12px] font-semibold text-[#111] shadow-none hover:from-[#56d3cd] hover:to-[#c1d87b]"
+                    className="linkdo-gradient-action mt-1 h-9 w-full rounded-lg border-0 text-[12px] font-semibold text-white shadow-none"
                     onClick={async () => {
                       // 更新状态
                       const res = await updateStatusMapping(

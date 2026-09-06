@@ -6,9 +6,10 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { uploadImage } from "@/services/file";
+import { ICollection } from "@/types/base";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { uploadImage } from "@/services/file";
 
 const EMOJI_OPTIONS = ["📋", "💼", "🏠", "📚", "🎯", "✨", "🔧", "📝"];
 
@@ -16,6 +17,7 @@ interface ICreateModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSubmit: (data: { name: string; icon: string; cover?: string }) => void;
+  collection?: ICollection;
 }
 
 interface FormValues {
@@ -28,6 +30,7 @@ export default function CreateCollectionModal({
   isOpen,
   onClose,
   onSubmit,
+  collection,
 }: ICreateModalProps) {
   const {
     register,
@@ -45,9 +48,13 @@ export default function CreateCollectionModal({
 
   useEffect(() => {
     if (isOpen) {
-      reset({ name: "", icon: "📋" });
+      reset({
+        name: collection?.name ?? "",
+        icon: collection?.icon ?? "📋",
+        cover: collection?.cover,
+      });
     }
-  }, [isOpen, reset]);
+  }, [collection, isOpen, reset]);
 
   const icon = watch("icon");
 
@@ -68,7 +75,7 @@ export default function CreateCollectionModal({
       <DialogContent className="max-w-md rounded-2xl bg-[#1c1b1c] p-6 text-white">
         <DialogHeader className="mb-6 flex flex-row items-center justify-between">
           <DialogTitle className="text-lg font-bold text-white">
-            新建列表
+            {collection ? "编辑列表" : "新建列表"}
           </DialogTitle>
         </DialogHeader>
 
@@ -118,7 +125,7 @@ export default function CreateCollectionModal({
             type="submit"
             className="mt-2 w-full cursor-pointer rounded-full border border-solid border-[#3a3a3a] bg-[#2b2b2b] py-3 text-sm font-bold text-black text-white transition-opacity hover:opacity-90"
           >
-            Create List
+            {collection ? "Save changes" : "Create List"}
           </button>
         </form>
       </DialogContent>

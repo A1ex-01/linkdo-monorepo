@@ -2,18 +2,15 @@
 
 "use client";
 
-import type { ITimelinePoint } from "@/types/base";
 import {
   Bar,
   BarChart,
-  CartesianGrid,
   Legend,
-  ReferenceLine,
   ResponsiveContainer,
   Tooltip,
   XAxis,
-  YAxis,
 } from "recharts";
+import type { ITimelinePoint } from "@/types/base";
 
 interface ReportTimelineChartProps {
   data: ITimelinePoint[] | undefined;
@@ -25,10 +22,16 @@ export function ReportTimelineChart({ data }: ReportTimelineChartProps) {
   // Format date as "Aug 10" for x-axis labels.
   const chartData = points.map((p) => {
     const d = new Date(p.date);
-    const label = `${d.toLocaleString("en-US", { month: "short" })} ${d.getDate()}`;
+    const label = d.toLocaleDateString("en-US", {
+      day: "2-digit",
+      month: "short",
+      weekday: "short",
+    });
     return {
       ...p,
-      total_count: p.started_count + p.completed_count,
+      tasks: p.completed_count,
+      breaks: p.started_count,
+      total: p.focus_minutes,
       label,
     };
   });
@@ -36,10 +39,10 @@ export function ReportTimelineChart({ data }: ReportTimelineChartProps) {
   if (chartData.length === 0) {
     return (
       <div className="flex h-[320px] flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-[#2a2a2a] bg-[#1d1d1d] p-6 text-center">
-        <div className="text-atext-460 text-sm">
+        <div className="text-sm text-[#77777c]">
           No activity in this window yet.
         </div>
-        <div className="text-atext-460 text-xs">
+        <div className="text-xs text-[#5f5f64]">
           Pick a wider date range or add tasks to see a chart.
         </div>
       </div>
@@ -47,42 +50,21 @@ export function ReportTimelineChart({ data }: ReportTimelineChartProps) {
   }
 
   return (
-    <div className="border-[#2a2a2a] bg-[#1d1d1d] flex h-[360px] flex-col gap-2 rounded-xl border p-5 shadow-sm">
-      <div className="flex items-center justify-between">
-        <div>
-          <div className="text-atext-500 text-sm font-semibold">
-            Started vs Completed
-          </div>
-          <div className="text-atext-460 text-xs">
-            Daily task activity within the selected window
-          </div>
-        </div>
-      </div>
+    <div className="flex h-[596px] flex-col rounded-lg border border-[#29292c] bg-[#171717] px-7 pt-8 pb-6">
       <div className="min-h-0 flex-1">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart
             data={chartData}
-            margin={{ top: 16, right: 16, left: 0, bottom: 0 }}
-            barCategoryGap="22%"
+            margin={{ top: 20, right: 72, left: 40, bottom: 24 }}
+            barCategoryGap="36%"
+            barGap={8}
           >
-            <CartesianGrid
-              stroke="#2a2a2a"
-              strokeDasharray="3 3"
-              vertical={false}
-            />
             <XAxis
               dataKey="label"
-              stroke="#808080"
-              tick={{ fill: "#808080", fontSize: 11 }}
+              stroke="#d8d8db"
+              tick={{ fill: "#d8d8db", fontSize: 15, fontWeight: 500 }}
               tickLine={false}
-              axisLine={{ stroke: "#2a2a2a" }}
-            />
-            <YAxis
-              stroke="#808080"
-              tick={{ fill: "#808080", fontSize: 11 }}
-              tickLine={false}
-              axisLine={{ stroke: "#2a2a2a" }}
-              allowDecimals={false}
+              axisLine={{ stroke: "#c9c9cc", strokeWidth: 2 }}
             />
             <Tooltip
               cursor={{ fill: "rgba(255,255,255,0.04)" }}
@@ -90,37 +72,43 @@ export function ReportTimelineChart({ data }: ReportTimelineChartProps) {
                 background: "#181818",
                 border: "1px solid #2a2a2a",
                 borderRadius: 8,
-                fontSize: 12,
+                fontSize: 13,
                 color: "#fff",
               }}
               labelStyle={{ color: "#a3a3a3" }}
             />
             <Legend
-              wrapperStyle={{ fontSize: 12, color: "#a3a3a3" }}
-              iconType="circle"
+              align="left"
+              verticalAlign="bottom"
+              wrapperStyle={{
+                color: "#85858a",
+                fontSize: 14,
+                fontWeight: 700,
+                paddingTop: 18,
+              }}
+              iconType="rect"
             />
             <Bar
-              dataKey="started_count"
-              name="Started"
-              fill="#7ba4e8"
-              radius={[4, 4, 0, 0]}
-              maxBarSize={28}
+              dataKey="tasks"
+              name="TASKS"
+              fill="#6550e8"
+              radius={[3, 3, 0, 0]}
+              maxBarSize={68}
             />
             <Bar
-              dataKey="completed_count"
-              name="Completed"
-              fill="#9b8cff"
-              radius={[4, 4, 0, 0]}
-              maxBarSize={28}
+              dataKey="breaks"
+              name="BREAKS"
+              fill="#91d9cf"
+              radius={[3, 3, 0, 0]}
+              maxBarSize={68}
             />
             <Bar
-              dataKey="total_count"
-              name="Total"
-              fill="#ffffff"
-              radius={[4, 4, 0, 0]}
-              maxBarSize={28}
+              dataKey="total"
+              name="TOTAL"
+              fill="#dfb979"
+              radius={[3, 3, 0, 0]}
+              maxBarSize={68}
             />
-
           </BarChart>
         </ResponsiveContainer>
       </div>

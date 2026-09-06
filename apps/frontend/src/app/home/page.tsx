@@ -9,9 +9,14 @@ import {
   AvatarImage,
 } from "@/components/ui/avatar";
 import { HomeWindowTitleBar } from "@/components/window-title-bar";
-import { createCollection, getCollections } from "@/services/collection";
+import {
+  createCollection,
+  getCollections,
+  updateCollection,
+} from "@/services/collection";
 import { resolveFilePath } from "@/services/file";
 import { useUserStore } from "@/stores/user";
+import { ICollection } from "@/types/base";
 import { getGreeting, getGreetingMessage } from "@/utils/base";
 import { IconPlus, IconStarFilled } from "@tabler/icons-react";
 import { useRequest } from "ahooks";
@@ -26,6 +31,7 @@ export default function page() {
   const router = useRouter();
   const { user } = useUserStore();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingCollection, setEditingCollection] = useState<ICollection>();
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
   const {
@@ -50,9 +56,26 @@ export default function page() {
     { manual: true },
   );
 
-  const handleCreate = () => setIsModalOpen(true);
+  const handleCreate = () => {
+    setEditingCollection(undefined);
+    setIsModalOpen(true);
+  };
 
-  const handleSubmitCreate = async (data: { name: string; icon: string }) => {
+  const handleSubmitCreate = async (data: {
+    name: string;
+    icon: string;
+    cover?: string;
+  }) => {
+    if (editingCollection) {
+      const res = await updateCollection(editingCollection.uuid, data);
+      if (res.success) {
+        refresh();
+        toast.success("Collection updated");
+      } else {
+        toast.error(res.message || "Failed to update collection");
+      }
+      return;
+    }
     try {
       toast.loading("Creating collection...");
       const res = await submitCreate(data);
@@ -165,7 +188,7 @@ export default function page() {
                   {[1, 2, 3].map((i) => (
                     <div
                       key={i}
-                      className="bg-card h-[303px] animate-pulse rounded-xl"
+                      className="bg-card h-[320px] animate-pulse rounded-xl"
                     />
                   ))}
                 </div>
@@ -189,6 +212,10 @@ export default function page() {
                       onClick={() => {
                         router.push(`/work?uuid=${collection.uuid}`);
                       }}
+                      onEdit={() => {
+                        setEditingCollection(collection);
+                        setIsModalOpen(true);
+                      }}
                       onDeleted={() => {
                         refresh();
                       }}
@@ -198,7 +225,7 @@ export default function page() {
                   {/* Create List Card */}
                   <div
                     onClick={handleCreate}
-                    className="border-muted-foreground/20 hover:bg-muted bg-card flex h-[303px] cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed transition-all"
+                    className="border-muted-foreground/20 hover:bg-muted bg-card flex h-[320px] cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed transition-all"
                   >
                     <svg
                       width={52}
@@ -343,8 +370,12 @@ export default function page() {
 
       <CreateCollectionModal
         isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
+        onClose={() => {
+          setIsModalOpen(false);
+          setEditingCollection(undefined);
+        }}
         onSubmit={handleSubmitCreate}
+        collection={editingCollection}
       />
       <AccountSettingsDialog
         open={isSettingsOpen}

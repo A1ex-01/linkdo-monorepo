@@ -47,6 +47,29 @@
   --color-chart-3: #06b6d4;
   --color-chart-4: #f59e0b;
   --color-chart-5: #ec4899;
+  /* LinkDo brand gradient: violet focus flowing into calm blue. */
+  --color-linkdo-violet: #7663e8;
+  --color-linkdo-blue: #5b84e5;
+  --color-linkdo-mist: #4ea8d6;
+  --gradient-linkdo-action: linear-gradient(
+    112deg,
+    #7663e8 0%,
+    #5b84e5 53%,
+    #4ea8d6 100%
+  );
+  --gradient-linkdo-action-hover: linear-gradient(
+    112deg,
+    #8977f1 0%,
+    #6d96ee 53%,
+    #60b8de 100%
+  );
+  --gradient-linkdo-border: linear-gradient(
+    112deg,
+    rgba(137, 119, 241, 0.92) 0%,
+    rgba(91, 132, 229, 0.88) 53%,
+    rgba(78, 168, 214, 0.84) 100%
+  );
+  --shadow-linkdo-glow: 0 10px 26px rgba(91, 132, 229, 0.24);
   --color-sidebar: #1c283e;
   --color-sidebar-foreground: #f8fafc;
   --color-sidebar-primary: #4e89fe;
@@ -87,6 +110,26 @@
   --color-atext-450: #858585;
   --color-atext-400: #666666;
   --color-atext-300: #cccccc;
+}
+
+/* Reusable LinkDo brand treatments for buttons, highlights, and bordered surfaces. */
+.linkdo-gradient-action {
+  background-image: var(--gradient-linkdo-action);
+}
+
+.linkdo-gradient-action:hover {
+  background-image: var(--gradient-linkdo-action-hover);
+}
+
+.linkdo-gradient-border {
+  border: 1px solid transparent;
+  background:
+    linear-gradient(
+        var(--linkdo-gradient-surface, #181818),
+        var(--linkdo-gradient-surface, #181818)
+      )
+      padding-box,
+    var(--gradient-linkdo-border) border-box;
 }
 
 /* ===== Notion Comment Mini Typography ===== */

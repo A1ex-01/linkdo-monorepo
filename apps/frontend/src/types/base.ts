@@ -126,3 +126,15 @@ export interface ITimelinePoint {
   completed_count: number;
   focus_minutes: number;
 }
+
+export interface IReportSession {
+  uuid: string;
+  task_uuid: string;
+  task_title: string;
+  collection_uuid: string;
+  collection_name: string;
+  collection_icon?: string;
+  started_at: string;
+  ended_at?: string;
+  duration: number;
+}

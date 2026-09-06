@@ -3,6 +3,7 @@
 import type {
   ICollectionBreakdown,
   IReportQuery,
+  IReportSession,
   IReportSummary,
   ITimelinePoint,
 } from "@/types/base";
@@ -44,6 +45,13 @@ export function getReportBreakdown(query?: IReportQuery) {
 export function getReportTimeline(query?: IReportQuery) {
   return request<ITimelinePoint[]>({
     url: `/api/reports/timeline${toQueryString(query)}`,
+    method: "get",
+  });
+}
+
+export function getReportSessions(query?: IReportQuery) {
+  return request<IReportSession[]>({
+    url: `/api/reports/sessions${toQueryString(query)}`,
     method: "get",
   });
 }

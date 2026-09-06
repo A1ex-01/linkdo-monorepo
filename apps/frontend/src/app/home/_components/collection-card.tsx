@@ -1,19 +1,20 @@
+import { CollectionCover } from "@/components/collection-cover";
+import { AIconClickup, AIconNotion } from "@/components/icons/base";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { CollectionCover } from "@/components/collection-cover";
 import { getTaskPreview } from "@/lib/collection-tasks";
 import { deleteCollection, getTasks } from "@/services/collection";
 import { resolveFilePath } from "@/services/file";
-import { ICollection, TaskStatus } from "@/types/base";
+import type { ICollection } from "@/types/base";
 import { formatEstimated } from "@/utils/base";
 import {
   IconArrowUpRight,
-  IconBrandNotion,
   IconDotsVertical,
+  IconPencil,
   IconTrash,
 } from "@tabler/icons-react";
 import { useRequest } from "ahooks";
@@ -23,11 +24,13 @@ import toast from "react-hot-toast";
 interface ICollectionCardProps {
   collection: ICollection;
   onClick: () => void;
+  onEdit: () => void;
   onDeleted?: (uuid: string) => void;
 }
 export default function CollectionCard({
   collection,
   onClick,
+  onEdit,
   onDeleted,
 }: ICollectionCardProps) {
   const estimated = formatEstimated(collection.estimated_total);
@@ -36,7 +39,8 @@ export default function CollectionCard({
     const res = await getTasks(collection.uuid);
     return res.data ?? [];
   });
-  const taskPreview = useMemo(() => getTaskPreview(tasks), [tasks]);
+  const taskPreview = useMemo(() => getTaskPreview(tasks).slice(0, 4), [tasks]);
+  const initial = collection.name.trim().charAt(0).toUpperCase() || "?";
 
   const handleDelete = async (e: Event) => {
     e.preventDefault();
@@ -62,39 +66,69 @@ export default function CollectionCard({
   return (
     <div
       onClick={onClick}
-      className="group bg-card relative flex h-[303px] cursor-pointer flex-col overflow-hidden rounded-xl border border-[#363636] p-6 transition-all hover:border-[#525252]"
+      className="group hover:border-linkdo-blue relative flex h-[320px] cursor-pointer flex-col overflow-hidden rounded-2xl border border-[#383838] bg-[#161616] p-4 transition-[border-color,box-shadow,transform] duration-200 hover:shadow-[0_0_0_1px_rgba(91,132,229,0.52)]"
     >
       {collection.cover ? (
         <img
           src={resolveFilePath(collection.cover)}
           alt=""
-          className="absolute inset-0 h-full w-full object-cover opacity-20"
+          className="absolute inset-0 h-full w-full object-cover opacity-[0.13]"
         />
       ) : null}
-      <div className="relative z-10 mb-6 flex items-start justify-between">
-        <div className="flex items-center gap-3">
-          <div className="flex size-8 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-[#363636]">
-            <CollectionCover
-              cover={collection.cover}
-              alt={`${collection.name} cover`}
-              className="size-full object-cover"
-              fallback={<IconBrandNotion className="text-atext-500 h-5 w-5" />}
-            />
+      <div className="relative z-10 mb-4 flex items-start justify-between">
+        <div className="flex min-w-0 items-center gap-3">
+          <div className="flex -space-x-2">
+            <div className="z-10 flex size-9 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-white/10 bg-[#303030] shadow-sm">
+              <CollectionCover
+                cover={collection.cover}
+                alt={`${collection.name} cover`}
+                className="size-full object-cover"
+                fallback={
+                  <span className="text-sm font-bold text-[#f2f2f2]">
+                    {initial}
+                  </span>
+                }
+              />
+            </div>
+            {collection.notion_databases?.length ? (
+              <span className="z-[2] flex size-9 items-center justify-center rounded-lg border-2 border-[#161616] bg-white shadow-sm">
+                <AIconNotion alt="Notion" className="size-5" />
+              </span>
+            ) : null}
+            {collection.clickup_lists?.length ? (
+              <span className="z-[1] flex size-9 items-center justify-center rounded-lg border-2 border-[#161616] bg-white shadow-sm">
+                <AIconClickup alt="ClickUp" className="size-5" />
+              </span>
+            ) : null}
           </div>
-          <h3 className="text-atext-500 font-medium">{collection.name}</h3>
+          <h3 className="truncate text-[18px] font-semibold tracking-[-0.02em] text-[#f2f2f2]">
+            {collection.name}
+          </h3>
         </div>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <button
-              className="opacity-0 transition-opacity group-hover:opacity-100"
+              type="button"
+              aria-label={`Actions for ${collection.name}`}
+              className="rounded-md p-1 text-[#898989] transition-colors hover:bg-white/8 hover:text-white"
               onClick={(e) => {
                 e.stopPropagation();
               }}
             >
-              <IconDotsVertical className="text-atext-460 h-5 w-5" />
+              <IconDotsVertical className="size-5" />
             </button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-[200px]">
+            <DropdownMenuItem
+              onSelect={(event) => {
+                event.preventDefault();
+                onEdit();
+              }}
+              onClick={(event) => event.stopPropagation()}
+            >
+              <IconPencil />
+              Edit collection
+            </DropdownMenuItem>
             <DropdownMenuItem
               variant="destructive"
               disabled={deleting}
@@ -108,43 +142,45 @@ export default function CollectionCard({
         </DropdownMenu>
       </div>
 
-      <div className="flex flex-1 flex-col justify-center gap-2 overflow-hidden">
-        {taskPreview.map((task) => (
-          <div key={task.uuid} className="flex items-center gap-2">
-            <span
-              className={`size-2 shrink-0 rounded-full ${STATUS_DOT_CLASS[task.status]}`}
-              aria-hidden
-            />
-            <span className="text-atext-400 truncate text-sm">
+      <div className="relative z-10 flex flex-1 flex-col gap-2 overflow-hidden">
+        {taskPreview.map((task, index) => (
+          <div
+            key={task.uuid}
+            className="flex min-h-11 items-center gap-2.5 rounded-xl border border-white/[0.045] bg-[#222222]/80 px-3 transition-colors group-hover:bg-[#202020]/85"
+          >
+            <span className="w-3 shrink-0 text-[12px] font-medium text-[#666]">
+              {index + 1}
+            </span>
+            <span className="min-w-0 flex-1 truncate text-[15px] font-medium text-[#c1c1c1]">
               {task.title}
             </span>
-            <span className="text-atext-460 ml-auto shrink-0 text-xs">
-              {STATUS_LABEL[task.status]}
+            <span className="shrink-0 text-[13px] text-[#858585] tabular-nums">
+              {formatTaskDuration(task.estimated_time)}
             </span>
           </div>
         ))}
       </div>
 
-      <div className="pointer-events-none absolute inset-0 flex items-center justify-center bg-[#141414]/70 opacity-0 backdrop-blur-[1px] transition-opacity duration-200 group-hover:opacity-100">
+      <div className="pointer-events-none absolute inset-0 z-20 flex items-center justify-center bg-black/25 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
         <button
           type="button"
           onClick={(event) => {
             event.stopPropagation();
             onClick();
           }}
-          className="pointer-events-auto flex items-center gap-1.5 rounded-full border border-white/15 bg-[#252525] px-4 py-2 text-sm font-medium text-white shadow-lg transition-transform duration-200 hover:scale-[1.03] hover:bg-[#303030] focus-visible:ring-2 focus-visible:ring-white/40 focus-visible:outline-none"
+          className="linkdo-gradient-action focus-visible:ring-linkdo-blue/80 pointer-events-auto flex h-10 items-center gap-1.5 rounded-full px-5 text-[14px] font-semibold text-white shadow-[var(--shadow-linkdo-glow)] transition-transform duration-200 hover:scale-[1.03] focus-visible:ring-2 focus-visible:outline-none"
         >
-          Open
           <IconArrowUpRight className="size-4" />
+          Open
         </button>
       </div>
 
-      <div className="relative z-10 mt-4 flex items-center justify-between border-t border-[#363636] pt-4">
-        <span className="text-atext-450 text-xs font-bold tracking-wide uppercase">
+      <div className="relative z-10 mt-3 flex items-center justify-between border-t border-white/[0.06] pt-3">
+        <span className="text-[13px] font-semibold text-[#b0b0b0]">
           {collection.pending_count} pending tasks
         </span>
         {estimated && (
-          <span className="bg-muted text-atext-460 rounded px-2 py-1 text-xs">
+          <span className="text-[13px] font-semibold text-[#b0b0b0]">
             Est: {estimated}
           </span>
         )}
@@ -153,16 +189,8 @@ export default function CollectionCard({
   );
 }
 
-const STATUS_LABEL: Record<TaskStatus, string> = {
-  backlog: "Backlog",
-  this_week: "This week",
-  today: "Today",
-  done: "Done",
-};
-
-const STATUS_DOT_CLASS: Record<TaskStatus, string> = {
-  backlog: "bg-zinc-500",
-  this_week: "bg-blue-400",
-  today: "bg-amber-400",
-  done: "bg-emerald-400",
-};
+function formatTaskDuration(minutes: number): string {
+  const hours = Math.floor(minutes / 60);
+  const remainingMinutes = minutes % 60;
+  return `${String(hours).padStart(2, "0")}:${String(remainingMinutes).padStart(2, "0")}`;
+}
