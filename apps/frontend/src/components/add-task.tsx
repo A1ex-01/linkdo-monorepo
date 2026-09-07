@@ -1,12 +1,13 @@
 import { useData } from "@/app/work/data-provider";
 import { buildTaskLinkTargets, splitTaskLinkTarget } from "@/lib/link-targets";
 import { toScheduledDateRequest } from "@/lib/scheduled-date";
+import { getEstimatedMinutes, type TaskTimerMode } from "@/lib/task-timer-mode";
 import { cn } from "@/lib/utils";
 import { useCommonStore } from "@/stores/common";
 import { TaskStatus } from "@/types/base";
 import { IconCalendar, IconPlus, IconX } from "@tabler/icons-react";
 import { format } from "date-fns";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { Button } from "./ui/button";
@@ -28,6 +29,7 @@ interface IProps {
 
 interface IAddTaskForm {
   title: string;
+  timer_mode: TaskTimerMode;
   estimated_time: string;
   link_target: string;
   scheduled_date: string;
@@ -45,48 +47,33 @@ export function AddTask({ className, status }: IProps) {
     [currCollectionClickUpLists, currCollectionNotionDbs],
   );
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    control,
-    setValue,
-    watch,
-  } = useForm<IAddTaskForm>({
+  const { register, handleSubmit, control, watch } = useForm<IAddTaskForm>({
     defaultValues: {
-      estimated_time: "00:30",
-      link_target: "",
+      timer_mode: "countdown",
+      estimated_time: "",
+      link_target: "none",
       scheduled_date: "",
     },
   });
-  const selectedTarget = watch("link_target");
-
-  useEffect(() => {
-    if (!selectedTarget && linkTargets[0]) {
-      setValue("link_target", linkTargets[0].value);
-    }
-  }, [linkTargets, selectedTarget, setValue]);
-
   const onSubmit: SubmitHandler<IAddTaskForm> = async (data) => {
-    const target = splitTaskLinkTarget(data.link_target);
-    if (!target) {
-      toast.error("Please select a Notion database or ClickUp list");
+    if (data.timer_mode === "countdown" && !data.estimated_time) {
+      toast.error("Please set an expected duration for the countdown");
       return;
     }
+
+    const target = splitTaskLinkTarget(data.link_target);
     const params = {
       title: data.title,
-      estimated_time:
-        parseInt(data.estimated_time.split(":")[0]) * 60 +
-        parseInt(data.estimated_time.split(":")[1]),
+      estimated_time: getEstimatedMinutes(data.timer_mode, data.estimated_time),
       status: status,
       scheduled_date: data.scheduled_date
         ? toScheduledDateRequest(data.scheduled_date)
         : undefined,
       content: "-",
       notion_database_uuid:
-        target.platform === "notion" ? target.uuid : undefined,
+        target?.platform === "notion" ? target.uuid : undefined,
       clickup_list_uuid:
-        target.platform === "clickup" ? target.uuid : undefined,
+        target?.platform === "clickup" ? target.uuid : undefined,
     };
     const creation = createTaskOptimistic(params);
     setIsOpen(false);
@@ -97,6 +84,8 @@ export function AddTask({ className, status }: IProps) {
       toast.error("Failed to create task");
     }
   };
+  const timerMode = watch("timer_mode");
+
   return (
     <div className={cn("", className)}>
       <Button
@@ -126,11 +115,29 @@ export function AddTask({ className, status }: IProps) {
                   placeholder="What do you need to do?"
                   className="border border-[#363636] bg-[#1c1c1c] text-white placeholder:text-[#808080]"
                 />
-                <Input
-                  type="time"
-                  className="w-max shrink-0 border border-[#363636] bg-[#1c1c1c] text-white"
-                  {...register("estimated_time", { required: true })}
+                <Controller
+                  name="timer_mode"
+                  control={control}
+                  render={({ field }) => (
+                    <Select value={field.value} onValueChange={field.onChange}>
+                      <SelectTrigger className="w-[132px] shrink-0 border border-[#363636] bg-[#1c1c1c] text-white">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent className="border-[#363636] bg-[#262626] text-white">
+                        <SelectItem value="countdown">倒计时</SelectItem>
+                        <SelectItem value="stopwatch">正计时</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  )}
                 />
+                {timerMode === "countdown" && (
+                  <Input
+                    type="time"
+                    aria-label="Expected duration"
+                    className="w-max shrink-0 border border-[#363636] bg-[#1c1c1c] text-white"
+                    {...register("estimated_time")}
+                  />
+                )}
               </div>
               <div className="mt-2 flex gap-2">
                 <Controller
@@ -188,17 +195,10 @@ export function AddTask({ className, status }: IProps) {
                   }}
                 />
               </div>
-              {/* errors will return when field validation fails  */}
-              {errors.estimated_time && (
-                <span className="mt-1 block text-xs text-[#ef4444]">
-                  This field is required
-                </span>
-              )}
               <div className="mt-4 flex items-center gap-4">
                 <Controller
                   name="link_target"
                   control={control}
-                  rules={{ required: true }}
                   render={({ field, fieldState }) => (
                     <Field
                       orientation="responsive"
@@ -220,6 +220,12 @@ export function AddTask({ className, status }: IProps) {
                           position="item-aligned"
                           className="border-[#363636] bg-[#262626] text-white"
                         >
+                          <SelectItem
+                            value="none"
+                            className="text-white focus:bg-[#363636] focus:text-white"
+                          >
+                            No linked app
+                          </SelectItem>
                           {linkTargets.map((target) => (
                             <SelectItem
                               key={target.value}

@@ -1,7 +1,7 @@
 "use client";
 import { useData } from "@/app/work/data-provider";
-import { Button } from "@/components/ui/button";
 import { CollectionCover } from "@/components/collection-cover";
+import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Input } from "@/components/ui/input";
 import {
@@ -13,6 +13,7 @@ import {
   toScheduledDateInput,
   toScheduledDateRequest,
 } from "@/lib/scheduled-date";
+import { getTaskTimerDisplay } from "@/lib/task-timer";
 import { cn } from "@/lib/utils";
 import { ITask } from "@/types/base";
 import { formatEstimated } from "@/utils/base";
@@ -40,7 +41,7 @@ import { motion } from "framer-motion";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { AMarkdownEditor } from "./a-markdown-editor";
 import { AIconClickup } from "./icons/base";
-import { StopWatch } from "./timer";
+import { CountDown, StopWatch } from "./timer";
 
 interface TaskCardItemProps extends React.HTMLAttributes<HTMLDivElement> {
   item: ITask;
@@ -629,6 +630,10 @@ export function CardSimpleItem({
   const itemClassName = "cursor-pointer text-atext-460 hover:text-atext-500";
   const mergedClassName =
     className ?? "bg-card text-atext-500 border border-[#363636]";
+  const elapsedSeconds =
+    item.actual_time * 60 +
+    (timerInfo?.task_uuid === item.uuid ? timerInfo.duration : 0);
+  const timerDisplay = getTaskTimerDisplay(item.estimated_time, elapsedSeconds);
 
   return (
     <div
@@ -642,12 +647,33 @@ export function CardSimpleItem({
           {item.title}
         </div>
 
-        <StopWatch
-          seconds={timerInfo?.duration ?? 0}
-          color="#2b2b2b"
-          fontSize={16}
-          onTick={() => {}}
-        />
+        {item.estimated_time > 0 && !timerDisplay.isOverdue ? (
+          <CountDown
+            seconds={item.estimated_time * 60 - elapsedSeconds}
+            onFinish={() => {}}
+            color="#2b2b2b"
+            fontSize={16}
+          />
+        ) : (
+          <div
+            className={cn(
+              "flex items-center",
+              timerDisplay.isOverdue ? "text-red-400" : "text-atext-460",
+            )}
+          >
+            {timerDisplay.isOverdue && <span className="font-mono">+ </span>}
+            <StopWatch
+              seconds={
+                timerDisplay.isOverdue
+                  ? elapsedSeconds - item.estimated_time * 60
+                  : elapsedSeconds
+              }
+              color="#2b2b2b"
+              fontSize={16}
+              onTick={() => {}}
+            />
+          </div>
+        )}
       </div>
       <motion.div
         className="absolute inset-0 bg-inherit"
@@ -724,6 +750,10 @@ export function CapsuleItem({
   const itemClassName = "cursor-pointer text-atext-460 hover:text-atext-500";
   const mergedClassName =
     className ?? "bg-card text-atext-500 border border-[#363636]";
+  const elapsedSeconds =
+    item.actual_time * 60 +
+    (timerInfo?.task_uuid === item.uuid ? timerInfo.duration : 0);
+  const timerDisplay = getTaskTimerDisplay(item.estimated_time, elapsedSeconds);
   return (
     <div
       ref={wrapperRef}
@@ -735,12 +765,33 @@ export function CapsuleItem({
         >
           {item.title}
         </div>
-        <StopWatch
-          seconds={timerInfo?.duration ?? 0}
-          color="#2b2b2b"
-          fontSize={16}
-          onTick={() => {}}
-        />
+        {item.estimated_time > 0 && !timerDisplay.isOverdue ? (
+          <CountDown
+            seconds={item.estimated_time * 60 - elapsedSeconds}
+            onFinish={() => {}}
+            color="#2b2b2b"
+            fontSize={16}
+          />
+        ) : (
+          <div
+            className={cn(
+              "flex items-center",
+              timerDisplay.isOverdue ? "text-red-400" : "text-atext-460",
+            )}
+          >
+            {timerDisplay.isOverdue && <span className="font-mono">+ </span>}
+            <StopWatch
+              seconds={
+                timerDisplay.isOverdue
+                  ? elapsedSeconds - item.estimated_time * 60
+                  : elapsedSeconds
+              }
+              color="#2b2b2b"
+              fontSize={16}
+              onTick={() => {}}
+            />
+          </div>
+        )}
       </div>
       <motion.div
         className="absolute inset-0 bg-inherit"

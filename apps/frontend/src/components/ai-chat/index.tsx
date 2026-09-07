@@ -1,10 +1,16 @@
 "use client";
 
-import { useData } from "@/app/work/data-provider";
-import { SSEEvent, confirmAgentPlan, sendAgentMessage } from "@/services/agent";
 import { IconAi, IconCheck, IconX } from "@tabler/icons-react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useData } from "@/app/work/data-provider";
+import {
+  type AgentEvent,
+  confirmAgentPlan,
+  isCancelledMutation,
+  type SSEEvent,
+  sendAgentMessage,
+} from "@/services/agent";
 import { ReasoningText } from "../agents/loading-states/reasoning-text";
 import {
   Message,
@@ -16,11 +22,11 @@ import {
   MessageScroller,
 } from "../agents/message";
 import { PromptInput } from "../agents/prompt-input";
-import { ToolApproval, ToolApprovalStatus } from "../agents/tool-approval";
+import { ToolApproval, type ToolApprovalStatus } from "../agents/tool-approval";
 
 // ---------------------------------------------------------------------------
-// Message model — the chat list stores whatever the backend returned in
-// `data`. We never rename or reshape fields here.
+// Message model — only this component maps the versioned agent event contract
+// into presentation cards. No LangGraph event names or checkpoint ids leak in.
 // ---------------------------------------------------------------------------
 
 type MessageKind =
@@ -73,8 +79,8 @@ interface GenericNodeMessage extends StatusAwareMessage {
 
 interface ConfirmMessage extends MessageBase {
   kind: "confirm";
-  /** Cache the `session_id` on the message for cheap lookup. */
-  sessionId: string;
+  conversationId: string;
+  operationId: string;
   status: ToolApprovalStatus;
 }
 
@@ -205,11 +211,15 @@ function formatScheduledDate(value: unknown): string {
 // only place that knows about node names like `intent-classify` or `get_tasks`.
 // ---------------------------------------------------------------------------
 
-function classifyStartEvent(event: SSEEvent, id: string): AIChatMessage | null {
-  if (event.type !== "start" || !event.name) return null;
-  const data = event.data;
+function classifyActionStarted(
+  event: AgentEvent,
+  id: string,
+): AIChatMessage | null {
+  const action = event.action;
+  if (!action) return null;
+  const data = event.payload;
 
-  if (event.name === "intent-classify") {
+  if (action === "intent-classify") {
     return {
       id,
       role: "assistant",
@@ -220,7 +230,7 @@ function classifyStartEvent(event: SSEEvent, id: string): AIChatMessage | null {
     };
   }
 
-  if (event.name === "get_tasks") {
+  if (action === "get_tasks") {
     return {
       id,
       role: "assistant",
@@ -232,16 +242,16 @@ function classifyStartEvent(event: SSEEvent, id: string): AIChatMessage | null {
   }
 
   if (
-    event.name === "create_task" ||
-    event.name === "update_task" ||
-    event.name === "delete_task" ||
-    event.name === "chitchat"
+    action === "create_task" ||
+    action === "update_task" ||
+    action === "delete_task" ||
+    action === "chitchat"
   ) {
     return {
       id,
       role: "assistant",
-      kind: event.name,
-      nodeName: event.name,
+      kind: action,
+      nodeName: action,
       status: "running",
       data,
     };
@@ -252,44 +262,42 @@ function classifyStartEvent(event: SSEEvent, id: string): AIChatMessage | null {
     id,
     role: "assistant",
     kind: "chitchat",
-    nodeName: event.name,
+    nodeName: action,
     status: "running",
     data,
   };
 }
 
-function classifyEvent(event: SSEEvent): AIChatMessage | null {
-  if (event.type === "text") {
-    const content = "content" in event ? event.content : "";
+function classifyEvent(event: AgentEvent): AIChatMessage | null {
+  if (event.type === "assistant_message") {
     return {
       id: genId(),
       role: "assistant",
       kind: "text",
-      data: { content, ...event.data },
+      data: event.payload,
     };
   }
 
-  if (event.type === "confirm_required") {
-    const data = event.data;
-    const sessionId = readString(data, "session_id");
+  if (event.type === "approval_required" && event.operationId) {
     return {
       id: genId(),
       role: "assistant",
       kind: "confirm",
-      sessionId,
+      conversationId: event.conversationId,
+      operationId: event.operationId,
       status: "pending",
-      data,
+      data: event.payload,
     };
   }
 
   if (event.type === "error") {
-    const code = readString(event.data, "code") || "internal";
-    const message = readString(event.data, "message");
+    const code = readString(event.payload, "code") || "internal";
+    const message = readString(event.payload, "message");
     return {
       id: genId(),
       role: "assistant",
       kind: "error",
-      data: { code, message, ...event.data },
+      data: { code, message, ...event.payload },
     };
   }
 
@@ -311,9 +319,12 @@ export default function AIChat() {
       ? crypto.randomUUID()
       : genId(),
   );
-  const { getTasks } = useData();
+  const { collection, getTasks } = useData();
+  const [pendingOperationId, setPendingOperationId] = useState<string>();
+  const lastMessageId = messages.at(-1)?.id;
 
-  // Tracks running placeholders so the matching `end` event can replace them.
+  // Tracks action cards by operation+action. A resumed HITL action can replay
+  // its start event, so node name alone is not a safe key.
   const runningIds = useRef<Map<string, string>>(new Map());
 
   // Dedupe refreshes for the same node name within a short window. When the
@@ -333,10 +344,10 @@ export default function AIChat() {
   );
 
   useEffect(() => {
-    if (chatRef.current) {
+    if (lastMessageId && chatRef.current) {
       chatRef.current.scrollTop = chatRef.current.scrollHeight;
     }
-  }, [messages]);
+  }, [lastMessageId]);
 
   useEffect(() => {
     inputRef.current?.focus();
@@ -346,94 +357,125 @@ export default function AIChat() {
   // Mutation helpers
   // -------------------------------------------------------------------------
 
-  const append = (m: AIChatMessage) => {
+  const append = useCallback((m: AIChatMessage) => {
     setMessages((prev) => [...prev, m]);
-  };
+  }, []);
 
-  const updateStatusAwareById = (
-    id: string,
-    patch: Partial<StatusAwareMessage>,
-  ) => {
-    setMessages((prev) =>
-      prev.map((m) =>
-        m.id === id ? ({ ...m, ...patch } as AIChatMessage) : m,
-      ),
-    );
-  };
-
-  const removeById = (id: string) => {
-    setMessages((prev) => prev.filter((m) => m.id !== id));
-  };
+  const updateStatusAwareById = useCallback(
+    (id: string, patch: Partial<StatusAwareMessage>) => {
+      setMessages((prev) =>
+        prev.map((m) =>
+          m.id === id ? ({ ...m, ...patch } as AIChatMessage) : m,
+        ),
+      );
+    },
+    [],
+  );
 
   // -------------------------------------------------------------------------
-  // Stream consumer — feed raw SSE events into the message list. We keep a
-  // single function (rather than separate `onStart/onEnd/...` callbacks) so
-  // we can drop the bespoke specialisations from the service layer.
+  // Stream consumer for the versioned event envelope.
   // -------------------------------------------------------------------------
 
   const handleEvent = useCallback(
     (event: SSEEvent) => {
-      if (event.type === "start") {
-        if (!event.name) return;
+      if (event.type === "unknown") return;
+
+      const actionKey = event.action
+        ? `${event.operationId ?? event.requestId}:${event.action}`
+        : undefined;
+
+      if (event.type === "action_started") {
+        if (!actionKey) return;
         const id = genId();
-        runningIds.current.set(event.name, id);
-        const msg = classifyStartEvent(event, id);
+        const existingId = runningIds.current.get(actionKey);
+        if (existingId) {
+          updateStatusAwareById(existingId, {
+            status: "running",
+            data: event.payload,
+          });
+        } else {
+          runningIds.current.set(actionKey, id);
+          const msg = classifyActionStarted(event, id);
+          if (msg) append(msg);
+        }
+        return;
+      }
+
+      if (event.type === "approval_required") {
+        if (event.operationId) {
+          setPendingOperationId(event.operationId);
+          if (actionKey) {
+            const id = runningIds.current.get(actionKey);
+            if (id) {
+              updateStatusAwareById(id, { status: "running" });
+            }
+          }
+        }
+        const msg = classifyEvent(event);
         if (msg) append(msg);
         return;
       }
 
-      if (event.type === "end") {
-        if (!event.name) return;
-        const id = runningIds.current.get(event.name);
-        runningIds.current.delete(event.name);
+      if (event.type === "action_completed") {
+        if (!actionKey) return;
+        const id = runningIds.current.get(actionKey);
+        runningIds.current.delete(actionKey);
 
-        // Replace the placeholder with the final payload, keeping the original
-        // `kind` so the renderer stays consistent.
         if (id) {
           updateStatusAwareById(id, {
             status: "done",
-            data: event.data,
+            data: event.payload,
           });
         } else {
-          // No placeholder (e.g. end arrived before start). Append a fresh
-          // message and let the renderer decide what to do.
           const kind: MessageKind =
-            event.name === "intent-classify"
+            event.action === "intent-classify"
               ? "intent_classify"
-              : event.name === "get_tasks"
+              : event.action === "get_tasks"
                 ? "tasks"
-                : (event.name as MessageKind);
+                : (event.action as MessageKind);
           append({
             id: genId(),
             role: "assistant",
             kind,
-            nodeName: event.name,
+            nodeName: event.action ?? "chitchat",
             status: "done",
-            data: event.data,
+            data: event.payload,
           } as AIChatMessage);
         }
 
-        // After any task mutation ends (success or cancelled), refresh the
-        // kanban so the user sees the latest state. Plain `get_tasks` is
-        // read-only and already drove the table above, so we skip it.
-        // Cancelled confirmations (`{approved: false}`) leave the data
-        // untouched, so we don't burn an extra round-trip on those.
         if (
-          event.name === "create_task" ||
-          event.name === "update_task" ||
-          event.name === "delete_task"
+          event.action === "create_task" ||
+          event.action === "update_task" ||
+          event.action === "delete_task"
         ) {
-          if (event.data.approved !== false) {
-            refreshKanbanFor(event.name);
+          if (event.payload.approved !== false) {
+            refreshKanbanFor(event.action);
           }
         }
         return;
       }
 
+      if (event.type === "run_completed") {
+        if (event.operationId) setPendingOperationId(undefined);
+        return;
+      }
+
+      if (event.type === "error" && event.operationId) {
+        setPendingOperationId(undefined);
+        setMessages((prev) =>
+          prev.map((message) =>
+            message.kind === "confirm" &&
+            message.operationId === event.operationId
+              ? { ...message, status: "error" }
+              : message,
+          ),
+        );
+      }
+
       const msg = classifyEvent(event);
       if (msg) append(msg);
     },
-    [refreshKanbanFor],
+    [append, refreshKanbanFor, updateStatusAwareById],
   );
 
   // -------------------------------------------------------------------------
@@ -441,7 +483,7 @@ export default function AIChat() {
   // -------------------------------------------------------------------------
 
   const handleSend = async (text: string) => {
-    if (!text.trim() || streaming) return;
+    if (!text.trim() || streaming || pendingOperationId) return;
 
     const trimmed = text.trim();
     append({
@@ -455,7 +497,12 @@ export default function AIChat() {
     try {
       await sendAgentMessage({
         message: trimmed,
-        sessionId: sessionIdRef.current,
+        conversationId: sessionIdRef.current,
+        requestId:
+          typeof crypto !== "undefined" && "randomUUID" in crypto
+            ? crypto.randomUUID()
+            : genId(),
+        activeCollectionId: collection?.uuid,
         onEvent: handleEvent,
         onError: (code, message) => {
           append({
@@ -468,11 +515,6 @@ export default function AIChat() {
         },
       });
     } finally {
-      // The backend only emits `end` for nodes that produce a result.
-      // Anything still in the "running" bucket (chitchat, network calls that
-      // exit without a payload, etc.) needs to be finalised once the stream
-      // closes so the UI doesn't show a perpetual spinner.
-      flushRunningAsFinal();
       setStreaming(false);
     }
   };
@@ -482,11 +524,13 @@ export default function AIChat() {
   // -------------------------------------------------------------------------
 
   const updateConfirmStatus = useCallback(
-    (sessionId: string, status: ToolApprovalStatus) => {
+    (operationId: string, status: ToolApprovalStatus) => {
       setMessages((prev) => {
         const idx = [...prev]
           .reverse()
-          .findIndex((m) => m.kind === "confirm" && m.sessionId === sessionId);
+          .findIndex(
+            (m) => m.kind === "confirm" && m.operationId === operationId,
+          );
         if (idx === -1) return prev;
         const realIdx = prev.length - 1 - idx;
         const target = prev[realIdx];
@@ -501,34 +545,19 @@ export default function AIChat() {
     [],
   );
 
-  const flushRunningAsFinal = useCallback(() => {
-    const stillRunning = new Set(runningIds.current.keys());
-    if (stillRunning.size === 0) return;
-    setMessages((prev) =>
-      prev.map((m) => {
-        if (m.kind === "confirm" || m.kind === "error") return m;
-        if (m.kind === "user" || m.kind === "text") return m;
-        const status =
-          (m as StatusAwareMessage).status === "running" ? "done" : m.status;
-        if (status === m.status) return m;
-        return { ...m, status } as AIChatMessage;
-      }),
-    );
-    runningIds.current.clear();
-  }, []);
-
   const handleConfirmResponse = useCallback(
     async (confirmMsg: ConfirmMessage, approved: boolean) => {
       setStreaming(true);
       updateConfirmStatus(
-        confirmMsg.sessionId,
-        approved ? "approved" : "denied",
+        confirmMsg.operationId,
+        approved ? "approving" : "denied",
       );
 
       try {
         await confirmAgentPlan({
-          sessionId: confirmMsg.sessionId,
-          approved,
+          conversationId: confirmMsg.conversationId,
+          operationId: confirmMsg.operationId,
+          decision: approved ? "approve" : "deny",
           onEvent: handleEvent,
           onError: (code, message) => {
             append({
@@ -541,11 +570,10 @@ export default function AIChat() {
           },
         });
       } finally {
-        flushRunningAsFinal();
         setStreaming(false);
       }
     },
-    [handleEvent, updateConfirmStatus, flushRunningAsFinal],
+    [append, handleEvent, updateConfirmStatus],
   );
 
   // -------------------------------------------------------------------------
@@ -590,6 +618,7 @@ export default function AIChat() {
                 LinkDo AI – Beta
               </span>
               <button
+                type="button"
                 onClick={closeChat}
                 className="rounded p-1 transition hover:bg-[rgba(229,226,227,0.11)]"
               >
@@ -674,10 +703,10 @@ export default function AIChat() {
                 models={[]}
                 actions={[]}
                 defaultValue=""
-                loading={false}
+                loading={streaming || Boolean(pendingOperationId)}
                 onSubmit={handleSend}
                 onStop={() => {}}
-                onAction={(action) => {}}
+                onAction={(_action) => {}}
               />
             </div>
           </motion.div>
@@ -756,9 +785,7 @@ function renderMessage(
                     {String(v)}
                   </Tag>
                 ))}
-                {violations.length === 0 && (
-                  <Tag tone="emerald">无违规</Tag>
-                )}
+                {violations.length === 0 && <Tag tone="emerald">无违规</Tag>}
               </div>
               {Object.keys(params).length > 0 && (
                 <IntentParams intent={intent} params={params} />
@@ -873,21 +900,37 @@ function NodeCard({
   data: Record<string, unknown>;
   status: "running" | "done";
 }) {
+  const mutationWasCancelled =
+    status === "done" && kind !== "chitchat" && isCancelledMutation(data);
+
   return (
     <div className="flex flex-col gap-1.5">
       <StepHeader label={nodeLabel(nodeName)} status={status} />
-      {status === "done" && kind === "create_task" ? (
+      {mutationWasCancelled ? <CancelledMutationCard kind={kind} /> : null}
+      {status === "done" && !mutationWasCancelled && kind === "create_task" ? (
         <CreateTaskDoneCard data={data} />
       ) : null}
-      {status === "done" && kind === "update_task" ? (
+      {status === "done" && !mutationWasCancelled && kind === "update_task" ? (
         <UpdateTaskDoneCard data={data} />
       ) : null}
-      {status === "done" && kind === "delete_task" ? (
+      {status === "done" && !mutationWasCancelled && kind === "delete_task" ? (
         <DeleteCard data={data} />
       ) : null}
       {status === "done" && kind === "chitchat" ? (
         <DoneSummary data={data} />
       ) : null}
+    </div>
+  );
+}
+
+function CancelledMutationCard({
+  kind,
+}: {
+  kind: "create_task" | "update_task" | "delete_task";
+}) {
+  return (
+    <div className="rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-xs text-white/70">
+      已取消{intentLabel(kind)}
     </div>
   );
 }
@@ -912,17 +955,19 @@ function CreateTaskDoneCard({ data }: { data: Record<string, unknown> }) {
         taskUuid={taskUuid}
       />
       <TaskFieldList
-        entries={[
-          estimatedTime !== undefined
-            ? { key: "预估", value: `${estimatedTime} 分钟` }
-            : null,
-          scheduledDate
-            ? {
-                key: "计划日期",
-                value: formatScheduledDate(scheduledDate),
-              }
-            : null,
-        ].filter(Boolean) as { key: string; value: string }[]}
+        entries={
+          [
+            estimatedTime !== undefined
+              ? { key: "预估", value: `${estimatedTime} 分钟` }
+              : null,
+            scheduledDate
+              ? {
+                  key: "计划日期",
+                  value: formatScheduledDate(scheduledDate),
+                }
+              : null,
+          ].filter(Boolean) as { key: string; value: string }[]
+        }
       />
     </div>
   );
@@ -955,15 +1000,12 @@ function UpdateTaskDoneCard({ data }: { data: Record<string, unknown> }) {
 }
 
 function DeleteCard({ data }: { data: Record<string, unknown> }) {
-  const approved = data.approved === false;
   const collectionName = readString(data, "collection_name");
   const taskUuid =
     readOptionalString(data, "task_uuid") ?? readOptionalString(data, "uuid");
   return (
     <div className="rounded-lg border border-rose-500/30 bg-rose-500/10 px-3 py-2 text-xs text-rose-100">
-      <div className="font-medium">
-        {approved ? "已取消删除任务" : "已删除任务"}
-      </div>
+      <div className="font-medium">已删除任务</div>
       <div className="mt-0.5 text-rose-100/80">
         集合「{collectionName || "—"}」{taskUuid ? ` · ${taskUuid}` : ""}
       </div>
@@ -993,7 +1035,6 @@ function ConfirmPreviewCard({
 }) {
   const intent = readString(data, "intent");
   const summary = readString(data, "summary");
-  const sessionId = readString(data, "session_id");
   const preview = asRecord(data.preview);
   const collectionName = readString(preview, "collection_name");
   const taskUuid = readString(preview, "task_uuid");
@@ -1006,15 +1047,6 @@ function ConfirmPreviewCard({
       id: "intent",
       label: "Intent",
       value: <Tag tone="violet">{intentLabel(intent)}</Tag>,
-    },
-    {
-      id: "session",
-      label: "Session",
-      value: (
-        <span className="font-mono text-[11px] text-white/70">
-          {sessionId}
-        </span>
-      ),
     },
   ];
   if (collectionName) {
@@ -1074,11 +1106,7 @@ function ConfirmPreviewCard({
   );
 }
 
-function ConfirmCreateFields({
-  fields,
-}: {
-  fields: Record<string, unknown>;
-}) {
+function ConfirmCreateFields({ fields }: { fields: Record<string, unknown> }) {
   const title = readOptionalString(fields, "title");
   const status = readOptionalString(fields, "status");
   const estimatedTime = readOptionalNumber(fields, "estimated_time");
@@ -1086,13 +1114,24 @@ function ConfirmCreateFields({
   const notionDatabaseUuid = readOptionalString(fields, "notion_database_uuid");
 
   const entries: { key: string; value: React.ReactNode }[] = [];
-  if (title) entries.push({ key: "标题", value: <span className="font-medium">{title}</span> });
-  if (status) entries.push({ key: "状态", value: <Tag tone="amber">{statusLabel(status)}</Tag> });
+  if (title)
+    entries.push({
+      key: "标题",
+      value: <span className="font-medium">{title}</span>,
+    });
+  if (status)
+    entries.push({
+      key: "状态",
+      value: <Tag tone="amber">{statusLabel(status)}</Tag>,
+    });
   if (estimatedTime !== undefined) {
     entries.push({ key: "预估", value: `${estimatedTime} 分钟` });
   }
   if (scheduledDate) {
-    entries.push({ key: "计划日期", value: formatScheduledDate(scheduledDate) });
+    entries.push({
+      key: "计划日期",
+      value: formatScheduledDate(scheduledDate),
+    });
   }
   if (notionDatabaseUuid) {
     entries.push({
@@ -1266,18 +1305,20 @@ function IntentParams({
 
     const extraEntries = Object.entries(params).filter(
       ([key]) =>
-        !["title", "collection", "estimated_time", "status", "scheduled_date"].includes(
-          key,
-        ),
+        ![
+          "title",
+          "collection",
+          "estimated_time",
+          "status",
+          "scheduled_date",
+        ].includes(key),
     );
 
     return (
       <div className="flex flex-col gap-1.5">
         <TaskFieldList entries={known} />
         {extraEntries.length > 0 ? (
-          <ParamList
-            params={Object.fromEntries(extraEntries)}
-          />
+          <ParamList params={Object.fromEntries(extraEntries)} />
         ) : null}
       </div>
     );
@@ -1311,9 +1352,7 @@ function IntentParams({
     const collection = readOptionalString(params, "collection");
     return (
       <TaskFieldList
-        entries={
-          collection ? [{ key: "集合", value: collection }] : []
-        }
+        entries={collection ? [{ key: "集合", value: collection }] : []}
       />
     );
   }

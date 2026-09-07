@@ -1,126 +1,163 @@
 /**
- * Agent SSE Streaming API Service.
+ * Versioned LinkDo agent protocol.
  *
- * Backend endpoints (a-link-do a-agent, FastAPI):
- *   POST /api/chat/send-message   body: { message, session_id? }
- *   POST /api/chat/confirm-message body: { thread_id, approved, edits? }
- *
- * Both endpoints stream `text/event-stream`. Each frame is a single JSON
- * object keyed by `type`. The schema mirrors `services/a-agent/agent/single/graph.py`:
- *
- *   { "type": "start", "name": "<node>", "data": { ... } }
- *   { "type": "end",   "name": "<node>", "data": { ... } }
- *   { "type": "confirm_required", "name": "<node>",
- *     "data": { session_id, intent, summary, preview, params } }
- *   { "type": "error",  "name": "<node>", "data": { code, message } }
- *   { "type": "done",   "data": { message, session_id } }
- *   { "type": "text",   "data": { content } }
- *
- * This module is intentionally thin: it only parses the SSE stream into
- * raw JSON frames. No domain-specific shape inference happens here — that's
- * the consumer's responsibility, so adding a new field on the backend never
- * requires touching this file.
+ * The chat UI is deliberately isolated from LangGraph node names and internal
+ * checkpoint ids. HTTP inputs and SSE outputs are correlated by a public
+ * conversation id, a client request id, and (for mutations) an operation id.
  */
 
 import { AGENT_URL } from "@/config";
 import { getToken } from "./client-request";
 
-// ---------------------------------------------------------------------------
-// Raw event types (one-to-one with the SSE payload).
-// ---------------------------------------------------------------------------
+export type AgentAction =
+  | "intent-classify"
+  | "get_tasks"
+  | "create_task"
+  | "update_task"
+  | "delete_task"
+  | "chitchat"
+  | "send_message";
 
-export interface SSEEventBase {
-  /** Raw type field as sent by the server. */
-  type: string;
-  /** Node name where applicable (`start` / `end` / `confirm_required` / `error`). */
-  name?: string;
-  /** Free-form data payload. Always a record (never a scalar). */
-  data: Record<string, unknown>;
-}
+export type AgentEventType =
+  | "run_started"
+  | "action_started"
+  | "assistant_message"
+  | "approval_required"
+  | "action_completed"
+  | "error"
+  | "run_completed";
 
-export interface SSETextEvent extends SSEEventBase {
-  type: "text";
-  /** Convenience: `data.content` unwrapped. */
-  content: string;
-}
-
-export interface SSEDoneEvent extends SSEEventBase {
-  type: "done";
+export interface AgentEvent {
+  v: 1;
+  type: AgentEventType;
+  conversationId: string;
+  requestId: string;
+  operationId?: string;
+  action?: AgentAction;
+  payload: Record<string, unknown>;
 }
 
 export interface SSEUnknownEvent {
   type: "unknown";
-  /** The raw `data:` line that failed to parse. */
   raw: string;
 }
 
-export type SSEEvent =
-  | SSEEventBase
-  | SSETextEvent
-  | SSEDoneEvent
-  | SSEUnknownEvent;
+export type SSEEvent = AgentEvent | SSEUnknownEvent;
 
-// ---------------------------------------------------------------------------
-// Public options
-// ---------------------------------------------------------------------------
+export interface AgentMessageRequest {
+  conversation_id: string;
+  request_id: string;
+  context: { active_collection_id?: string };
+  input: { message: string };
+}
+
+export interface AgentConfirmationRequest {
+  conversation_id: string;
+  operation_id: string;
+  decision: "approve" | "deny";
+}
 
 export interface SendMessageOptions {
+  conversationId: string;
+  requestId: string;
   message: string;
-  sessionId?: string;
+  activeCollectionId?: string;
   onEvent?: (event: SSEEvent) => void;
   onError?: (code: string, message: string) => void;
 }
 
 export interface ConfirmOptions {
-  sessionId: string;
-  approved: boolean;
-  edits?: Record<string, unknown>;
+  conversationId: string;
+  operationId: string;
+  decision: "approve" | "deny";
   onEvent?: (event: SSEEvent) => void;
   onError?: (code: string, message: string) => void;
 }
 
-// ---------------------------------------------------------------------------
-// Parser
-// ---------------------------------------------------------------------------
+const EVENT_TYPES = new Set<AgentEventType>([
+  "run_started",
+  "action_started",
+  "assistant_message",
+  "approval_required",
+  "action_completed",
+  "error",
+  "run_completed",
+]);
 
-function asRecord(v: unknown): Record<string, unknown> {
-  return v && typeof v === "object" && !Array.isArray(v)
-    ? (v as Record<string, unknown>)
+function asRecord(value: unknown): Record<string, unknown> {
+  return value && typeof value === "object" && !Array.isArray(value)
+    ? (value as Record<string, unknown>)
     : {};
 }
 
-function parseSSEEvent(data: string): SSEEvent {
-  let parsed: Record<string, unknown>;
-  try {
-    parsed = JSON.parse(data) as Record<string, unknown>;
-  } catch {
-    return { type: "unknown", raw: data };
-  }
-
-  const type = typeof parsed.type === "string" ? parsed.type : "";
-  const name = typeof parsed.name === "string" ? parsed.name : undefined;
-  const dataField = asRecord(parsed.data);
-
-  switch (type) {
-    case "text":
-      return {
-        type: "text",
-        name,
-        data: dataField,
-        content: typeof dataField.content === "string" ? dataField.content : "",
-      };
-    case "done":
-      return { type: "done", name, data: dataField };
-    default:
-      // `start`, `end`, `confirm_required`, `error`, and any future types
-      // pass through unchanged. Callers decide how to render them.
-      return { type, name, data: dataField };
-  }
+function asOptionalString(value: unknown): string | undefined {
+  return typeof value === "string" && value.length > 0 ? value : undefined;
 }
 
-// ---------------------------------------------------------------------------
-// SSE stream reader
-// ---------------------------------------------------------------------------
+/**
+ * A completed mutation can represent an explicit HITL denial. Keep this
+ * distinction in the shared protocol layer so every presentation surface
+ * avoids treating a cancelled plan as a successful write.
+ */
+export function isCancelledMutation(payload: Record<string, unknown>): boolean {
+  return payload.approved === false;
+}
+
+export function buildAgentMessageRequest(
+  input: Omit<SendMessageOptions, "onEvent" | "onError">,
+): AgentMessageRequest {
+  const context = input.activeCollectionId
+    ? { active_collection_id: input.activeCollectionId }
+    : {};
+  return {
+    conversation_id: input.conversationId,
+    request_id: input.requestId,
+    context,
+    input: { message: input.message },
+  };
+}
+
+export function buildAgentConfirmationRequest(
+  input: Pick<ConfirmOptions, "conversationId" | "operationId" | "decision">,
+): AgentConfirmationRequest {
+  return {
+    conversation_id: input.conversationId,
+    operation_id: input.operationId,
+    decision: input.decision,
+  };
+}
+
+export function parseAgentEvent(raw: string): SSEEvent {
+  let parsed: Record<string, unknown>;
+  try {
+    parsed = JSON.parse(raw) as Record<string, unknown>;
+  } catch {
+    return { type: "unknown", raw };
+  }
+
+  const type = parsed.type;
+  const conversationId = asOptionalString(parsed.conversation_id);
+  const requestId = asOptionalString(parsed.request_id);
+  if (
+    parsed.v !== 1 ||
+    typeof type !== "string" ||
+    !EVENT_TYPES.has(type as AgentEventType) ||
+    !conversationId ||
+    !requestId
+  ) {
+    return { type: "unknown", raw };
+  }
+
+  return {
+    v: 1,
+    type: type as AgentEventType,
+    conversationId,
+    requestId,
+    operationId: asOptionalString(parsed.operation_id),
+    action: asOptionalString(parsed.action) as AgentAction | undefined,
+    payload: asRecord(parsed.payload),
+  };
+}
 
 async function readSSEStream(
   response: Response,
@@ -144,23 +181,18 @@ async function readSSEStream(
 
   const decoder = new TextDecoder();
   let buffer = "";
-
   try {
     while (true) {
       const { done, value } = await reader.read();
       if (done) break;
       buffer += decoder.decode(value, { stream: true });
-
       const lines = buffer.split("\n");
       buffer = lines.pop() ?? "";
-
       for (const line of lines) {
         const trimmed = line.trim();
-        if (!trimmed || !trimmed.startsWith("data:")) continue;
-        const data = trimmed.slice(5).trim();
-        if (!data) continue;
-
-        handlers.onEvent?.(parseSSEEvent(data));
+        if (!trimmed.startsWith("data:")) continue;
+        const event = parseAgentEvent(trimmed.slice(5).trim());
+        handlers.onEvent?.(event);
       }
     }
   } finally {
@@ -168,18 +200,9 @@ async function readSSEStream(
   }
 }
 
-// ---------------------------------------------------------------------------
-// Public API
-// ---------------------------------------------------------------------------
-
 export async function sendAgentMessage(
   options: SendMessageOptions,
 ): Promise<void> {
-  const { message, sessionId } = options;
-
-  const body: Record<string, unknown> = { message };
-  if (sessionId) body.session_id = sessionId;
-
   const token = getToken();
   const response = await fetch(`${AGENT_URL}/api/chat/send-message`, {
     method: "POST",
@@ -187,34 +210,20 @@ export async function sendAgentMessage(
       "Content-Type": "application/json",
       Authorization: token ? `Bearer ${token}` : "",
     },
-    body: JSON.stringify(body),
+    body: JSON.stringify(buildAgentMessageRequest(options)),
   });
-
-  await readSSEStream(response, {
-    onEvent: options.onEvent,
-    onError: options.onError,
-  });
+  await readSSEStream(response, options);
 }
 
 export async function confirmAgentPlan(options: ConfirmOptions): Promise<void> {
-  const { sessionId, approved, edits } = options;
   const token = getToken();
-
   const response = await fetch(`${AGENT_URL}/api/chat/confirm-message`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
       Authorization: token ? `Bearer ${token}` : "",
     },
-    body: JSON.stringify({
-      thread_id: sessionId,
-      approved,
-      edits: edits ?? {},
-    }),
+    body: JSON.stringify(buildAgentConfirmationRequest(options)),
   });
-
-  await readSSEStream(response, {
-    onEvent: options.onEvent,
-    onError: options.onError,
-  });
+  await readSSEStream(response, options);
 }

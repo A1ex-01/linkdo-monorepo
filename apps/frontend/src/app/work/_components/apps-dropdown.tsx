@@ -12,8 +12,9 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useUserStore } from "@/stores/user";
-import { IconApps, IconPlugConnected } from "@tabler/icons-react";
+import { IconApps } from "@tabler/icons-react";
 import toast from "react-hot-toast";
+import { COMING_SOON_INTEGRATIONS } from "./coming-soon-integrations";
 import { launchDesktopLinkOAuth } from "./link-oauth";
 
 export function AppsDropdown() {
@@ -31,7 +32,7 @@ export function AppsDropdown() {
           <IconApps />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-72 p-2">
+      <DropdownMenuContent align="end" className="w-96 p-2">
         <DropdownMenuLabel className="text-foreground px-2 py-1.5 text-sm">
           My Apps
         </DropdownMenuLabel>
@@ -54,7 +55,27 @@ export function AppsDropdown() {
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          <DropdownMenuItem disabled className="gap-3 px-2 py-2.5">
+          {COMING_SOON_INTEGRATIONS.map((integration) => (
+            <DropdownMenuItem
+              key={integration.name}
+              disabled
+              className="gap-3 px-2 py-2.5 opacity-100 data-disabled:opacity-100"
+            >
+              {integration.icon}
+              <span className="flex min-w-0 flex-1 flex-col gap-0.5">
+                <span className="text-foreground font-medium">
+                  {integration.name}
+                </span>
+                <span className="text-muted-foreground text-xs">
+                  {integration.description}
+                </span>
+              </span>
+              <span className="rounded-full border border-white/[0.08] bg-white/[0.05] px-2 py-0.5 text-[11px] font-medium text-[#9a9aa0]">
+                Coming soon
+              </span>
+            </DropdownMenuItem>
+          ))}
+          {/* <DropdownMenuItem disabled className="gap-3 px-2 py-2.5">
             <span className="bg-muted flex size-8 items-center justify-center rounded-md">
               <IconPlugConnected />
             </span>
@@ -67,7 +88,7 @@ export function AppsDropdown() {
             <span className="bg-muted text-muted-foreground rounded-full px-2 py-0.5 text-xs">
               Coming soon
             </span>
-          </DropdownMenuItem>
+          </DropdownMenuItem> */}
         </DropdownMenuGroup>
       </DropdownMenuContent>
     </DropdownMenu>

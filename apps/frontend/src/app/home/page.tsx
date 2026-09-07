@@ -1,10 +1,5 @@
 "use client";
 
-import { IconPlus, IconStarFilled } from "@tabler/icons-react";
-import { useRequest } from "ahooks";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-import toast from "react-hot-toast";
 import { AccountSettingsDialog } from "@/components/account-settings-dialog";
 import { LoadingScreen } from "@/components/motion/loading-screen";
 import {
@@ -23,6 +18,11 @@ import { resolveFilePath } from "@/services/file";
 import { useUserStore } from "@/stores/user";
 import type { ICollection } from "@/types/base";
 import { getGreeting, getGreetingMessage } from "@/utils/base";
+import { IconPlus, IconStarFilled } from "@tabler/icons-react";
+import { useRequest } from "ahooks";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import toast from "react-hot-toast";
 import CollectionCard from "./_components/collection-card";
 import CreateCollectionModal from "./_components/create-collection-modal";
 import Sidebar from "./_components/sidebar";
@@ -129,11 +129,9 @@ export default function HomePage() {
             <div className="bg-background flex w-full flex-col rounded-xl border border-[#363636] px-4 py-3">
               <div className="mb-1 flex items-center gap-2">
                 <IconStarFilled size={18} className="text-atext-450" />
-                <span className="text-atext-450 text-base font-bold">
-                  Unlimited Monthly
-                </span>
+                <span className="text-atext-450 text-base font-bold">Free</span>
               </div>
-              <span className="text-atext-460 text-sm">无限制使用所有功能</span>
+              <span className="text-atext-460 text-sm">无限制</span>
             </div>
           </div>
 
@@ -230,9 +228,7 @@ export default function HomePage() {
                     className="group hover:border-linkdo-blue/80 relative flex h-[320px] cursor-pointer flex-col items-center justify-center overflow-hidden rounded-2xl border border-dashed border-white/[0.17] bg-[#151515] p-5 text-center transition-[border-color,background-color,box-shadow,transform] duration-200 hover:bg-[#19191b] hover:shadow-[0_0_0_1px_rgba(91,132,229,0.32)]"
                   >
                     <div className="absolute inset-x-5 top-0 h-px bg-white/20 opacity-0 transition-opacity duration-200 group-hover:opacity-100" />
-                    <div className="mb-5 flex size-12 items-center justify-center rounded-2xl border border-white/[0.1] bg-[#242426] text-[#c7c7cc] transition-all duration-200 group-hover:scale-105 group-hover:border-white/25 group-hover:bg-[#2d2d30] group-hover:text-white">
-                      <IconPlus className="size-5" />
-                    </div>
+
                     <svg
                       aria-hidden="true"
                       width={52}
