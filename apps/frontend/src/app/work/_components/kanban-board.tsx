@@ -2,7 +2,6 @@
 
 import { useData } from "@/app/work/data-provider";
 import { AddTask } from "@/components/add-task";
-import AIChat from "@/components/ai-chat";
 import TaskCardItem from "@/components/task-card-item";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
@@ -46,7 +45,9 @@ const DropZone = ({
     <div
       className={cn(
         "absolute top-0 h-[72px] w-full shrink-0 rounded-lg border-2 border-dashed border-[#515151] transition-all",
-        isDraggingOver ? "border-[#363636] bg-[#232323] opacity-100" : "opacity-60",
+        isDraggingOver
+          ? "border-[#363636] bg-[#232323] opacity-100"
+          : "opacity-60",
       )}
     />
   );
@@ -123,7 +124,6 @@ export function KanbanBoard({}: KanbanBoardProps) {
           {COLUMNS.map((col) => {
             const colTasks = groupedTasks[col.value] || [];
 
-
             return (
               <Droppable key={col.value} droppableId={col.value}>
                 {(provided: DroppableProvided, snapshot) => {
@@ -179,7 +179,7 @@ export function KanbanBoard({}: KanbanBoardProps) {
                             </div>
                           </div>
                         )}
-                        <div className="relative mt-4 scrollbar-none flex flex-1 flex-col gap-3 overflow-x-hidden overflow-y-auto">
+                        <div className="relative mt-4 flex flex-1 scrollbar-none flex-col gap-3 overflow-x-hidden overflow-y-auto">
                           {colTasks?.map((task, index) => {
                             const isActive = activeId === task.uuid;
                             const targetIndex = overIndex;
@@ -257,7 +257,7 @@ export function KanbanBoard({}: KanbanBoardProps) {
             );
           })}
         </div>
-        <AIChat />
+        {/* <AIChat /> */}
       </div>
     </DragDropContext>
   );

@@ -18,7 +18,7 @@ import { resolveFilePath } from "@/services/file";
 import { useUserStore } from "@/stores/user";
 import type { ICollection } from "@/types/base";
 import { getGreeting, getGreetingMessage } from "@/utils/base";
-import { IconPlus, IconStarFilled } from "@tabler/icons-react";
+import { IconLoader, IconPlus, IconStarFilled } from "@tabler/icons-react";
 import { useRequest } from "ahooks";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -86,8 +86,10 @@ export default function HomePage() {
   };
 
   const [isLoadingScreen, setIsLoadingScreen] = useState(true);
+  const { isFetchedUser } = useUserStore();
 
   if (isLoadingScreen) {
+    if (!isFetchedUser) return <IconLoader />;
     return (
       <LoadingScreen
         icons={[
@@ -96,7 +98,7 @@ export default function HomePage() {
           },
           {
             type: "name",
-            value: "P",
+            value: user?.name?.slice(0, 1) || "L",
           },
         ]}
         loadId="home"
@@ -158,12 +160,12 @@ export default function HomePage() {
                 <Avatar>
                   <AvatarImage
                     src={resolveFilePath(user?.avatar_url)}
-                    className="size-10 object-cover"
+                    className="object-cover"
                   />
                   <AvatarFallback className="bg-primary-500">
                     {user?.name.slice(0, 2) ?? "U"}
                   </AvatarFallback>
-                  <AvatarBadge className="bg-green-600" />
+                  <AvatarBadge className="bg-green-600 dark:bg-green-800" />
                 </Avatar>
               </button>
             </div>

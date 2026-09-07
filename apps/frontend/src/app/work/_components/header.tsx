@@ -7,9 +7,14 @@ import { ClickUpDropdown } from "@/app/work/_components/clickup-dropdown";
 import { NotionDropdown } from "@/app/work/_components/notion-dropdown";
 import { TaskSearch } from "@/app/work/_components/task-search";
 import { useData } from "@/app/work/data-provider";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { CollectionCover } from "@/components/collection-cover";
 import { AccountSettingsDialog } from "@/components/account-settings-dialog";
+import { CollectionCover } from "@/components/collection-cover";
+import {
+  Avatar,
+  AvatarBadge,
+  AvatarFallback,
+  AvatarImage,
+} from "@/components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -30,8 +35,8 @@ import {
   IconSettings,
 } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
-import toast from "react-hot-toast";
 import { useState } from "react";
+import toast from "react-hot-toast";
 
 export function WorkHeader() {
   const router = useRouter();
@@ -140,11 +145,12 @@ export function WorkHeader() {
               <Avatar size="default" className="ring-1 ring-white/10">
                 <AvatarImage
                   src={resolveFilePath(user?.avatar_url)}
-                  className="size-9 object-cover"
+                  className="object-cover"
                 />
                 <AvatarFallback className="bg-[#2f2f2f] text-xs text-white">
                   {user?.name?.slice(0, 2)?.toUpperCase() ?? "U"}
                 </AvatarFallback>
+                <AvatarBadge className="bg-green-600 dark:bg-green-800" />
               </Avatar>
               <IconChevronDown className="size-4" />
             </button>
