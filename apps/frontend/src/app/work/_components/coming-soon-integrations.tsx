@@ -1,4 +1,5 @@
 import { AIconFigma, AIconMCP } from "@/components/icons/base";
+import React from "react";
 
 export const COMING_SOON_INTEGRATIONS = [
   {

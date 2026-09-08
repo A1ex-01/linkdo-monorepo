@@ -1,18 +1,18 @@
 import { cn } from '@/lib/utils'
-import { adminService, type AdminStats } from '@/services/admin'
+import { adminService, type ReportSummary } from '@/services/admin'
 import { createFileRoute } from '@tanstack/react-router'
 import { CheckCircle, LayoutList, ListChecks, Users } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
 
 export function Dashboard() {
-  const [stats, setStats] = useState<AdminStats | null>(null)
+  const [stats, setStats] = useState<ReportSummary | null>(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     async function fetchStats() {
       try {
-        const res = await adminService.getStats()
+        const res = await adminService.getReportSummary()
         if (res.success && res.data) {
           setStats(res.data)
         } else {
@@ -30,9 +30,9 @@ export function Dashboard() {
   const cards = [
     {
       title: 'Total Users',
-      value: stats?.total_users ?? '—',
+      value: '—',
       icon: Users,
-      description: 'All registered users',
+      description: 'No list-users endpoint is registered',
       color: 'text-blue-500',
       bg: 'bg-blue-500/10',
     },
@@ -46,24 +46,24 @@ export function Dashboard() {
     },
     {
       title: 'Total Collections',
-      value: stats?.total_todos ?? '—',
+      value: stats?.total_work_days ?? '—',
       icon: LayoutList,
-      description: 'Active collections',
+      description: 'Work days in report window',
       color: 'text-orange-500',
       bg: 'bg-orange-500/10',
     },
     {
       title: 'Done Today',
-      value: stats?.today_done ?? '—',
+      value: stats?.completed_tasks ?? '—',
       icon: CheckCircle,
-      description: 'Tasks completed today',
+      description: 'Completed tasks in report window',
       color: 'text-green-500',
       bg: 'bg-green-500/10',
     },
   ]
 
   return (
-    <div className='space-y-6 p-6'>
+    <div className='flex flex-col gap-6 p-6'>
       <div>
         <h2 className='text-2xl font-bold tracking-tight'>Dashboard</h2>
         <p className='text-muted-foreground'>

@@ -73,6 +73,20 @@ export function getCollectionsColumns(): ColumnDef<Collection>[] {
       ),
     },
     {
+      id: 'targets',
+      header: 'Linked Targets',
+      cell: ({ row }) => {
+        const notionCount = row.original.notion_databases?.length ?? 0
+        const clickupCount = row.original.clickup_lists?.length ?? 0
+        return (
+          <div className='flex flex-wrap gap-1'>
+            <Badge variant='outline'>Notion {notionCount}</Badge>
+            <Badge variant='outline'>ClickUp {clickupCount}</Badge>
+          </div>
+        )
+      },
+    },
+    {
       accessorKey: 'created_at',
       header: 'Created',
       cell: ({ row }) => (

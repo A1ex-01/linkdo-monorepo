@@ -4,7 +4,10 @@ import {
   LayoutDashboard,
   ListTodo,
   MessageCircle,
-  Shield,
+  Plug,
+  ScrollText,
+  Server,
+  SlidersHorizontal,
   Users,
 } from 'lucide-react'
 import { type SidebarData } from '../types'
@@ -36,14 +39,29 @@ export const sidebarData: SidebarData = {
           icon: ListTodo,
         },
         {
-          title: 'Users',
-          url: '/users',
-          icon: Users,
+          title: 'API Reference',
+          url: '/api-reference',
+          icon: Server,
         },
         {
-          title: 'Roles',
-          url: '/roles',
-          icon: Shield,
+          title: 'Integrations',
+          url: '/integrations',
+          icon: Plug,
+        },
+        {
+          title: 'Reports',
+          url: '/reports',
+          icon: ScrollText,
+        },
+        {
+          title: 'Operations',
+          url: '/operations',
+          icon: SlidersHorizontal,
+        },
+        {
+          title: 'Current User',
+          url: '/users',
+          icon: Users,
         },
         {
           title: 'Product Intro',

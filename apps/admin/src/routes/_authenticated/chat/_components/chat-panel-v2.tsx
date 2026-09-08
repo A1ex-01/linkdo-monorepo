@@ -237,12 +237,17 @@ export default function ChatPanelV2() {
                                   <div key={index}>
                                     <Badge>{prefix}</Badge> <br />
                                     steps: <br />
-                                    {parsedData?.data?.steps?.map((step) => (
-                                      <Badge key={step?.intent}>
-                                        {step?.intent} -{' '}
-                                        {JSON.stringify(step?.params)}
-                                      </Badge>
-                                    ))}
+                                    {parsedData?.data?.steps?.map(
+                                      (step: {
+                                        intent?: string
+                                        params?: unknown
+                                      }) => (
+                                        <Badge key={step?.intent}>
+                                          {step?.intent} -{' '}
+                                          {JSON.stringify(step?.params)}
+                                        </Badge>
+                                      )
+                                    )}
                                   </div>
                                 )
                               default:
@@ -289,14 +294,10 @@ export default function ChatPanelV2() {
                                     <br />
                                     <Button
                                       onClick={async () => {
-                                        console.log(
-                                          '🐽🐽 ~ chat-panel-v2.tsx ~ ChatPanelV2 ~ onClick ~ parsedData?.data?.params?.confirm:',
-                                          parsedData?.data?.params?.confirm
-                                        )
                                         const data =
                                           confirmTaskUpdate('1234567890')
                                         for await (const chunk of data) {
-                                          console.log(chunk)
+                                          void chunk
                                         }
 
                                         // handleSend(parsedData?.data?.params?.confirm)
@@ -331,15 +332,10 @@ export default function ChatPanelV2() {
                                   <br />
                                   <Button
                                     onClick={async () => {
-                                      console.log(
-                                        '🐽🐽 ~ chat-panel-v2.tsx ~ ChatPanelV2 ~ onClick ~ parsedData?.data?.params?.confirm:',
-                                        parsedData?.data?.params?.confirm
-                                      )
                                       const data =
                                         confirmTaskUpdate('1234567890')
 
                                       for await (const chunk of data) {
-                                        console.log(chunk)
                                         const newMsg = {
                                           ...msg,
                                           content: `${msg.content}\n${chunk.text}`,

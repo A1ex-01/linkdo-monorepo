@@ -20,11 +20,14 @@ import { Route as authSignInRouteImport } from './routes/(auth)/sign-in'
 import { Route as AuthenticatedUsersIndexRouteImport } from './routes/_authenticated/users/index'
 import { Route as AuthenticatedTasksIndexRouteImport } from './routes/_authenticated/tasks/index'
 import { Route as AuthenticatedRolesIndexRouteImport } from './routes/_authenticated/roles/index'
+import { Route as AuthenticatedReportsIndexRouteImport } from './routes/_authenticated/reports/index'
 import { Route as AuthenticatedProductIntroIndexRouteImport } from './routes/_authenticated/product-intro/index'
+import { Route as AuthenticatedOperationsIndexRouteImport } from './routes/_authenticated/operations/index'
+import { Route as AuthenticatedIntegrationsIndexRouteImport } from './routes/_authenticated/integrations/index'
 import { Route as AuthenticatedHelpCenterIndexRouteImport } from './routes/_authenticated/help-center/index'
 import { Route as AuthenticatedCollectionsIndexRouteImport } from './routes/_authenticated/collections/index'
 import { Route as AuthenticatedChatIndexRouteImport } from './routes/_authenticated/chat/index'
-import { Route as AuthenticatedRolesRoleIdRouteImport } from './routes/_authenticated/roles/$roleId'
+import { Route as AuthenticatedApiReferenceIndexRouteImport } from './routes/_authenticated/api-reference/index'
 import { Route as AuthenticatedErrorsErrorRouteImport } from './routes/_authenticated/errors/$error'
 
 const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
@@ -81,10 +84,28 @@ const AuthenticatedRolesIndexRoute = AuthenticatedRolesIndexRouteImport.update({
   path: '/roles/',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedReportsIndexRoute =
+  AuthenticatedReportsIndexRouteImport.update({
+    id: '/reports/',
+    path: '/reports/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedProductIntroIndexRoute =
   AuthenticatedProductIntroIndexRouteImport.update({
     id: '/product-intro/',
     path: '/product-intro/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedOperationsIndexRoute =
+  AuthenticatedOperationsIndexRouteImport.update({
+    id: '/operations/',
+    path: '/operations/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedIntegrationsIndexRoute =
+  AuthenticatedIntegrationsIndexRouteImport.update({
+    id: '/integrations/',
+    path: '/integrations/',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedHelpCenterIndexRoute =
@@ -104,10 +125,10 @@ const AuthenticatedChatIndexRoute = AuthenticatedChatIndexRouteImport.update({
   path: '/chat/',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
-const AuthenticatedRolesRoleIdRoute =
-  AuthenticatedRolesRoleIdRouteImport.update({
-    id: '/roles/$roleId',
-    path: '/roles/$roleId',
+const AuthenticatedApiReferenceIndexRoute =
+  AuthenticatedApiReferenceIndexRouteImport.update({
+    id: '/api-reference/',
+    path: '/api-reference/',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedErrorsErrorRoute =
@@ -126,11 +147,14 @@ export interface FileRoutesByFullPath {
   '/500': typeof errors500Route
   '/503': typeof errors503Route
   '/errors/$error': typeof AuthenticatedErrorsErrorRoute
-  '/roles/$roleId': typeof AuthenticatedRolesRoleIdRoute
+  '/api-reference/': typeof AuthenticatedApiReferenceIndexRoute
   '/chat/': typeof AuthenticatedChatIndexRoute
   '/collections/': typeof AuthenticatedCollectionsIndexRoute
   '/help-center/': typeof AuthenticatedHelpCenterIndexRoute
+  '/integrations/': typeof AuthenticatedIntegrationsIndexRoute
+  '/operations/': typeof AuthenticatedOperationsIndexRoute
   '/product-intro/': typeof AuthenticatedProductIntroIndexRoute
+  '/reports/': typeof AuthenticatedReportsIndexRoute
   '/roles/': typeof AuthenticatedRolesIndexRoute
   '/tasks/': typeof AuthenticatedTasksIndexRoute
   '/users/': typeof AuthenticatedUsersIndexRoute
@@ -144,11 +168,14 @@ export interface FileRoutesByTo {
   '/503': typeof errors503Route
   '/': typeof AuthenticatedIndexRoute
   '/errors/$error': typeof AuthenticatedErrorsErrorRoute
-  '/roles/$roleId': typeof AuthenticatedRolesRoleIdRoute
+  '/api-reference': typeof AuthenticatedApiReferenceIndexRoute
   '/chat': typeof AuthenticatedChatIndexRoute
   '/collections': typeof AuthenticatedCollectionsIndexRoute
   '/help-center': typeof AuthenticatedHelpCenterIndexRoute
+  '/integrations': typeof AuthenticatedIntegrationsIndexRoute
+  '/operations': typeof AuthenticatedOperationsIndexRoute
   '/product-intro': typeof AuthenticatedProductIntroIndexRoute
+  '/reports': typeof AuthenticatedReportsIndexRoute
   '/roles': typeof AuthenticatedRolesIndexRoute
   '/tasks': typeof AuthenticatedTasksIndexRoute
   '/users': typeof AuthenticatedUsersIndexRoute
@@ -164,11 +191,14 @@ export interface FileRoutesById {
   '/(errors)/503': typeof errors503Route
   '/_authenticated/': typeof AuthenticatedIndexRoute
   '/_authenticated/errors/$error': typeof AuthenticatedErrorsErrorRoute
-  '/_authenticated/roles/$roleId': typeof AuthenticatedRolesRoleIdRoute
+  '/_authenticated/api-reference/': typeof AuthenticatedApiReferenceIndexRoute
   '/_authenticated/chat/': typeof AuthenticatedChatIndexRoute
   '/_authenticated/collections/': typeof AuthenticatedCollectionsIndexRoute
   '/_authenticated/help-center/': typeof AuthenticatedHelpCenterIndexRoute
+  '/_authenticated/integrations/': typeof AuthenticatedIntegrationsIndexRoute
+  '/_authenticated/operations/': typeof AuthenticatedOperationsIndexRoute
   '/_authenticated/product-intro/': typeof AuthenticatedProductIntroIndexRoute
+  '/_authenticated/reports/': typeof AuthenticatedReportsIndexRoute
   '/_authenticated/roles/': typeof AuthenticatedRolesIndexRoute
   '/_authenticated/tasks/': typeof AuthenticatedTasksIndexRoute
   '/_authenticated/users/': typeof AuthenticatedUsersIndexRoute
@@ -184,11 +214,14 @@ export interface FileRouteTypes {
     | '/500'
     | '/503'
     | '/errors/$error'
-    | '/roles/$roleId'
+    | '/api-reference/'
     | '/chat/'
     | '/collections/'
     | '/help-center/'
+    | '/integrations/'
+    | '/operations/'
     | '/product-intro/'
+    | '/reports/'
     | '/roles/'
     | '/tasks/'
     | '/users/'
@@ -202,11 +235,14 @@ export interface FileRouteTypes {
     | '/503'
     | '/'
     | '/errors/$error'
-    | '/roles/$roleId'
+    | '/api-reference'
     | '/chat'
     | '/collections'
     | '/help-center'
+    | '/integrations'
+    | '/operations'
     | '/product-intro'
+    | '/reports'
     | '/roles'
     | '/tasks'
     | '/users'
@@ -221,11 +257,14 @@ export interface FileRouteTypes {
     | '/(errors)/503'
     | '/_authenticated/'
     | '/_authenticated/errors/$error'
-    | '/_authenticated/roles/$roleId'
+    | '/_authenticated/api-reference/'
     | '/_authenticated/chat/'
     | '/_authenticated/collections/'
     | '/_authenticated/help-center/'
+    | '/_authenticated/integrations/'
+    | '/_authenticated/operations/'
     | '/_authenticated/product-intro/'
+    | '/_authenticated/reports/'
     | '/_authenticated/roles/'
     | '/_authenticated/tasks/'
     | '/_authenticated/users/'
@@ -320,11 +359,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedRolesIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/reports/': {
+      id: '/_authenticated/reports/'
+      path: '/reports'
+      fullPath: '/reports/'
+      preLoaderRoute: typeof AuthenticatedReportsIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/product-intro/': {
       id: '/_authenticated/product-intro/'
       path: '/product-intro'
       fullPath: '/product-intro/'
       preLoaderRoute: typeof AuthenticatedProductIntroIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/operations/': {
+      id: '/_authenticated/operations/'
+      path: '/operations'
+      fullPath: '/operations/'
+      preLoaderRoute: typeof AuthenticatedOperationsIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/integrations/': {
+      id: '/_authenticated/integrations/'
+      path: '/integrations'
+      fullPath: '/integrations/'
+      preLoaderRoute: typeof AuthenticatedIntegrationsIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/help-center/': {
@@ -348,11 +408,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedChatIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/_authenticated/roles/$roleId': {
-      id: '/_authenticated/roles/$roleId'
-      path: '/roles/$roleId'
-      fullPath: '/roles/$roleId'
-      preLoaderRoute: typeof AuthenticatedRolesRoleIdRouteImport
+    '/_authenticated/api-reference/': {
+      id: '/_authenticated/api-reference/'
+      path: '/api-reference'
+      fullPath: '/api-reference/'
+      preLoaderRoute: typeof AuthenticatedApiReferenceIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/errors/$error': {
@@ -368,11 +428,14 @@ declare module '@tanstack/react-router' {
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
   AuthenticatedErrorsErrorRoute: typeof AuthenticatedErrorsErrorRoute
-  AuthenticatedRolesRoleIdRoute: typeof AuthenticatedRolesRoleIdRoute
+  AuthenticatedApiReferenceIndexRoute: typeof AuthenticatedApiReferenceIndexRoute
   AuthenticatedChatIndexRoute: typeof AuthenticatedChatIndexRoute
   AuthenticatedCollectionsIndexRoute: typeof AuthenticatedCollectionsIndexRoute
   AuthenticatedHelpCenterIndexRoute: typeof AuthenticatedHelpCenterIndexRoute
+  AuthenticatedIntegrationsIndexRoute: typeof AuthenticatedIntegrationsIndexRoute
+  AuthenticatedOperationsIndexRoute: typeof AuthenticatedOperationsIndexRoute
   AuthenticatedProductIntroIndexRoute: typeof AuthenticatedProductIntroIndexRoute
+  AuthenticatedReportsIndexRoute: typeof AuthenticatedReportsIndexRoute
   AuthenticatedRolesIndexRoute: typeof AuthenticatedRolesIndexRoute
   AuthenticatedTasksIndexRoute: typeof AuthenticatedTasksIndexRoute
   AuthenticatedUsersIndexRoute: typeof AuthenticatedUsersIndexRoute
@@ -381,11 +444,14 @@ interface AuthenticatedRouteRouteChildren {
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedIndexRoute: AuthenticatedIndexRoute,
   AuthenticatedErrorsErrorRoute: AuthenticatedErrorsErrorRoute,
-  AuthenticatedRolesRoleIdRoute: AuthenticatedRolesRoleIdRoute,
+  AuthenticatedApiReferenceIndexRoute: AuthenticatedApiReferenceIndexRoute,
   AuthenticatedChatIndexRoute: AuthenticatedChatIndexRoute,
   AuthenticatedCollectionsIndexRoute: AuthenticatedCollectionsIndexRoute,
   AuthenticatedHelpCenterIndexRoute: AuthenticatedHelpCenterIndexRoute,
+  AuthenticatedIntegrationsIndexRoute: AuthenticatedIntegrationsIndexRoute,
+  AuthenticatedOperationsIndexRoute: AuthenticatedOperationsIndexRoute,
   AuthenticatedProductIntroIndexRoute: AuthenticatedProductIntroIndexRoute,
+  AuthenticatedReportsIndexRoute: AuthenticatedReportsIndexRoute,
   AuthenticatedRolesIndexRoute: AuthenticatedRolesIndexRoute,
   AuthenticatedTasksIndexRoute: AuthenticatedTasksIndexRoute,
   AuthenticatedUsersIndexRoute: AuthenticatedUsersIndexRoute,

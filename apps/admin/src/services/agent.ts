@@ -64,7 +64,7 @@ export interface ConfirmOptions {
 function parseSSEEvent(data: string): SSEEvent {
   try {
     const parsed = JSON.parse(data) as Record<string, unknown>
-    const { type, ...rest } = parsed
+    const { type } = parsed
 
     switch (type) {
       case 'confirm_required':
@@ -129,12 +129,14 @@ export async function sendAgentMessage(
   const body: Record<string, unknown> = { message, confirm }
   if (sessionId) body.session_id = sessionId
 
+  const headers: HeadersInit = {
+    'Content-Type': 'application/json',
+  }
+  if (AGENT_API_KEY) headers['X-API-Key'] = AGENT_API_KEY
+
   const response = await fetch(`${AGENT_URL}/v1/chat/stream`, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'X-API-Key': AGENT_API_KEY,
-    },
+    headers,
     body: JSON.stringify(body),
   })
 
@@ -210,15 +212,17 @@ export async function confirmAgentPlan(options: ConfirmOptions): Promise<void> {
     options
   const token = getToken()
 
+  const headers: HeadersInit = {
+    'Content-Type': 'application/json',
+    Authorization: `Bearer ${token}`,
+  }
+  if (AGENT_API_KEY) headers['X-API-Key'] = AGENT_API_KEY
+
   const response = await fetch(
     `${AGENT_URL}/v1/chat/confirm?session_id=${encodeURIComponent(sessionId)}`,
     {
       method: 'POST',
-      headers: {
-        'X-API-Key': AGENT_API_KEY,
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-      },
+      headers,
     }
   )
 

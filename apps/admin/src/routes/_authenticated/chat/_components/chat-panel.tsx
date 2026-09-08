@@ -7,7 +7,7 @@ import {
 } from '@/services/agent'
 import { IconSend } from '@tabler/icons-react'
 import { AnimatePresence, motion } from 'framer-motion'
-import { useEffect, useRef, useState } from 'react'
+import { type HTMLAttributes, useEffect, useRef, useState } from 'react'
 import Markdown from 'react-markdown'
 
 // ---------------------------------------------------------------------------
@@ -234,11 +234,11 @@ export default function ChatPanel() {
                           />
                         ),
                         code: ({
-                          node,
                           inline,
-                          className,
                           children,
                           ...props
+                        }: HTMLAttributes<HTMLElement> & {
+                          inline?: boolean
                         }) =>
                           inline ? (
                             <code
@@ -249,7 +249,6 @@ export default function ChatPanel() {
                             </code>
                           ) : (
                             <pre
-                              {...props}
                               className='overflow-x-auto rounded-lg bg-[#232136] p-2 text-[13px] text-[#e5e2e3]'
                             >
                               <code>{children}</code>

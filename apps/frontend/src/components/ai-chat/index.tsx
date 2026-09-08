@@ -1112,6 +1112,7 @@ function ConfirmCreateFields({ fields }: { fields: Record<string, unknown> }) {
   const estimatedTime = readOptionalNumber(fields, "estimated_time");
   const scheduledDate = readOptionalString(fields, "scheduled_date");
   const notionDatabaseUuid = readOptionalString(fields, "notion_database_uuid");
+  const clickUpListUuid = readOptionalString(fields, "clickup_list_uuid");
 
   const entries: { key: string; value: React.ReactNode }[] = [];
   if (title)
@@ -1139,6 +1140,16 @@ function ConfirmCreateFields({ fields }: { fields: Record<string, unknown> }) {
       value: (
         <span className="font-mono text-[11px] text-white/70">
           {notionDatabaseUuid}
+        </span>
+      ),
+    });
+  }
+  if (clickUpListUuid) {
+    entries.push({
+      key: "ClickUp List",
+      value: (
+        <span className="font-mono text-[11px] text-white/70">
+          {clickUpListUuid}
         </span>
       ),
     });

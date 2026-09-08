@@ -19,16 +19,8 @@ function Collections() {
   useEffect(() => {
     queueMicrotask(() => setLoading(true))
 
-    // const page = searchParams.get('page')
-    // const pageSize = searchParams.get('pageSize')
-
-    const params = {
-      // ...(page ? { current: Number(page) } : {}),
-      // ...(pageSize ? { pageSize: Number(pageSize) } : {}),
-    }
-
     adminService
-      .listCollections(params)
+      .listCollections({})
       .then((res) => {
         if (res.success && res.data) {
           setData(res.data.list)
