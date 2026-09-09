@@ -2,14 +2,28 @@
 set -euo pipefail
 
 deploy_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-env_file="$deploy_dir/.env"
+admin_env_file="$deploy_dir/.env.admin.production"
+backend_env_file="$deploy_dir/.env.backend.production"
+image_env_file="$deploy_dir/.env.image"
 
-if [[ ! -f "$env_file" ]]; then
-  echo "Missing $env_file. Copy .env.example and fill in the production values." >&2
+if [[ ! -f "$admin_env_file" ]]; then
+  echo "Missing $admin_env_file. Copy the Admin .env.product file here." >&2
+  exit 1
+fi
+if [[ ! -f "$backend_env_file" ]]; then
+  echo "Missing $backend_env_file. Copy the Backend .env.product file here." >&2
+  exit 1
+fi
+if [[ ! -f "$image_env_file" ]]; then
+  echo "Missing $image_env_file. Add REGISTRY_HOST, CCR_NAMESPACE, and IMAGE_TAG." >&2
   exit 1
 fi
 
-compose=(docker compose --env-file "$env_file" -f "$deploy_dir/compose.yaml")
+compose=(docker compose \
+  --env-file "$backend_env_file" \
+  --env-file "$admin_env_file" \
+  --env-file "$image_env_file" \
+  -f "$deploy_dir/compose.yaml")
 
 "${compose[@]}" pull
 exec "${compose[@]}" up -d --remove-orphans

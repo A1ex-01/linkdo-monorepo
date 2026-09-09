@@ -33,6 +33,9 @@ services/backend/link-do-backend
 
 # 环境变量
 .env
+.env.development
+.env.product
+.env.production
 .env.local
 .env.*.local
 !.env.example
@@ -61,7 +64,13 @@ backups
 
 
 .env.server
+deploy/.env.admin.production
+deploy/.env.backend.production
+deploy/.env.image
 
 
 .pytest_cache/
 .pytest_pkgs/
+
+
+*.tgz

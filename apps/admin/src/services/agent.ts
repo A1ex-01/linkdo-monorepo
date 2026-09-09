@@ -3,7 +3,7 @@
  * Endpoint: POST http://localhost:6001/v1/chat/stream
  */
 
-import { AGENT_API_KEY, AGENT_URL } from '@/config/index'
+import { AGENT_URL } from '@/config/index'
 import { getToken } from './client-request'
 
 // ---------------------------------------------------------------------------
@@ -132,7 +132,6 @@ export async function sendAgentMessage(
   const headers: HeadersInit = {
     'Content-Type': 'application/json',
   }
-  if (AGENT_API_KEY) headers['X-API-Key'] = AGENT_API_KEY
 
   const response = await fetch(`${AGENT_URL}/v1/chat/stream`, {
     method: 'POST',
@@ -216,7 +215,6 @@ export async function confirmAgentPlan(options: ConfirmOptions): Promise<void> {
     'Content-Type': 'application/json',
     Authorization: `Bearer ${token}`,
   }
-  if (AGENT_API_KEY) headers['X-API-Key'] = AGENT_API_KEY
 
   const response = await fetch(
     `${AGENT_URL}/v1/chat/confirm?session_id=${encodeURIComponent(sessionId)}`,

@@ -1,15 +1,10 @@
 name: ${COMPOSE_PROJECT_NAME:-linkdo}
 
-x-backend-environment: &backend-environment
-  MYSQL_DSN: "root:${MYSQL_ROOT_PASSWORD}@tcp(mysql:3306)/${MYSQL_DATABASE:-linkdo}?charset=utf8mb4&parseTime=True&loc=Local"
-  REDIS_ADDR: redis:6379
-  AMQP_URL: "amqp://${RABBITMQ_USER:-linkdo}:${RABBITMQ_PASSWORD}@rabbitmq:5672/"
-
 x-backend: &backend
-  image: ${REGISTRY_HOST:-ccr.ccs.tencentyun.com}/${CCR_NAMESPACE:-ax-linkdo}/linkdo-backend:${IMAGE_TAG:-latest}
+  image: ${REGISTRY_HOST}/${CCR_NAMESPACE}/linkdo-backend:${IMAGE_TAG}
   restart: unless-stopped
   init: true
-  env_file: .env
+  env_file: .env.backend.production
   depends_on:
     mysql:
       condition: service_healthy
@@ -27,13 +22,14 @@ x-backend: &backend
 
 services:
   admin:
-    image: ${REGISTRY_HOST:-ccr.ccs.tencentyun.com}/${CCR_NAMESPACE:-ax-linkdo}/linkdo-admin:${IMAGE_TAG:-latest}
+    image: ${REGISTRY_HOST}/${CCR_NAMESPACE}/linkdo-admin:${IMAGE_TAG}
     restart: unless-stopped
+    env_file: .env.admin.production
     depends_on:
       gateway:
         condition: service_healthy
     ports:
-      - "${HTTP_PORT:-80}:80"
+      - "${HTTP_PORT}:80"
     networks:
       - public
       - internal
@@ -46,12 +42,8 @@ services:
   gateway:
     <<: *backend
     command: ["./app-gateway"]
-    environment:
-      <<: *backend-environment
-      GATEWAY_PORT: "8080"
-      BASE_SERVICE_URL: http://base-service:8081
-      LINK_SERVICE_URL: http://link-service:8082
-      FILE_SERVICE_URL: http://file-service:8083
+    ports:
+      - "${GATEWAY_PORT}:8080"
     healthcheck:
       test: ["CMD", "wget", "-qO-", "http://localhost:8080/health"]
       interval: 15s
@@ -65,9 +57,6 @@ services:
   base-service:
     <<: *backend
     command: ["./app-base"]
-    environment:
-      <<: *backend-environment
-      BASE_PORT: "8081"
     healthcheck:
       test: ["CMD", "wget", "-qO-", "http://localhost:8081/health"]
       interval: 15s
@@ -78,9 +67,6 @@ services:
   link-service:
     <<: *backend
     command: ["./app-link"]
-    environment:
-      <<: *backend-environment
-      LINK_PORT: "8082"
     healthcheck:
       test: ["CMD", "wget", "-qO-", "http://localhost:8082/health"]
       interval: 15s
@@ -91,9 +77,6 @@ services:
   file-service:
     <<: *backend
     command: ["./app-file"]
-    environment:
-      <<: *backend-environment
-      FILE_PORT: "8083"
     healthcheck:
       test: ["CMD", "wget", "-qO-", "http://localhost:8083/health"]
       interval: 15s
@@ -104,21 +87,19 @@ services:
   worker-email:
     <<: *backend
     command: ["./app-worker"]
-    environment:
-      <<: *backend-environment
+    networks:
+      - internal
+      - public
 
   mysql:
     image: mysql:8.4
     restart: unless-stopped
+    env_file: .env.backend.production
     command:
       - --character-set-server=utf8mb4
       - --collation-server=utf8mb4_unicode_ci
-    environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:?set MYSQL_ROOT_PASSWORD in deploy/.env}
-      MYSQL_DATABASE: ${MYSQL_DATABASE:-linkdo}
     volumes:
       - mysql-data:/var/lib/mysql
-      - ../services/backend/docker/mysql/init:/docker-entrypoint-initdb.d:ro
     healthcheck:
       test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -uroot -p\"$$MYSQL_ROOT_PASSWORD\" --silent"]
       interval: 10s
@@ -127,16 +108,12 @@ services:
       start_period: 60s
     networks:
       - internal
-    logging:
-      driver: local
-      options:
-        max-size: 10m
-        max-file: "3"
 
   redis:
     image: redis:7.4-alpine
     restart: unless-stopped
-    command: ["redis-server", "--appendonly", "yes", "--requirepass", "${REDIS_PASSWORD:?set REDIS_PASSWORD in deploy/.env}"]
+    env_file: .env.backend.production
+    command: ["sh", "-ec", "exec redis-server --appendonly yes --requirepass \"$$REDIS_PASSWORD\""]
     volumes:
       - redis-data:/data
     healthcheck:
@@ -150,9 +127,7 @@ services:
   rabbitmq:
     image: rabbitmq:3.13-management-alpine
     restart: unless-stopped
-    environment:
-      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER:-linkdo}
-      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD:?set RABBITMQ_PASSWORD in deploy/.env}
+    env_file: .env.backend.production
     volumes:
       - rabbitmq-data:/var/lib/rabbitmq
     healthcheck:
