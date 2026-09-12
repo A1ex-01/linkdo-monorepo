@@ -42,6 +42,13 @@ services:
   gateway:
     <<: *backend
     command: ["./app-gateway"]
+    depends_on:
+      base-service:
+        condition: service_healthy
+      link-service:
+        condition: service_healthy
+      file-service:
+        condition: service_healthy
     ports:
       - "${GATEWAY_PORT}:8080"
     healthcheck:
@@ -67,6 +74,9 @@ services:
   link-service:
     <<: *backend
     command: ["./app-link"]
+    depends_on:
+      base-service:
+        condition: service_healthy
     healthcheck:
       test: ["CMD", "wget", "-qO-", "http://localhost:8082/health"]
       interval: 15s
@@ -77,6 +87,9 @@ services:
   file-service:
     <<: *backend
     command: ["./app-file"]
+    depends_on:
+      base-service:
+        condition: service_healthy
     healthcheck:
       test: ["CMD", "wget", "-qO-", "http://localhost:8083/health"]
       interval: 15s

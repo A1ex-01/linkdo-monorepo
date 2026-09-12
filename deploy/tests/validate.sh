@@ -31,6 +31,13 @@ grep -q -- '- "${HTTP_PORT}:80"' "$deploy_dir/compose.yaml"
 grep -q -- '- "${GATEWAY_PORT}:8080"' "$deploy_dir/compose.yaml"
 awk '/^  worker-email:/{in_worker=1; next} in_worker && /^  [A-Za-z]/{exit} in_worker{print}' "$deploy_dir/compose.yaml" \
   | grep -q -- '- public'
+for service in gateway link-service file-service; do
+  awk -v service="$service" '$0 == "  " service ":" {in_service=1; next} in_service && /^  [A-Za-z-]+:/{exit} in_service{print}' "$deploy_dir/compose.yaml" \
+    | grep -q 'base-service:' || {
+      echo "$service must wait for the base-service schema owner" >&2
+      exit 1
+    }
+done
 grep -q 'proxy_pass http://gateway:8080;' "$deploy_dir/nginx/default.conf"
 
 if rg -q 'x-backend-environment|MYSQL_DSN:|REDIS_ADDR:|AMQP_URL:' "$deploy_dir/compose.yaml"; then
@@ -47,6 +54,15 @@ if rg -q 'docker-entrypoint-initdb.d|mysql/init' "$deploy_dir/compose.yaml" "$de
 fi
 if [[ -e "$deploy_dir/mysql/init/01-schema.sql" ]]; then
   echo "legacy MySQL init schema must not exist" >&2
+  exit 1
+fi
+if rg -q 'EnsureClickUpSchema|EnsureLinkColumns|EnsureLinkTokenColumns|BackfillInitialStatus|BackfillSortOrder' \
+  "$root_dir/services/backend/base_service" "$root_dir/services/backend/link_service"; then
+  echo "schema changes must be owned by base_service/internal/migration, not startup repositories" >&2
+  exit 1
+fi
+if [[ -e "$root_dir/services/backend/docker/mysql/init/01-schema.sql" ]]; then
+  echo "legacy backend MySQL init schema must not exist" >&2
   exit 1
 fi
 

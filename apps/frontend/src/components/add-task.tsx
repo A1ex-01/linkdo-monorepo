@@ -38,6 +38,7 @@ interface IAddTaskForm {
 export function AddTask({ className, status }: IProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
+  const today = format(new Date(), "yyyy-MM-dd");
   const { currCollectionNotionDbs, currCollectionClickUpLists } =
     useCommonStore();
   const { createTaskOptimistic } = useData();
@@ -50,9 +51,9 @@ export function AddTask({ className, status }: IProps) {
   const { register, handleSubmit, control, watch } = useForm<IAddTaskForm>({
     defaultValues: {
       timer_mode: "countdown",
-      estimated_time: "",
+      estimated_time: "00:30",
       link_target: "none",
-      scheduled_date: "",
+      scheduled_date: `${today}T00:00:00`,
     },
   });
   const onSubmit: SubmitHandler<IAddTaskForm> = async (data) => {
@@ -119,25 +120,36 @@ export function AddTask({ className, status }: IProps) {
                   name="timer_mode"
                   control={control}
                   render={({ field }) => (
-                    <Select value={field.value} onValueChange={field.onChange}>
-                      <SelectTrigger className="w-[132px] shrink-0 border border-[#363636] bg-[#1c1c1c] text-white">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent className="border-[#363636] bg-[#262626] text-white">
-                        <SelectItem value="countdown">倒计时</SelectItem>
-                        <SelectItem value="stopwatch">正计时</SelectItem>
-                      </SelectContent>
-                    </Select>
+                    <div
+                      role="radiogroup"
+                      aria-label="计时模式"
+                      className="flex shrink-0 rounded-lg border border-[#363636] bg-[#1c1c1c] p-0.5"
+                    >
+                      {(
+                        [
+                          ["countdown", "倒计时"],
+                          ["stopwatch", "正计时"],
+                        ] as const
+                      ).map(([value, label]) => (
+                        <button
+                          key={value}
+                          type="button"
+                          role="radio"
+                          aria-checked={field.value === value}
+                          onClick={() => field.onChange(value)}
+                          className={cn(
+                            "rounded-md px-2.5 py-1 text-xs font-medium transition-colors focus-visible:ring-2 focus-visible:ring-[#6f98e8] focus-visible:outline-none",
+                            field.value === value
+                              ? "bg-[#6f98e8] text-white"
+                              : "text-[#a0a0a0] hover:text-white",
+                          )}
+                        >
+                          {label}
+                        </button>
+                      ))}
+                    </div>
                   )}
                 />
-                {timerMode === "countdown" && (
-                  <Input
-                    type="time"
-                    aria-label="Expected duration"
-                    className="w-max shrink-0 border border-[#363636] bg-[#1c1c1c] text-white"
-                    {...register("estimated_time")}
-                  />
-                )}
               </div>
               <div className="mt-2 flex gap-2">
                 <Controller
@@ -158,7 +170,7 @@ export function AddTask({ className, status }: IProps) {
                             type="button"
                             variant="outline"
                             data-empty={!field.value}
-                            className="w-full justify-between border border-[#363636] bg-[#1c1c1c] text-left font-normal text-white data-[empty=true]:text-[#808080]"
+                            className="flex-1 justify-between border border-[#363636] bg-[#1c1c1c] text-left font-normal text-white data-[empty=true]:text-[#808080]"
                           >
                             {selectedDate ? (
                               format(selectedDate, "yyyy-MM-dd")
@@ -194,6 +206,15 @@ export function AddTask({ className, status }: IProps) {
                     );
                   }}
                 />
+
+                {timerMode === "countdown" && (
+                  <Input
+                    type="time"
+                    aria-label="Expected duration"
+                    className="w-max shrink-0 border border-[#363636] bg-[#1c1c1c] text-white"
+                    {...register("estimated_time")}
+                  />
+                )}
               </div>
               <div className="mt-4 flex items-center gap-4">
                 <Controller
