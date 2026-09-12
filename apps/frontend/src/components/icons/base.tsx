@@ -10,7 +10,7 @@ export function AIconClickup({ className }: IProps) {
     <img
       src="/clickup-logo.svg"
       alt=""
-      className={cn("size-5 rounded bg-white", className)}
+      className={cn("size-5 rounded bg-card", className)}
     />
   );
 }
@@ -28,7 +28,7 @@ export function AIconNotion({ className }: IProps) {
 export function AIconMCP({ className }: IProps) {
   return (
     <IconPlugConnected
-      className={cn("size-5 rounded bg-white p-1 text-black", className)}
+      className={cn("size-5 rounded bg-card p-1 text-foreground", className)}
     />
   );
 }
@@ -38,7 +38,7 @@ export function AIconFigma({ className }: IProps) {
     <img
       src="/figma-logo.svg"
       alt=""
-      className={cn("size-5 rounded bg-white p-1", className)}
+      className={cn("size-5 rounded bg-card p-1", className)}
     />
   );
 }

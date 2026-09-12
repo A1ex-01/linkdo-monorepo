@@ -11,6 +11,7 @@ import { ThemeProvider } from "next-themes";
 import type React from "react";
 import { useEffect } from "react";
 import { Toaster } from "react-hot-toast";
+import { StyleThemeProvider } from "./style-theme-provider";
 
 interface IProviders {
   children: React.ReactNode;
@@ -45,22 +46,24 @@ export default function Providers({ children }: IProviders) {
     return null;
   }
   return (
-    <ThemeProvider
-      attribute="class"
-      defaultTheme="system"
-      enableSystem
-      disableTransitionOnChange
-    >
-      <Toaster
-        toastOptions={{
-          style: {
-            borderRadius: "10px",
-            background: "hsl(var(--popover))",
-            color: "hsl(var(--popover-foreground))",
-          },
-        }}
-      />
-      {children}
-    </ThemeProvider>
+    <StyleThemeProvider>
+      <ThemeProvider
+        attribute="class"
+        defaultTheme="system"
+        enableSystem
+        disableTransitionOnChange
+      >
+        <Toaster
+          toastOptions={{
+            style: {
+              borderRadius: "10px",
+              background: "hsl(var(--popover))",
+              color: "hsl(var(--popover-foreground))",
+            },
+          }}
+        />
+        {children}
+      </ThemeProvider>
+    </StyleThemeProvider>
   );
 }

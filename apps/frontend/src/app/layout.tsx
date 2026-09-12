@@ -1,29 +1,15 @@
 "use client";
 import Providers from "@/providers/base";
 import "@/styles/globals.css";
-import { Inter } from "next/font/google";
-
-import { Merriweather, Montserrat, Ubuntu_Mono } from "next/font/google";
-
-const montserrat = Montserrat({
+import { Geist_Mono, Open_Sans } from "next/font/google";
+const fontSans = Open_Sans({
   subsets: ["latin"],
-  variable: "--font-montserrat",
+  variable: "--font-sans",
 });
 
-const merriweather = Merriweather({
+const fontMono = Geist_Mono({
   subsets: ["latin"],
-  variable: "--font-merriweather",
-});
-
-const ubuntuMono = Ubuntu_Mono({
-  subsets: ["latin"],
-  weight: ["400", "700"],
-  variable: "--font-ubuntu-mono",
-});
-
-const inter = Inter({
-  variable: "--font-inter",
-  subsets: ["latin"],
+  variable: "--font-mono",
 });
 
 export default function RootLayout({
@@ -33,9 +19,26 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="h-screen" suppressHydrationWarning>
-      <head />
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                try {
+                  var stored = localStorage.getItem('linkdo-style-theme');
+                  if (stored && ['default', 'twitter', 'vercel'].includes(stored)) {
+                    document.documentElement.dataset.theme = stored;
+                  } else {
+                    document.documentElement.dataset.theme = 'default';
+                  }
+                } catch (e) {}
+              })();
+            `,
+          }}
+        />
+      </head>
       <body
-        className={`${montserrat.variable} ${merriweather.variable} ${ubuntuMono.variable} text-pr bg-background flex h-screen flex-col overflow-hidden`}
+        className={`${fontSans.variable} ${fontMono.variable} text-pr bg-background flex h-screen flex-col overflow-hidden`}
       >
         <Providers>
           <div className="bg-background flex-1 overflow-y-scroll">

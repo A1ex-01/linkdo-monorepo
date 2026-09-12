@@ -15,6 +15,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useTheme } from "next-themes";
+import { useStyleTheme } from "@/providers/style-theme-provider";
 
 export function SystemSettingsDialog({
   open,
@@ -24,6 +25,7 @@ export function SystemSettingsDialog({
   onOpenChange: (value: boolean) => void;
 }) {
   const { theme, setTheme } = useTheme();
+  const { styleTheme, setStyleTheme } = useStyleTheme();
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -48,6 +50,26 @@ export function SystemSettingsDialog({
             </Select>
             <p className="text-muted-foreground text-xs">
               Choose how LinkDo looks. System will use your device&apos;s theme.
+            </p>
+          </div>
+
+          <div className="space-y-3">
+            <Label htmlFor="style-theme-select" className="text-sm font-medium">
+              Interface Style
+            </Label>
+            <Select value={styleTheme} onValueChange={setStyleTheme}>
+              <SelectTrigger id="style-theme-select" className="w-full">
+                <SelectValue placeholder="Select style" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="default">Default</SelectItem>
+                <SelectItem value="twitter">Twitter</SelectItem>
+                <SelectItem value="vercel">Vercel</SelectItem>
+              </SelectContent>
+            </Select>
+            <p className="text-muted-foreground text-xs">
+              Choose the visual style of the interface. This works independently
+              from the light/dark theme.
             </p>
           </div>
         </div>
