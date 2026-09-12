@@ -1,5 +1,6 @@
 "use client";
 
+import { AIconLinkdo } from "@/components/icons/base";
 import { WindowTitleBar } from "@/components/window-title-bar";
 import { authService } from "@/services/auth";
 import { setToken } from "@/services/auth-session";
@@ -124,11 +125,7 @@ export default function LoginPage() {
             <div className="relative z-20 flex h-full flex-col justify-center">
               {/* Logo */}
               <div className="text-foreground mb-12 flex items-center gap-2.5 text-[24px] font-bold">
-                <img
-                  className="size-10 rounded-sm"
-                  src="/logo.png"
-                  alt="link-do"
-                />
+                <AIconLinkdo className="size-10 rounded-sm" alt="link-do" />
                 LinkDo
               </div>
 
@@ -255,7 +252,9 @@ export default function LoginPage() {
                   {/* 分隔线 */}
                   <div className="my-6 flex items-center">
                     <div className="bg-border h-[1px] flex-1"></div>
-                    <span className="text-muted-foreground px-4 text-[13px]">或</span>
+                    <span className="text-muted-foreground px-4 text-[13px]">
+                      或
+                    </span>
                     <div className="bg-border h-[1px] flex-1"></div>
                   </div>
                 </>

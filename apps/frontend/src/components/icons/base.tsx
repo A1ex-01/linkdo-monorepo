@@ -1,5 +1,6 @@
 import { cn } from "@/lib/utils";
 import { IconPlugConnected } from "@tabler/icons-react";
+import { useTheme } from "next-themes";
 import { ImgHTMLAttributes } from "react";
 
 interface IProps extends ImgHTMLAttributes<HTMLImageElement> {
@@ -39,6 +40,17 @@ export function AIconFigma({ className }: IProps) {
       src="/figma-logo.svg"
       alt=""
       className={cn("bg-card size-5 rounded p-1", className)}
+    />
+  );
+}
+
+export function AIconLinkdo({ className }: IProps) {
+  const { theme } = useTheme();
+  return (
+    <img
+      src={theme === "dark" ? "/linkdo-dark.png" : "/linkdo.png"}
+      alt=""
+      className={cn("size-5", className)}
     />
   );
 }

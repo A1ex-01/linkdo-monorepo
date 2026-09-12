@@ -1,6 +1,7 @@
 "use client";
 
 import { AccountSettingsDialog } from "@/components/account-settings-dialog";
+import { AIconLinkdo } from "@/components/icons/base";
 import { LoadingScreen } from "@/components/motion/loading-screen";
 import { ThemeToggle } from "@/components/theme-toggle";
 import {
@@ -118,11 +119,7 @@ export default function HomePage() {
         <div className="left bg-card text-foreground w-[280px] px-4">
           <div className="flex flex-col items-start gap-4 pt-4">
             <div className="mb-1 flex items-center gap-2">
-              <img
-                src={"/logo.png"}
-                alt="LinkDo"
-                className="size-10 rounded-md"
-              />
+              <AIconLinkdo alt="LinkDo" className="size-10 rounded-md" />
               <span className="text-foreground text-2xl leading-tight font-extrabold">
                 LinkDo
               </span>

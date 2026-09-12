@@ -1,6 +1,7 @@
 import { cn } from "@/lib/utils";
-import { IconAnalyze, IconChartArcs, IconChartBar, IconHome, IconReport } from "@tabler/icons-react";
+import { IconChartBar, IconHome } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
+import { AIconLinkdo } from "./icons/base";
 
 export default function BottomNav({
   active = "home",
@@ -14,7 +15,6 @@ export default function BottomNav({
         <button
           className={cn(
             "hover:bg-accent text-muted-foreground hover:text-foreground flex items-center gap-2.5 rounded-xl bg-transparent px-4 py-2 text-sm font-medium transition-colors",
-            
           )}
           onClick={() => {
             router.push("/home");
@@ -26,7 +26,6 @@ export default function BottomNav({
         <button
           className={cn(
             "hover:bg-accent text-muted-foreground hover:text-foreground flex items-center gap-2.5 rounded-xl bg-transparent px-4 py-2 text-sm font-medium transition-colors",
-          
           )}
           onClick={() => {
             router.push("/reports");
@@ -39,7 +38,7 @@ export default function BottomNav({
 
       <div className="flex items-center gap-4">
         <span className="text-muted-foreground text-xs">Link-Do</span>
-        <img src="/logo.png" alt="avatar" className="h-8 w-8 rounded-md opacity-80" />
+        <AIconLinkdo alt="avatar" className="h-8 w-8 rounded-md opacity-80" />
       </div>
     </nav>
   );

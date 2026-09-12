@@ -1,6 +1,10 @@
 "use client";
 
-import { AIconClickup, AIconNotion } from "@/components/icons/base";
+import {
+  AIconClickup,
+  AIconLinkdo,
+  AIconNotion,
+} from "@/components/icons/base";
 import { resolveFilePath } from "@/services/file";
 import { ICollection } from "@/types/base";
 import { IconTransition } from "./icon-transition";
@@ -31,9 +35,7 @@ export function LoadingScreen({
 }) {
   const items = icons.map(({ type, value }) => {
     if (type === "linkdo") {
-      return (
-        <img src={"logo.png"} alt={""} className={"size-full rounded-2xl"} />
-      );
+      return <AIconLinkdo key={type} className="size-full rounded-2xl" />;
     }
     if (type === "notion") {
       return <AIconNotion key={type} className="size-full rounded-2xl" />;
