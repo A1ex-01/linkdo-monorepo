@@ -1,5 +1,6 @@
 import { CollectionCover } from "@/components/collection-cover";
 import { AIconClickup, AIconNotion } from "@/components/icons/base";
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -66,7 +67,7 @@ export default function CollectionCard({
   return (
     <div
       onClick={onClick}
-      className="group hover:border-linkdo-blue relative flex h-[320px] cursor-pointer flex-col overflow-hidden rounded-2xl border border-[#383838] bg-[#161616] p-4 transition-[border-color,box-shadow,transform] duration-200 hover:shadow-[0_0_0_1px_rgba(91,132,229,0.52)]"
+      className="group relative flex h-[320px] cursor-pointer flex-col overflow-hidden rounded-2xl border-solid border-[#ffffff]/20! bg-[#161616] p-4 transition-[border-color,box-shadow,transform] duration-200 hover:border"
     >
       {collection.cover ? (
         <img
@@ -162,17 +163,17 @@ export default function CollectionCard({
       </div>
 
       <div className="pointer-events-none absolute inset-0 z-20 flex items-center justify-center bg-black/25 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
-        <button
+        <Button
           type="button"
           onClick={(event) => {
             event.stopPropagation();
             onClick();
           }}
-          className="linkdo-gradient-action focus-visible:ring-linkdo-blue/80 pointer-events-auto flex h-10 items-center gap-1.5 rounded-full px-5 text-[14px] font-semibold text-white shadow-[var(--shadow-linkdo-glow)] transition-transform duration-200 hover:scale-[1.03] focus-visible:ring-2 focus-visible:outline-none"
+          className="focus-visible:ring-linkdo-blue/80 bg-accent pointer-events-auto flex h-10 items-center gap-1.5 rounded-full px-5 text-[14px] font-semibold text-white transition-transform duration-200 hover:scale-[1.03] focus-visible:ring-2 focus-visible:outline-none"
         >
           <IconArrowUpRight className="size-4" />
           Open
-        </button>
+        </Button>
       </div>
 
       <div className="relative z-10 mt-3 flex items-center justify-between border-t border-white/[0.06] pt-3">

@@ -110,6 +110,8 @@
   --color-atext-450: #858585;
   --color-atext-400: #666666;
   --color-atext-300: #cccccc;
+
+  --color-fun-500: #171717;
 }
 
 /* Reusable LinkDo brand treatments for buttons, highlights, and bordered surfaces. */
@@ -148,7 +150,11 @@
   font-size: var(--base-font-size);
   line-height: var(--line-height);
   color: #ffffff;
-  background-color: #111111 !important;
+  background-color: #262626 !important;
+}
+
+.notion-comment-editor .crepe-placeholder::before {
+  color: #ffffff !important;
 }
 
 /* 编辑区域 */

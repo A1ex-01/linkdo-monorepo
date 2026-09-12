@@ -47,7 +47,7 @@ export function AMarkdownEditor({ className, value, onChange }: IProps) {
   return (
     <div
       className={cn(
-        "notion-comment-editor bg-input! text-foreground w-full",
+        "notion-comment-editor text-foreground w-full bg-[#2b2b2b]!",
         className,
       )}
     >

@@ -153,7 +153,8 @@ export function KanbanBoard({}: KanbanBoardProps) {
                         "relative flex h-full flex-1 flex-col overflow-hidden rounded-xl border-2 border-[#282828] p-px",
 
                         isOver && "",
-                        col.isHighlighted && "border-[#674b71] shadow-lg",
+                        col.isHighlighted &&
+                          "border-3 border-[#3d3b3b] shadow-lg",
                       )}
                       ref={provided.innerRef}
                       {...provided.droppableProps}
@@ -230,7 +231,7 @@ export function KanbanBoard({}: KanbanBoardProps) {
                           {provided.placeholder}
                           <AddTask status={col.value} />
                           {colTasks?.length === 0 && (
-                            <div className="flex h-full w-full flex-col items-center justify-center gap-2 text-[#796186]">
+                            <div className="text-atext-460 flex h-full w-full flex-col items-center justify-center gap-2">
                               <IconCircleCheck className="size-10" />
                               <div className="text-atext-460">All Clear</div>
                             </div>
