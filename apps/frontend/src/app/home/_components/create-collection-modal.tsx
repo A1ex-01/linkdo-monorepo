@@ -8,6 +8,7 @@ import {
 } from "@tabler/icons-react";
 import { type ChangeEvent, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -90,17 +91,17 @@ export default function CreateCollectionModal({
         if (!open) onClose();
       }}
     >
-      <DialogContent className="max-w-[460px] overflow-hidden rounded-[22px] border border-white/[0.09] bg-[#171717] p-0 text-white shadow-2xl">
-        <div className="h-1 w-full bg-[#343438]" />
+      <DialogContent className="max-w-[460px] overflow-hidden rounded-[22px] p-0 shadow-2xl">
+        <div className="bg-muted h-1 w-full" />
         <div className="p-6">
           <DialogHeader className="mb-6 pr-8 text-left">
-            <p className="text-linkdo-mist mb-1 text-[11px] font-bold tracking-[0.14em] uppercase">
+            <p className="text-muted-foreground mb-1 text-[11px] font-bold tracking-[0.14em] uppercase">
               Your workspace
             </p>
-            <DialogTitle className="text-[22px] font-bold tracking-[-0.03em] text-white">
+            <DialogTitle className="text-foreground text-[22px] font-bold tracking-[-0.03em]">
               {collection ? "Edit list" : "Create new list"}
             </DialogTitle>
-            <p className="mt-2 text-sm leading-6 text-[#8d8d92]">
+            <p className="text-muted-foreground mt-2 text-sm leading-6">
               {collection
                 ? "Refresh its identity without losing the work inside."
                 : "A focused space for the tasks you want to move forward."}
@@ -111,7 +112,7 @@ export default function CreateCollectionModal({
             onSubmit={handleSubmit(onFormSubmit)}
             className="flex flex-col gap-5"
           >
-            <div className="relative overflow-hidden rounded-2xl border border-white/[0.07] bg-[#202022] p-4">
+            <div className="bg-muted relative overflow-hidden rounded-2xl border p-4">
               {cover ? (
                 <img
                   src={resolveFilePath(cover)}
@@ -120,14 +121,14 @@ export default function CreateCollectionModal({
                 />
               ) : null}
               <div className="relative flex items-center gap-3">
-                <div className="flex size-11 items-center justify-center rounded-xl border border-white/[0.08] bg-[#2d2d30] text-[#d7d7da]">
+                <div className="bg-accent text-accent-foreground flex size-11 items-center justify-center rounded-xl border">
                   <IconList className="size-5" />
                 </div>
                 <div className="min-w-0">
-                  <p className="truncate text-base font-semibold text-[#f4f4f5]">
+                  <p className="text-foreground truncate text-base font-semibold">
                     {name?.trim() || "Untitled list"}
                   </p>
-                  <p className="mt-0.5 text-xs text-[#98989e]">List preview</p>
+                  <p className="text-muted-foreground mt-0.5 text-xs">List preview</p>
                 </div>
               </div>
             </div>
@@ -135,7 +136,7 @@ export default function CreateCollectionModal({
             <div>
               <label
                 htmlFor="collection-name"
-                className="mb-2 block text-[13px] font-semibold text-[#d7d7da]"
+                className="text-foreground mb-2 block text-[13px] font-semibold"
               >
                 List name
               </label>
@@ -144,38 +145,38 @@ export default function CreateCollectionModal({
                 type="text"
                 {...register("name", { required: true })}
                 placeholder="e.g. Daily routine"
-                className="focus:border-linkdo-blue focus:ring-linkdo-blue/20 h-11 w-full rounded-xl border border-white/[0.08] bg-[#202022] px-3.5 text-sm text-white transition-colors outline-none placeholder:text-[#69696f] focus:ring-2"
+                className="bg-input text-foreground placeholder:text-muted-foreground focus-visible:ring-ring h-11 w-full rounded-xl border px-3.5 text-sm transition-colors outline-none focus-visible:ring-2"
                 autoFocus
               />
               {errors.name ? (
-                <span className="mt-1.5 block text-xs text-red-400">
+                <span className="text-destructive mt-1.5 block text-xs">
                   Give your list a name to continue.
                 </span>
               ) : null}
             </div>
 
             <div>
-              <p className="mb-2 text-[13px] font-semibold text-[#d7d7da]">
+              <p className="text-foreground mb-2 text-[13px] font-semibold">
                 Cover image{" "}
-                <span className="font-normal text-[#77777d]">Optional</span>
+                <span className="text-muted-foreground font-normal">Optional</span>
               </p>
-              <label className="hover:border-linkdo-blue/70 flex h-14 cursor-pointer items-center gap-3 rounded-xl border border-dashed border-white/[0.12] bg-[#1c1c1e] px-3.5 transition-colors hover:bg-[#202024]">
-                <span className="flex size-8 items-center justify-center rounded-lg bg-white/[0.07] text-[#b8b8bf]">
+              <label className="hover:bg-accent bg-muted hover:border-accent-foreground flex h-14 cursor-pointer items-center gap-3 rounded-xl border border-dashed px-3.5 transition-colors">
+                <span className="bg-accent/50 text-muted-foreground flex size-8 items-center justify-center rounded-lg">
                   {cover ? (
-                    <IconCheck className="size-4 text-[#d7d7da]" />
+                    <IconCheck className="text-foreground size-4" />
                   ) : (
                     <IconPhoto className="size-4" />
                   )}
                 </span>
                 <span className="min-w-0 flex-1 text-sm">
-                  <span className="block truncate font-medium text-[#dedee1]">
+                  <span className="text-foreground block truncate font-medium">
                     {cover ? "Cover image ready" : "Upload a cover image"}
                   </span>
-                  <span className="block text-xs text-[#76767c]">
+                  <span className="text-muted-foreground block text-xs">
                     PNG, JPG, WebP, or GIF
                   </span>
                 </span>
-                <span className="flex items-center gap-1.5 text-xs font-semibold text-[#b4b4ba]">
+                <span className="text-muted-foreground flex items-center gap-1.5 text-xs font-semibold">
                   <IconUpload className="size-3.5" />
                   {isUploading ? "Uploading" : "Browse"}
                 </span>
@@ -189,12 +190,9 @@ export default function CreateCollectionModal({
               </label>
             </div>
 
-            <button
-              type="submit"
-              className="mt-1 flex h-11 w-full items-center justify-center rounded-xl bg-[#f1f1f2] text-sm font-bold text-[#171717] transition-colors hover:bg-white focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:outline-none"
-            >
+            <Button type="submit" className="mt-1 h-11 w-full text-sm font-bold">
               {collection ? "Save changes" : "Create list"}
-            </button>
+            </Button>
           </form>
         </div>
       </DialogContent>

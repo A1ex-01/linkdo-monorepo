@@ -49,8 +49,8 @@ export default function Providers({ children }: IProviders) {
         toastOptions={{
           style: {
             borderRadius: "10px",
-            background: "#333",
-            color: "#fff",
+            background: "hsl(var(--popover))",
+            color: "hsl(var(--popover-foreground))",
           },
         }}
       />

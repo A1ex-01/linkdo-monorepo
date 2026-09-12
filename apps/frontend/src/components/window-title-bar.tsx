@@ -82,7 +82,7 @@ export function WindowTitleBar() {
 
       {/* Center title (optional, can be used for page title) */}
       <div
-        className="absolute left-1/2 -translate-x-1/2 text-xs text-[#6b7280] select-none"
+        className="text-muted-foreground absolute left-1/2 -translate-x-1/2 select-none text-xs"
         data-tauri-drag-region
       >
         link-do

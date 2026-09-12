@@ -48,7 +48,7 @@ export function AccountSettingsDialog({
   };
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-lg border-[#363636] bg-[#151515] p-7 text-white">
+      <DialogContent className="max-w-lg p-7">
         <DialogHeader>
           <DialogTitle className="text-2xl">Account settings</DialogTitle>
         </DialogHeader>
@@ -60,7 +60,7 @@ export function AccountSettingsDialog({
                 {name.slice(0, 2).toUpperCase() || "U"}
               </AvatarFallback>
             </Avatar>
-            <label className="cursor-pointer rounded-lg bg-[#2a2a2a] px-4 py-2 text-sm font-medium hover:bg-[#363636]">
+            <label className="bg-secondary hover:bg-secondary/80 cursor-pointer rounded-lg px-4 py-2 text-sm font-medium">
               Upload avatar
               <input
                 className="sr-only"
@@ -78,18 +78,18 @@ export function AccountSettingsDialog({
               />
             </label>
           </div>
-          <label className="block text-sm text-[#b0b0b0]">
+          <label className="text-muted-foreground block text-sm">
             Nickname
             <input
               value={name}
               onChange={(e) => setName(e.target.value)}
               maxLength={255}
-              className="mt-2 w-full rounded-lg border border-[#3b3b3b] bg-[#252525] px-3 py-2 text-white outline-none focus:border-white/60"
+              className="bg-input text-foreground focus:ring-ring mt-2 w-full rounded-lg border px-3 py-2 outline-none focus:ring-2"
             />
           </label>
           <div>
-            <p className="text-sm text-[#b0b0b0]">Email</p>
-            <p className="mt-2 rounded-lg bg-[#202020] px-3 py-2 text-sm text-[#d0d0d0]">
+            <p className="text-muted-foreground text-sm">Email</p>
+            <p className="bg-muted text-muted-foreground mt-2 rounded-lg px-3 py-2 text-sm">
               {user?.email || "Not set"}
             </p>
           </div>
@@ -97,7 +97,7 @@ export function AccountSettingsDialog({
             type="button"
             disabled={saving || !name.trim()}
             onClick={save}
-            className="w-full rounded-lg bg-white py-2.5 text-sm font-semibold text-black disabled:opacity-50"
+            className="bg-primary text-primary-foreground w-full rounded-lg py-2.5 text-sm font-semibold disabled:opacity-50"
           >
             {saving ? "Saving…" : "Save changes"}
           </button>

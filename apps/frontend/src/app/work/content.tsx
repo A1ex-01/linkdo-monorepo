@@ -67,7 +67,7 @@ export default function Content() {
   }
 
   return (
-    <div className="flex h-full flex-col bg-[#111111] text-white">
+    <div className="bg-background text-foreground flex h-full flex-col">
       {viewMode === "kanban" && (
         <>
           <WindowTitleBar />

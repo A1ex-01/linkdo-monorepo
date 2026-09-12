@@ -93,12 +93,12 @@ export default function CollectionCard({
                 />
               </div>
               {collection.notion_databases?.length ? (
-                <span className="z-[2] flex size-9 items-center justify-center rounded-lg border-2 border-[#161616] bg-white shadow-sm">
+                <span className="bg-card border-background z-[2] flex size-9 items-center justify-center rounded-lg border-2 shadow-sm">
                   <AIconNotion alt="Notion" className="size-5" />
                 </span>
               ) : null}
               {collection.clickup_lists?.length ? (
-                <span className="z-[1] flex size-9 items-center justify-center rounded-lg border-2 border-[#161616] bg-white shadow-sm">
+                <span className="bg-card border-background z-[1] flex size-9 items-center justify-center rounded-lg border-2 shadow-sm">
                   <AIconClickup alt="ClickUp" className="size-5" />
                 </span>
               ) : null}

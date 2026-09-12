@@ -137,7 +137,7 @@ export default function LoginPage() {
                 <h1 className="text-foreground m-0 flex items-center text-[32px] font-extrabold tracking-tight">
                   欢迎回来 <span className="ml-2 text-3xl">&#x1F44B;</span>
                 </h1>
-                <p className="text-atext-460 mt-2.5 mb-0 text-[16px]">
+                <p className="text-muted-foreground mt-2.5 mb-0 text-[16px]">
                   专注当下，高效成就未来
                 </p>
               </div>
@@ -151,7 +151,7 @@ export default function LoginPage() {
                     <h3 className="text-foreground m-0 text-[15px] font-semibold">
                       专注计时
                     </h3>
-                    <p className="text-atext-460 m-0 mt-1 text-[13px]">
+                    <p className="text-muted-foreground m-0 mt-1 text-[13px]">
                       科学番茄钟，提升专注力
                     </p>
                   </div>
@@ -164,7 +164,7 @@ export default function LoginPage() {
                     <h3 className="text-foreground m-0 text-[15px] font-semibold">
                       任务管理
                     </h3>
-                    <p className="text-atext-460 m-0 mt-1 text-[13px]">
+                    <p className="text-muted-foreground m-0 mt-1 text-[13px]">
                       清晰规划，高效执行每一步
                     </p>
                   </div>
@@ -177,7 +177,7 @@ export default function LoginPage() {
                     <h3 className="text-foreground m-0 text-[15px] font-semibold">
                       数据洞察
                     </h3>
-                    <p className="text-atext-460 m-0 mt-1 text-[13px]">
+                    <p className="text-muted-foreground m-0 mt-1 text-[13px]">
                       多维度分析，持续优化习惯
                     </p>
                   </div>
@@ -200,7 +200,7 @@ export default function LoginPage() {
               <h2 className="text-foreground m-0 mb-2 text-[24px] font-bold">
                 登录到 <span className="text-blue-400">Blitzit</span>
               </h2>
-              <p className="text-atext-460 mt-0 mb-8 text-[14px]">
+              <p className="text-muted-foreground mt-0 mb-8 text-[14px]">
                 {step === "email"
                   ? "输入邮箱获取验证码"
                   : "输入发送到邮箱的验证码"}
@@ -218,12 +218,12 @@ export default function LoginPage() {
                             : "border-border"
                         }`}
                       >
-                        <IconMail className="text-atext-460 mr-3 h-5 w-5" />
+                        <IconMail className="text-muted-foreground mr-3 h-5 w-5" />
                         <input
                           type="email"
                           placeholder="请输入邮箱地址"
                           {...emailForm.register("email")}
-                          className="placeholder:text-atext-460 flex-1 bg-transparent text-[14px] outline-none"
+                          className="placeholder:text-muted-foreground flex-1 bg-transparent text-[14px] outline-none"
                         />
                       </div>
                       {emailForm.formState.errors.email && (
@@ -255,7 +255,7 @@ export default function LoginPage() {
                   {/* 分隔线 */}
                   <div className="my-6 flex items-center">
                     <div className="bg-border h-[1px] flex-1"></div>
-                    <span className="text-atext-460 px-4 text-[13px]">或</span>
+                    <span className="text-muted-foreground px-4 text-[13px]">或</span>
                     <div className="bg-border h-[1px] flex-1"></div>
                   </div>
                 </>
@@ -280,7 +280,7 @@ export default function LoginPage() {
                             : "border-border"
                         }`}
                       >
-                        <IconLock className="text-atext-460 mr-3 h-5 w-5" />
+                        <IconLock className="text-muted-foreground mr-3 h-5 w-5" />
                         <input
                           type="text"
                           placeholder="请输入6位验证码"
@@ -289,7 +289,7 @@ export default function LoginPage() {
                             setValueAs: (value) =>
                               value.replace(/\D/g, "").slice(0, 6),
                           })}
-                          className="placeholder:text-atext-460 flex-1 bg-transparent text-[14px] outline-none"
+                          className="placeholder:text-muted-foreground flex-1 bg-transparent text-[14px] outline-none"
                         />
                       </div>
                       {codeForm.formState.errors.code && (
@@ -300,7 +300,7 @@ export default function LoginPage() {
                     </div>
 
                     {/* 验证码提示 */}
-                    <div className="text-atext-460 mb-4 flex items-center justify-between text-[12px]">
+                    <div className="text-muted-foreground mb-4 flex items-center justify-between text-[12px]">
                       <span>验证码已发送至 {email}</span>
                       <button
                         type="button"
@@ -312,7 +312,7 @@ export default function LoginPage() {
                           })();
                         }}
                         disabled={countdown > 0 || sendingCode}
-                        className="disabled:text-atext-460 text-blue-400 hover:text-blue-300"
+                        className="disabled:text-muted-foreground text-blue-400 hover:text-blue-300"
                       >
                         {countdown > 0
                           ? `${countdown}s 后可重新发送`
@@ -339,14 +339,14 @@ export default function LoginPage() {
                   <h4 className="text-foreground m-0 text-[13px] font-semibold">
                     我们不会访问你的 Notion 内容
                   </h4>
-                  <p className="text-atext-460 m-0 mt-1 text-[12px] leading-relaxed">
+                  <p className="text-muted-foreground m-0 mt-1 text-[12px] leading-relaxed">
                     仅用于身份验证，保障你的数据安全
                   </p>
                 </div>
               </div>
 
               {/* 了解更多 */}
-              <div className="text-atext-460 mt-8 flex items-center justify-center gap-1 text-[13px]">
+              <div className="text-muted-foreground mt-8 flex items-center justify-center gap-1 text-[13px]">
                 没有 Notion 账号？
                 <a
                   href="#"
@@ -371,7 +371,7 @@ export default function LoginPage() {
             </div>
 
             {/* 底部协议区 */}
-            <div className="text-atext-460 absolute bottom-6 w-full text-center text-[12px]">
+            <div className="text-muted-foreground absolute bottom-6 w-full text-center text-[12px]">
               继续即表示你同意
               <a
                 href="#"
