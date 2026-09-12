@@ -1,9 +1,9 @@
 "use client";
 
-import { IconMoon, IconSun } from "@tabler/icons-react";
+import { cn } from "@/lib/utils";
+import { Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
-import { cn } from "@/lib/utils";
 
 export function ThemeToggle({ className }: { className?: string }) {
   const { theme, setTheme, resolvedTheme } = useTheme();
@@ -26,31 +26,27 @@ export function ThemeToggle({ className }: { className?: string }) {
   const isDark = mounted && resolvedTheme === "dark";
 
   return (
-    <button
-      type="button"
+    <div
       onClick={toggle}
       aria-label={isDark ? "Switch to light theme" : "Switch to dark theme"}
       title={isDark ? "Switch to light theme" : "Switch to dark theme"}
       className={cn(
-        "text-muted-foreground hover:text-foreground hover:bg-muted inline-flex h-9 w-9 items-center justify-center rounded-lg border border-transparent transition-colors",
-        "focus-visible:ring-ring focus-visible:ring-2 focus-visible:outline-none",
-        className,
+        "text-muted-foreground hover:text-accent-foreground relative size-6 cursor-pointer",
       )}
     >
-      {/* Render both icons; toggle visibility based on the current theme. */}
-      <IconSun
+      <Sun
         className={cn(
-          "h-[18px] w-[18px] transition-all",
+          "absolute inset-0 size-6 transition-all",
           isDark ? "scale-0 opacity-0" : "scale-100 opacity-100",
         )}
       />
-      <IconMoon
+      <Moon
         className={cn(
-          "absolute h-[18px] w-[18px] transition-all",
+          "absolute inset-0 size-6 transition-all",
           isDark ? "scale-100 opacity-100" : "scale-0 opacity-0",
         )}
       />
       <span className="sr-only">Toggle theme</span>
-    </button>
+    </div>
   );
 }

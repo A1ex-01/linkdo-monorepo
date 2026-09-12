@@ -88,11 +88,11 @@ export function NotionDropdown({ className }: IProps) {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button
-          variant={"outline"}
+          variant={"secondary"}
           size={"icon"}
-          className="border-border bg-card hover:bg-accent"
+          className="size-8 shrink-0 border-none bg-transparent"
         >
-          <AIconNotion alt="Notion" className="size-5" />
+          <AIconNotion alt="Notion" className="size-6" />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent

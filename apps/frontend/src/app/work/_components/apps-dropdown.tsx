@@ -1,7 +1,6 @@
 "use client";
 
 import { AIconClickup, AIconNotion } from "@/components/icons/base";
-import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -12,7 +11,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useUserStore } from "@/stores/user";
-import { IconApps } from "@tabler/icons-react";
+import { Grip } from "lucide-react";
 import { COMING_SOON_INTEGRATIONS } from "./coming-soon-integrations";
 import { launchDesktopLinkOAuth } from "./link-oauth";
 
@@ -22,14 +21,7 @@ export function AppsDropdown() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button
-          variant="ghost"
-          size="icon"
-          aria-label="My apps"
-          className="text-muted-foreground hover:bg-accent hover:text-foreground"
-        >
-          <IconApps />
-        </Button>
+        <Grip className="text-muted-foreground hover:text-accent-foreground size-6 cursor-pointer" />
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-96 p-2">
         <DropdownMenuLabel className="text-foreground px-2 py-1.5 text-sm">

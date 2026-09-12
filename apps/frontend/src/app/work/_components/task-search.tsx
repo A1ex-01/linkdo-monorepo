@@ -12,7 +12,7 @@ import {
 import { searchTasksByTitle } from "@/lib/task-search";
 import { getTasks } from "@/services/collection";
 import type { ITask } from "@/types/base";
-import { IconSearch } from "@tabler/icons-react";
+import { Search } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 
@@ -64,15 +64,7 @@ export function TaskSearch() {
 
   return (
     <>
-      <button
-        type="button"
-        aria-label="Search tasks"
-        data-tauri-drag-region="false"
-        onClick={() => setOpen(true)}
-        className="text-muted-foreground border-border bg-card hover:bg-accent hover:text-accent-foreground focus-visible:ring-ring flex size-8 items-center justify-center rounded-md border transition-colors focus-visible:ring-2 focus-visible:outline-none"
-      >
-        <IconSearch className="size-4" />
-      </button>
+      <Search className="text-muted-foreground hover:text-accent-foreground size-[22px] cursor-pointer" />
 
       <CommandDialog open={open} onOpenChange={handleOpenChange}>
         <CommandInput

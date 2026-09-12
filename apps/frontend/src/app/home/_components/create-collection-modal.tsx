@@ -1,13 +1,5 @@
 "use client";
 
-import {
-  IconCheck,
-  IconList,
-  IconPhoto,
-  IconUpload,
-} from "@tabler/icons-react";
-import { type ChangeEvent, useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -17,6 +9,14 @@ import {
 } from "@/components/ui/dialog";
 import { resolveFilePath, uploadImage } from "@/services/file";
 import type { ICollection } from "@/types/base";
+import {
+  IconCheck,
+  IconList,
+  IconPhoto,
+  IconUpload,
+} from "@tabler/icons-react";
+import { type ChangeEvent, useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
 
 interface ICreateModalProps {
   isOpen: boolean;
@@ -91,8 +91,7 @@ export default function CreateCollectionModal({
         if (!open) onClose();
       }}
     >
-      <DialogContent className="max-w-[460px] overflow-hidden rounded-[22px] p-0 shadow-2xl">
-        <div className="bg-muted h-1 w-full" />
+      <DialogContent className="w-[520px]! max-w-[900px]! overflow-hidden p-0 shadow-2xl">
         <div className="p-6">
           <DialogHeader className="mb-6 pr-8 text-left">
             <p className="text-muted-foreground mb-1 text-[11px] font-bold tracking-[0.14em] uppercase">
@@ -128,7 +127,9 @@ export default function CreateCollectionModal({
                   <p className="text-foreground truncate text-base font-semibold">
                     {name?.trim() || "Untitled list"}
                   </p>
-                  <p className="text-muted-foreground mt-0.5 text-xs">List preview</p>
+                  <p className="text-muted-foreground mt-0.5 text-xs">
+                    List preview
+                  </p>
                 </div>
               </div>
             </div>
@@ -158,7 +159,9 @@ export default function CreateCollectionModal({
             <div>
               <p className="text-foreground mb-2 text-[13px] font-semibold">
                 Cover image{" "}
-                <span className="text-muted-foreground font-normal">Optional</span>
+                <span className="text-muted-foreground font-normal">
+                  Optional
+                </span>
               </p>
               <label className="hover:bg-accent bg-muted hover:border-accent-foreground flex h-14 cursor-pointer items-center gap-3 rounded-xl border border-dashed px-3.5 transition-colors">
                 <span className="bg-accent/50 text-muted-foreground flex size-8 items-center justify-center rounded-lg">
@@ -190,7 +193,10 @@ export default function CreateCollectionModal({
               </label>
             </div>
 
-            <Button type="submit" className="mt-1 h-11 w-full text-sm font-bold">
+            <Button
+              type="submit"
+              className="mt-1 h-11 w-full text-sm font-bold"
+            >
               {collection ? "Save changes" : "Create list"}
             </Button>
           </form>

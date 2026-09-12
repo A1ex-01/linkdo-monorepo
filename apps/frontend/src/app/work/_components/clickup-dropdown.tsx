@@ -86,12 +86,11 @@ export function ClickUpDropdown() {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button
-          variant="outline"
-          size="icon"
-          aria-label="ClickUp settings"
-          className="border-border bg-card hover:bg-accent"
+          variant={"secondary"}
+          size={"icon"}
+          className="size-8 shrink-0 border-none bg-transparent"
         >
-          <AIconClickup />
+          <AIconClickup className="size-6" />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent

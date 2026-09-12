@@ -134,68 +134,75 @@ export function WorkHeader() {
 
       {/* Right: Link providers + Avatar dropdown */}
       <div className="flex items-center gap-3">
-        <NotionDropdown className="w-full" />
-        <ClickUpDropdown />
-        <TaskSearch />
-        <AppsDropdown />
-        <ThemeToggle />
+        <div className="bg-muted flex h-[44px] items-center gap-4 rounded-lg px-3">
+          <NotionDropdown className="shrink-0" />
+          <ClickUpDropdown />
+        </div>
 
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild data-tauri-drag-region="false">
-            <button
-              type="button"
-              className="text-muted-foreground bg-card hover:bg-accent focus-visible:ring-ring flex cursor-pointer items-center gap-2 rounded-xs px-3 py-1.5 transition-colors focus-visible:ring-2 focus-visible:outline-none"
-            >
-              <Avatar size="default" className="ring-border ring-1">
-                <AvatarImage
-                  src={resolveFilePath(user?.avatar_url)}
-                  className="object-cover"
-                />
-                <AvatarFallback className="bg-muted text-muted-foreground text-xs">
-                  {user?.name?.slice(0, 2)?.toUpperCase() ?? "U"}
-                </AvatarFallback>
-                <AvatarBadge />
-              </Avatar>
-              <IconChevronDown className="size-4" />
-            </button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="min-w-44">
-            {user?.name ? (
-              <>
-                <DropdownMenuLabel>{user.name}</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-              </>
-            ) : null}
-            <DropdownMenuItem
-              onSelect={(event) => {
-                event.preventDefault();
-                setAccountSettingsOpen(true);
-              }}
-            >
-              <IconSettings />
-              Account settings
-            </DropdownMenuItem>
-            <DropdownMenuItem
-              onSelect={(event) => {
-                event.preventDefault();
-                setSystemSettingsOpen(true);
-              }}
-            >
-              <IconSettings />
-              System settings
-            </DropdownMenuItem>
-            <DropdownMenuItem
-              variant="destructive"
-              onSelect={async (e) => {
-                e.preventDefault();
-                await handleLogout();
-              }}
-            >
-              <IconLogout />
-              Log out
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <div className="bg-muted flex items-center gap-4 rounded-lg py-1 pr-2 pl-4">
+          <ThemeToggle />
+
+          <TaskSearch />
+          <AppsDropdown />
+
+          <IconSettings
+            className="text-muted-foreground hover:text-accent-foreground size-6 cursor-pointer"
+            onClick={() => setSystemSettingsOpen(true)}
+          />
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild data-tauri-drag-region="false">
+              <div className="hover:bg-accent -ml-2 flex cursor-pointer items-center gap-2 rounded px-2 py-1.5">
+                <Avatar size="sm" className="">
+                  <AvatarImage
+                    src={resolveFilePath(user?.avatar_url)}
+                    className="object-cover"
+                  />
+                  <AvatarFallback className="bg-muted text-muted-foreground text-xs">
+                    {user?.name?.slice(0, 2)?.toUpperCase() ?? "U"}
+                  </AvatarFallback>
+                  <AvatarBadge />
+                </Avatar>
+                <IconChevronDown className="size-4" />
+              </div>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="min-w-44">
+              {user?.name ? (
+                <>
+                  <DropdownMenuLabel>{user.name}</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                </>
+              ) : null}
+              <DropdownMenuItem
+                onSelect={(event) => {
+                  event.preventDefault();
+                  setAccountSettingsOpen(true);
+                }}
+              >
+                <IconSettings />
+                Account settings
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onSelect={(event) => {
+                  event.preventDefault();
+                  setSystemSettingsOpen(true);
+                }}
+              >
+                <IconSettings />
+                System settings
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                variant="destructive"
+                onSelect={async (e) => {
+                  e.preventDefault();
+                  await handleLogout();
+                }}
+              >
+                <IconLogout />
+                Log out
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
       </div>
       <AccountSettingsDialog
         open={accountSettingsOpen}

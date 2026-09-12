@@ -10,7 +10,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { getTaskPreview } from "@/lib/collection-tasks";
 import { deleteCollection, getTasks } from "@/services/collection";
-import { resolveFilePath } from "@/services/file";
 import type { ICollection } from "@/types/base";
 import { formatEstimated } from "@/utils/base";
 import {
@@ -69,16 +68,8 @@ export default function CollectionCard({
     <Card
       onClick={onClick}
       className="group relative aspect-square cursor-pointer"
-      // className="group relative flex h-[320px] cursor-pointer flex-col overflow-hidden rounded-2xl border-solid border-[#ffffff]/20! bg-[#161616] p-4 transition-[border-color,box-shadow,transform] duration-200 hover:border"
     >
       <CardContent className="flex h-full flex-col">
-        {collection.cover ? (
-          <img
-            src={resolveFilePath(collection.cover)}
-            alt=""
-            className="absolute inset-0 h-full w-full object-cover opacity-[0.13]"
-          />
-        ) : null}
         <div className="relative z-10 mb-4 flex items-start justify-between">
           <div className="flex min-w-0 items-center gap-3">
             <div className="flex -space-x-2">
@@ -165,12 +156,13 @@ export default function CollectionCard({
           ))}
         </div>
 
-        <div className="bg-foreground/20 pointer-events-none absolute inset-0 z-20 flex items-center justify-center opacity-0 transition-opacity duration-200 group-hover:opacity-100">
+        <div className="bg-accent/20 pointer-events-none absolute inset-0 z-20 flex items-center justify-center opacity-0 transition-opacity duration-200 group-hover:opacity-100">
           <Button
             onClick={(event) => {
               event.stopPropagation();
               onClick();
             }}
+            size={"lg"}
           >
             <IconArrowUpRight className="size-4" />
             Open
