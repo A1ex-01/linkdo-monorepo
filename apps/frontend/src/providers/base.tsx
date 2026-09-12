@@ -7,6 +7,7 @@ import {
 import { getToken } from "@/services/client-request";
 import { useUserStore } from "@/stores/user";
 import { useMount } from "ahooks";
+import { ThemeProvider } from "next-themes";
 import type React from "react";
 import { useEffect } from "react";
 import { Toaster } from "react-hot-toast";
@@ -44,7 +45,12 @@ export default function Providers({ children }: IProviders) {
     return null;
   }
   return (
-    <>
+    <ThemeProvider
+      attribute="class"
+      defaultTheme="system"
+      enableSystem
+      disableTransitionOnChange
+    >
       <Toaster
         toastOptions={{
           style: {
@@ -55,6 +61,6 @@ export default function Providers({ children }: IProviders) {
         }}
       />
       {children}
-    </>
+    </ThemeProvider>
   );
 }

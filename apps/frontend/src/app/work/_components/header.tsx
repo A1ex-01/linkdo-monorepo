@@ -9,6 +9,8 @@ import { TaskSearch } from "@/app/work/_components/task-search";
 import { useData } from "@/app/work/data-provider";
 import { AccountSettingsDialog } from "@/components/account-settings-dialog";
 import { CollectionCover } from "@/components/collection-cover";
+import { SystemSettingsDialog } from "@/components/system-settings-dialog";
+import { ThemeToggle } from "@/components/theme-toggle";
 import {
   Avatar,
   AvatarBadge,
@@ -42,7 +44,8 @@ export function WorkHeader() {
   const router = useRouter();
   const { collection, collections } = useData();
   const { user, clearUser } = useUserStore();
-  const [settingsOpen, setSettingsOpen] = useState(false);
+  const [accountSettingsOpen, setAccountSettingsOpen] = useState(false);
+  const [systemSettingsOpen, setSystemSettingsOpen] = useState(false);
 
   const handleLogout = async () => {
     try {
@@ -135,6 +138,7 @@ export function WorkHeader() {
         <ClickUpDropdown />
         <TaskSearch />
         <AppsDropdown />
+        <ThemeToggle />
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild data-tauri-drag-region="false">
@@ -165,11 +169,20 @@ export function WorkHeader() {
             <DropdownMenuItem
               onSelect={(event) => {
                 event.preventDefault();
-                setSettingsOpen(true);
+                setAccountSettingsOpen(true);
               }}
             >
               <IconSettings />
               Account settings
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onSelect={(event) => {
+                event.preventDefault();
+                setSystemSettingsOpen(true);
+              }}
+            >
+              <IconSettings />
+              System settings
             </DropdownMenuItem>
             <DropdownMenuItem
               variant="destructive"
@@ -185,8 +198,12 @@ export function WorkHeader() {
         </DropdownMenu>
       </div>
       <AccountSettingsDialog
-        open={settingsOpen}
-        onOpenChange={setSettingsOpen}
+        open={accountSettingsOpen}
+        onOpenChange={setAccountSettingsOpen}
+      />
+      <SystemSettingsDialog
+        open={systemSettingsOpen}
+        onOpenChange={setSystemSettingsOpen}
       />
     </header>
   );

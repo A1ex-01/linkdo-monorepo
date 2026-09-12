@@ -1,10 +1,5 @@
 "use client";
 
-import { IconLoader, IconPlus, IconStarFilled } from "@tabler/icons-react";
-import { useRequest } from "ahooks";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-import toast from "react-hot-toast";
 import { AccountSettingsDialog } from "@/components/account-settings-dialog";
 import { LoadingScreen } from "@/components/motion/loading-screen";
 import { ThemeToggle } from "@/components/theme-toggle";
@@ -25,6 +20,11 @@ import { resolveFilePath } from "@/services/file";
 import { useUserStore } from "@/stores/user";
 import type { ICollection } from "@/types/base";
 import { getGreeting, getGreetingMessage } from "@/utils/base";
+import { IconLoader, IconPlus, IconStarFilled } from "@tabler/icons-react";
+import { useRequest } from "ahooks";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import toast from "react-hot-toast";
 import CollectionCard from "./_components/collection-card";
 import CreateCollectionModal from "./_components/create-collection-modal";
 import Sidebar from "./_components/sidebar";

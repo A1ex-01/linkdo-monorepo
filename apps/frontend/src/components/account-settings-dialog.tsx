@@ -24,12 +24,14 @@ export function AccountSettingsDialog({
   const [name, setName] = useState("");
   const [avatarPath, setAvatarPath] = useState<string | undefined>();
   const [saving, setSaving] = useState(false);
+  
   useEffect(() => {
     if (open) {
       setName(user?.name ?? "");
       setAvatarPath(user?.avatar_url);
     }
   }, [open, user]);
+  
   const save = async () => {
     setSaving(true);
     try {
@@ -46,6 +48,7 @@ export function AccountSettingsDialog({
       setSaving(false);
     }
   };
+  
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-lg p-7">
