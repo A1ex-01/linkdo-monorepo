@@ -8,6 +8,7 @@ import {
   AvatarFallback,
   AvatarImage,
 } from "@/components/ui/avatar";
+import { Card, CardContent } from "@/components/ui/card";
 import { HomeWindowTitleBar } from "@/components/window-title-bar";
 import {
   createCollection,
@@ -125,15 +126,15 @@ export default function HomePage() {
                 LinkDo
               </span>
             </div>
-            <span className="text-atext-460 -mt-2 mb-2 text-[15px] font-medium">
-              v1.0.0
-            </span>
-            <div className="bg-background flex w-full flex-col rounded-xl border border-[#363636] px-4 py-3">
-              <div className="mb-1 flex items-center gap-2">
-                <IconStarFilled size={18} className="text-atext-450" />
-                <span className="text-atext-450 text-base font-bold">Free</span>
+            <span className="-mt-2 mb-2 text-[15px] font-medium">v1.0.0</span>
+            <div className="bg-background border-border flex w-full flex-col rounded-xl border px-4 py-3">
+              <div className="text-foreground mb-1 flex items-center gap-2">
+                <IconStarFilled size={18} className="" />
+                <span className="text-base font-bold">Free</span>
               </div>
-              <span className="text-atext-460 text-sm">无限制</span>
+              <span className="text-f text-muted-foreground text-sm">
+                无限制
+              </span>
             </div>
           </div>
 
@@ -142,41 +143,34 @@ export default function HomePage() {
         <div className="right w-full flex-1">
           <header className="flex h-[80px] w-full items-center justify-between px-10 py-6 backdrop-blur-sm">
             <div>
-              <h1 className="text-atext-500 text-2xl font-extrabold tracking-[-0.6px]">
+              <h1 className="text-2xl font-extrabold tracking-[-0.6px]">
                 {getGreeting()}, {user?.name}
               </h1>
-              <p className="text-atext-450 mt-1 text-sm">
+              <p className="text-muted-foreground mt-1 text-sm">
                 {getGreetingMessage()}
               </p>
             </div>
 
             <div className="flex items-center gap-6">
-              <button
-                type="button"
-                aria-label="Open account settings"
-                onClick={() => setIsSettingsOpen(true)}
-                className="rounded-full focus-visible:ring-2 focus-visible:ring-white/60 focus-visible:outline-none"
-              >
-                <Avatar>
-                  <AvatarImage
-                    src={resolveFilePath(user?.avatar_url)}
-                    className="object-cover"
-                  />
-                  <AvatarFallback className="bg-primary-500">
-                    {user?.name.slice(0, 2) ?? "U"}
-                  </AvatarFallback>
-                  <AvatarBadge className="bg-green-600 dark:bg-green-800" />
-                </Avatar>
-              </button>
+              <Avatar onClick={() => setIsSettingsOpen(true)}>
+                <AvatarImage
+                  src={resolveFilePath(user?.avatar_url)}
+                  className="object-cover"
+                />
+                <AvatarFallback className="">
+                  {user?.name.slice(0, 2) ?? "U"}
+                </AvatarFallback>
+                <AvatarBadge className="bg-green-600 dark:bg-green-800" />
+              </Avatar>
             </div>
           </header>
 
           <div className="flex w-full">
             <main className="flex-1 px-8">
               <div className="mb-4 flex items-end justify-between">
-                <h2 className="text-atext-500 text-xl font-bold">Your Lists</h2>
+                <h2 className="text-xl font-bold">Your Lists</h2>
                 <div className="flex items-center gap-2">
-                  <span className="text-atext-400 text-sm">
+                  <span className="text-muted-foreground text-sm">
                     Lists with your upcoming tasks
                   </span>
                 </div>
@@ -224,151 +218,22 @@ export default function HomePage() {
                   ))}
 
                   {/* Create List Card */}
-                  <button
-                    type="button"
+                  <Card
                     onClick={handleCreate}
-                    className="group hover:border-linkdo-blue/80 relative flex h-[320px] cursor-pointer flex-col items-center justify-center overflow-hidden rounded-2xl border border-dashed border-white/[0.17] bg-[#151515] p-5 text-center transition-[border-color,background-color,box-shadow,transform] duration-200 hover:bg-[#19191b] hover:shadow-[0_0_0_1px_rgba(91,132,229,0.32)]"
+                    className="group hover:border-muted-foreground/50 aspect-square cursor-pointer hover:border"
                   >
-                    <div className="absolute inset-x-5 top-0 h-px bg-white/20 opacity-0 transition-opacity duration-200 group-hover:opacity-100" />
-
-                    <svg
-                      aria-hidden="true"
-                      width={52}
-                      height={60}
-                      viewBox="0 0 52 60"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <g filter="url(#filter0_ddd_6_172)">
-                        <rect
-                          x={2}
-                          y={1}
-                          width={48}
-                          height={56}
-                          rx={4}
-                          fill="#262626"
-                        />
-                        <rect
-                          x={2.5}
-                          y={1.5}
-                          width={47}
-                          height={55}
-                          rx={3.5}
-                          stroke="#363636"
-                        />
-                        <g opacity={0.4}>
-                          <rect
-                            x={9}
-                            y={8}
-                            width={34}
-                            height={4}
-                            rx={2}
-                            fill="#6f98e8"
-                          />
-                        </g>
-                        <g opacity={0.2}>
-                          <rect
-                            x={9}
-                            y={16}
-                            width={22.6641}
-                            height={4}
-                            rx={2}
-                            fill="#6f98e8"
-                          />
-                        </g>
-                        <g opacity={0.2}>
-                          <rect
-                            x={9}
-                            y={24}
-                            width={17}
-                            height={4}
-                            rx={2}
-                            fill="#6f98e8"
-                          />
-                        </g>
-                      </g>
-                      <defs>
-                        <filter
-                          id="filter0_ddd_6_172"
-                          x={0}
-                          y={0}
-                          width={52}
-                          height={60}
-                          filterUnits="userSpaceOnUse"
-                          colorInterpolationFilters="sRGB"
-                        >
-                          <feFlood
-                            floodOpacity={0}
-                            result="BackgroundImageFix"
-                          />
-                          <feColorMatrix
-                            in="SourceAlpha"
-                            type="matrix"
-                            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
-                            result="hardAlpha"
-                          />
-                          <feOffset />
-                          <feColorMatrix
-                            type="matrix"
-                            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.2 0"
-                          />
-                          <feBlend
-                            mode="normal"
-                            in2="BackgroundImageFix"
-                            result="effect1_dropShadow_6_172"
-                          />
-                          <feColorMatrix
-                            in="SourceAlpha"
-                            type="matrix"
-                            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
-                            result="hardAlpha"
-                          />
-                          <feOffset />
-                          <feColorMatrix
-                            type="matrix"
-                            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.2 0"
-                          />
-                          <feBlend
-                            mode="normal"
-                            in2="effect1_dropShadow_6_172"
-                            result="effect2_dropShadow_6_172"
-                          />
-                          <feColorMatrix
-                            in="SourceAlpha"
-                            type="matrix"
-                            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
-                            result="hardAlpha"
-                          />
-                          <feOffset dy={1} />
-                          <feGaussianBlur stdDeviation={1} />
-                          <feColorMatrix
-                            type="matrix"
-                            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.2 0"
-                          />
-                          <feBlend
-                            mode="normal"
-                            in2="effect2_dropShadow_6_172"
-                            result="effect3_dropShadow_6_172"
-                          />
-                          <feBlend
-                            mode="normal"
-                            in="SourceGraphic"
-                            in2="effect3_dropShadow_6_172"
-                            result="shape"
-                          />
-                        </filter>
-                      </defs>
-                    </svg>
-                    <span className="mt-5 text-[15px] font-semibold text-[#e7e7ea]">
-                      Create new list
-                    </span>
-                    <div className="mt-2 max-w-[190px] text-xs leading-5 text-[#77777d]">
-                      A focused home for the work you want to move forward.
-                    </div>
-                    <span className="mt-5 text-[11px] font-bold tracking-[0.12em] text-[#c6c6cb] uppercase opacity-0 transition-opacity duration-200 group-hover:opacity-100">
-                      Start building
-                    </span>
-                  </button>
+                    <CardContent className="flex h-full flex-col items-center justify-center">
+                      <span className="text-foreground mt-5 text-[15px] font-semibold">
+                        Create new list
+                      </span>
+                      <div className="text-muted-foreground mt-2 max-w-[190px] text-center text-xs leading-5">
+                        A focused home for the work you want to move forward.
+                      </div>
+                      <span className="text-foreground mt-5 text-[11px] font-bold tracking-[0.12em] uppercase opacity-60 transition-opacity duration-200 group-hover:opacity-100">
+                        Start building
+                      </span>
+                    </CardContent>
+                  </Card>
                 </div>
               )}
             </main>

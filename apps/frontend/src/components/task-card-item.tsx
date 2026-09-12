@@ -162,7 +162,7 @@ export default function TaskCardItem({
   return (
     <div
       ref={wrapperRef}
-      className="flex flex-col gap-2 rounded-lg border border-solid border-[#363636] bg-[#262626] p-3 text-sm text-white select-none"
+      className="border-border bg-card text-card-foreground flex flex-col gap-2 rounded-lg border border-solid p-3 text-sm select-none"
       {...props}
     >
       <div className="flex w-full items-center">
@@ -194,8 +194,8 @@ export default function TaskCardItem({
           >
             <IconSquareCheck
               className={cn(
-                "hover:text-atext-400 size-full text-[#808080] transition-colors",
-                item.status === "done" ? "text-[#7ba4e8]" : "",
+                "text-muted-foreground hover:text-foreground size-full transition-colors",
+                item.status === "done" ? "text-foreground" : "",
               )}
             />
           </div>
@@ -204,7 +204,7 @@ export default function TaskCardItem({
           className={cn(
             "min-w-0 flex-1 truncate",
             isHover && !isEditingTitle ? "cursor-text" : "",
-            isDone && "text-atext-460 line-through",
+            isDone && "text-muted-foreground line-through",
           )}
           onClick={startEditingTitle}
         >
@@ -224,7 +224,7 @@ export default function TaskCardItem({
               }}
               onBlur={() => void commitTitle()}
               onClick={(e) => e.stopPropagation()}
-              className="bg-background text-atext-500 h-6 w-full rounded-md px-2 text-sm shadow-sm outline-none"
+              className="bg-background text-foreground h-6 w-full rounded-md px-2 text-sm shadow-sm outline-none"
             />
           ) : (
             item.title
@@ -240,7 +240,7 @@ export default function TaskCardItem({
           }
           transition={{ type: "spring", stiffness: 400, damping: 26 }}
         >
-          <div className="flex aspect-square size-4.5 items-center justify-center overflow-hidden rounded-sm bg-[#6f98e8] text-xs text-white">
+          <div className="bg-muted text-muted-foreground flex aspect-square size-4.5 items-center justify-center overflow-hidden rounded-sm text-xs">
             <CollectionCover
               cover={collection?.cover}
               alt=""
@@ -278,7 +278,7 @@ export default function TaskCardItem({
                 onStartFocus(item);
               }}
               title="Start focus on this task"
-              className="size-5 cursor-pointer rounded-md p-0.5 text-[#7ba4e8] hover:bg-[#444444] hover:text-[#6f98e8]"
+              className="text-muted-foreground hover:bg-accent hover:text-foreground size-5 cursor-pointer rounded-md p-0.5"
             >
               <IconRocket className="size-full" />
             </div>
@@ -287,8 +287,8 @@ export default function TaskCardItem({
             className={cn(
               "size-5 cursor-pointer rounded-md p-0.5 transition-colors",
               isDone
-                ? "text-[#7ba4e8] hover:bg-[#444444]"
-                : "text-atext-460 hover:bg-[#444444] hover:text-white",
+                ? "text-foreground hover:bg-accent"
+                : "text-muted-foreground hover:bg-accent hover:text-foreground",
             )}
             onClick={(e) => {
               e.stopPropagation();
@@ -299,7 +299,7 @@ export default function TaskCardItem({
             <IconCircleCheck className="size-full" />
           </div>
           <div
-            className="text-atext-460 size-5 cursor-pointer rounded-md p-0.5 hover:bg-[#444444] hover:text-white"
+            className="text-muted-foreground hover:bg-accent hover:text-foreground size-5 cursor-pointer rounded-md p-0.5"
             onClick={() => {
               setMarkdownContent(item.content ?? "");
               setShowContentEditor(true);
@@ -310,7 +310,7 @@ export default function TaskCardItem({
           {item.status !== "backlog" && (
             <div
               onClick={() => toPrevTaskStatus(item)}
-              className="text-atext-460 size-5 cursor-pointer rounded-md p-0.5 hover:bg-[#444444] hover:text-white"
+              className="text-muted-foreground hover:bg-accent hover:text-foreground size-5 cursor-pointer rounded-md p-0.5"
             >
               <IconArrowLeft className="size-full" />
             </div>
@@ -318,7 +318,7 @@ export default function TaskCardItem({
           {item.status !== "done" && (
             <div
               onClick={() => toNextTaskStatus(item)}
-              className="text-atext-460 size-5 cursor-pointer rounded-md p-0.5 hover:bg-[#444444] hover:text-white"
+              className="text-muted-foreground hover:bg-accent hover:text-foreground size-5 cursor-pointer rounded-md p-0.5"
             >
               <IconArrowRight className="size-full" />
             </div>
@@ -337,7 +337,7 @@ export default function TaskCardItem({
                   return next;
                 });
               }}
-              className="text-atext-460 flex size-5 cursor-pointer items-center justify-center rounded-md p-0.5 hover:bg-[#444444]"
+              className="text-muted-foreground hover:bg-accent hover:text-foreground flex size-5 cursor-pointer items-center justify-center rounded-md p-0.5"
             >
               <IconDotsVertical className="size-full" />
             </button>
@@ -357,7 +357,7 @@ export default function TaskCardItem({
                     openTaskInExternalApp(item);
                   }}
                   className={cn(
-                    "hover:bg-accent relative flex w-full cursor-pointer items-center gap-2 rounded-md px-2 py-1.5 text-xs text-white outline-hidden select-none disabled:pointer-events-none disabled:opacity-50",
+                    "text-popover-foreground hover:bg-accent hover:text-accent-foreground relative flex w-full cursor-pointer items-center gap-2 rounded-md px-2 py-1.5 text-xs outline-hidden select-none disabled:pointer-events-none disabled:opacity-50",
                   )}
                 >
                   <IconExternalLink className="size-3.5" />
@@ -388,7 +388,7 @@ export default function TaskCardItem({
                         e.preventDefault();
                         setDeleteConfirming(false);
                       }}
-                      className="text-atext-460 hover:bg-accent hover:text-foreground flex size-7 shrink-0 cursor-pointer items-center justify-center rounded-sm transition-colors"
+                      className="text-muted-foreground hover:bg-accent hover:text-foreground flex size-7 shrink-0 cursor-pointer items-center justify-center rounded-sm transition-colors"
                     >
                       <IconX className="size-3.5" />
                     </button>
@@ -412,8 +412,8 @@ export default function TaskCardItem({
       {/* desc */}
       {showContentEditor ? null : (
         <div className="flex w-full items-center justify-between gap-2 text-xs">
-          <div className="text-atext-460">{"+EST"}</div>
-          <div className="text-atext-460">
+          <div className="text-muted-foreground">{"+EST"}</div>
+          <div className="text-muted-foreground">
             {formatEstimated(item.actual_time)}
           </div>
 
@@ -424,7 +424,7 @@ export default function TaskCardItem({
                 updateTaskScheduledDate(item, next);
               }}
             />
-            <span className="text-atext-460">
+            <span className="text-muted-foreground">
               {formatEstimated(item.estimated_time)}
             </span>
           </div>
@@ -433,7 +433,7 @@ export default function TaskCardItem({
 
       {/* content editor */}
       {showContentEditor && (
-        <div className="flex w-full cursor-auto flex-col items-center justify-between gap-2 overflow-hidden rounded-[4px] border border-solid border-[#363636] text-xs">
+        <div className="border-border flex w-full cursor-auto flex-col items-center justify-between gap-2 overflow-hidden rounded-[4px] border border-solid text-xs">
           <AMarkdownEditor
             value={markdownContent}
             onChange={setMarkdownContent}
@@ -523,8 +523,8 @@ function ScheduledDateChip({
           className={cn(
             "inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[11px] font-medium transition-colors",
             hasDate
-              ? "text-atext-500 border-[#363636] bg-[#363636]"
-              : "text-atext-460 border-[#363636]",
+              ? "border-border bg-muted text-foreground"
+              : "border-border text-muted-foreground hover:bg-accent hover:text-foreground",
           )}
         >
           {hasDate ? (
@@ -540,7 +540,7 @@ function ScheduledDateChip({
         className="w-auto p-0"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="text-atext-460 px-3 pt-3 text-xs font-semibold">
+        <div className="text-muted-foreground px-3 pt-3 text-xs font-semibold">
           Scheduled date
         </div>
         <Calendar
@@ -561,7 +561,6 @@ function ScheduledDateChip({
             step="1"
             value={draft}
             onChange={(event) => setDraft(event.target.value)}
-            className="border border-[#363636] bg-[#1c1c1c] text-white"
           />
         </div>
         <div className="flex items-center justify-between gap-2 px-3 pb-3">
@@ -571,7 +570,7 @@ function ScheduledDateChip({
             size="sm"
             onClick={clear}
             disabled={!hasDate}
-            className="text-atext-460 h-7 px-2 text-[11px] hover:text-[#ef4444]"
+            className="text-muted-foreground hover:text-destructive h-7 px-2 text-[11px]"
           >
             <IconX className="size-3" />
             Clear
@@ -580,7 +579,7 @@ function ScheduledDateChip({
             type="button"
             size="sm"
             onClick={apply}
-            className="bg-primary h-7 rounded-md px-3 text-[11px] text-white"
+            className="h-7 rounded-md px-3 text-[11px]"
           >
             Save
           </Button>
@@ -627,9 +626,10 @@ export function CardSimpleItem({
   const wrapperRef = useRef<HTMLDivElement>(null);
   const isHover = useHover(wrapperRef);
   const isDone = useMemo(() => item.status === "done", [item.status]);
-  const itemClassName = "cursor-pointer text-atext-460 hover:text-atext-500";
+  const itemClassName =
+    "cursor-pointer text-muted-foreground hover:text-foreground";
   const mergedClassName =
-    className ?? "bg-card text-atext-500 border border-[#363636]";
+    className ?? "border border-border bg-card text-card-foreground";
   const elapsedSeconds =
     item.actual_time * 60 +
     (timerInfo?.task_uuid === item.uuid ? timerInfo.duration : 0);
@@ -642,7 +642,10 @@ export function CardSimpleItem({
     >
       <div className={cn("flex w-full items-center justify-between")}>
         <div
-          className={cn("truncate", isDone && "text-atext-460 line-through")}
+          className={cn(
+            "truncate",
+            isDone && "text-muted-foreground line-through",
+          )}
         >
           {item.title}
         </div>
@@ -651,14 +654,16 @@ export function CardSimpleItem({
           <CountDown
             seconds={item.estimated_time * 60 - elapsedSeconds}
             onFinish={() => {}}
-            color="#2b2b2b"
+            color="var(--card)"
             fontSize={16}
           />
         ) : (
           <div
             className={cn(
               "flex items-center",
-              timerDisplay.isOverdue ? "text-red-400" : "text-atext-460",
+              timerDisplay.isOverdue
+                ? "text-destructive"
+                : "text-muted-foreground",
             )}
           >
             {timerDisplay.isOverdue && <span className="font-mono">+ </span>}
@@ -668,7 +673,7 @@ export function CardSimpleItem({
                   ? elapsedSeconds - item.estimated_time * 60
                   : elapsedSeconds
               }
-              color="#2b2b2b"
+              color="var(--card)"
               fontSize={16}
               onTick={() => {}}
             />
@@ -687,11 +692,11 @@ export function CardSimpleItem({
       >
         <div
           data-tauri-drag-region
-          className="actions text-atext-460 ml-auto flex size-full items-center justify-center gap-2"
+          className="actions text-muted-foreground ml-auto flex size-full items-center justify-center gap-2"
         >
           {onStartFocus && (
             <div
-              className="cursor-pointer text-[#7ba4e8] hover:text-[#6f98e8]"
+              className="text-muted-foreground hover:text-foreground cursor-pointer"
               onClick={(e) => {
                 e.stopPropagation();
                 onStartFocus(item);
@@ -724,7 +729,7 @@ export function CardSimpleItem({
             <IconCircleCheck
               className={cn(
                 "size-5 transition-colors",
-                isDone ? "text-atext-460" : "text-[#6f98e8]",
+                isDone ? "text-muted-foreground" : "text-foreground",
               )}
             />
           </div>
@@ -747,9 +752,10 @@ export function CapsuleItem({
   const wrapperRef = useRef<HTMLDivElement>(null);
   const isHover = useHover(wrapperRef);
   const isDone = useMemo(() => item.status === "done", [item.status]);
-  const itemClassName = "cursor-pointer text-atext-460 hover:text-atext-500";
+  const itemClassName =
+    "cursor-pointer text-muted-foreground hover:text-foreground";
   const mergedClassName =
-    className ?? "bg-card text-atext-500 border border-[#363636]";
+    className ?? "border border-border bg-card text-card-foreground";
   const elapsedSeconds =
     item.actual_time * 60 +
     (timerInfo?.task_uuid === item.uuid ? timerInfo.duration : 0);
@@ -761,7 +767,10 @@ export function CapsuleItem({
     >
       <div className={cn("flex w-full items-center justify-between")}>
         <div
-          className={cn("truncate", isDone && "text-atext-460 line-through")}
+          className={cn(
+            "truncate",
+            isDone && "text-muted-foreground line-through",
+          )}
         >
           {item.title}
         </div>
@@ -769,14 +778,16 @@ export function CapsuleItem({
           <CountDown
             seconds={item.estimated_time * 60 - elapsedSeconds}
             onFinish={() => {}}
-            color="#2b2b2b"
+            color="var(--card)"
             fontSize={16}
           />
         ) : (
           <div
             className={cn(
               "flex items-center",
-              timerDisplay.isOverdue ? "text-red-400" : "text-atext-460",
+              timerDisplay.isOverdue
+                ? "text-destructive"
+                : "text-muted-foreground",
             )}
           >
             {timerDisplay.isOverdue && <span className="font-mono">+ </span>}
@@ -786,7 +797,7 @@ export function CapsuleItem({
                   ? elapsedSeconds - item.estimated_time * 60
                   : elapsedSeconds
               }
-              color="#2b2b2b"
+              color="var(--card)"
               fontSize={16}
               onTick={() => {}}
             />
@@ -805,7 +816,7 @@ export function CapsuleItem({
       >
         <div
           data-tauri-drag-region
-          className="actions text-atext-460 ml-auto flex size-full items-center justify-center gap-2"
+          className="actions text-muted-foreground ml-auto flex size-full items-center justify-center gap-2"
         >
           <div className={`${itemClassName} `} onClick={() => {}}>
             <IconDeviceGamepad2 className="size-5" />
@@ -820,7 +831,7 @@ export function CapsuleItem({
             <IconPlayerPlay className="size-5" />
           </div>
           <div className={`${itemClassName} `} onClick={() => {}}>
-            <IconCircleCheck className="size-5 text-[#6f98e8]" />
+            <IconCircleCheck className="text-foreground size-5" />
           </div>
           <div
             className={`${itemClassName} `}
@@ -828,7 +839,7 @@ export function CapsuleItem({
               onAction("maximize");
             }}
           >
-            <IconMaximize className="size-5 text-[#6f98e8]" />
+            <IconMaximize className="text-foreground size-5" />
           </div>
         </div>
       </motion.div>

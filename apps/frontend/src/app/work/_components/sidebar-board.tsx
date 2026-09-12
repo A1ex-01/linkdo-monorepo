@@ -94,7 +94,7 @@ export function SidebarBoard({}: SidebarBoardProps) {
       <div className="flex h-full justify-center gap-6">
         <div
           className={cn(
-            "text-card-foreground relative flex h-full flex-1 flex-col overflow-hidden overflow-y-scroll rounded-2xl border border-[#2a2a2a] bg-[#1d1d1d] p-5 shadow-sm",
+            "bg-card text-card-foreground relative flex h-full flex-1 flex-col overflow-hidden overflow-y-scroll rounded-2xl border p-5 shadow-sm",
           )}
         >
           <div
@@ -106,13 +106,13 @@ export function SidebarBoard({}: SidebarBoardProps) {
               <div className="text-card-foreground text-xl font-bold">
                 {"Today"}
               </div>
-              <div className="text-atext-460 ml-1 text-xs font-normal">
+              <div className="text-muted-foreground ml-1 text-xs font-normal">
                 {`${todayTasks.length} tasks`}
               </div>
             </div>
             <div className="actions">
               <IconHome
-                className="text-atext-460 hover:text-atext-500 cursor-pointer transition-colors"
+                className="text-muted-foreground hover:text-foreground cursor-pointer transition-colors"
                 onClick={async () => {
                   await handleExitToKanban();
                   if (timerInfo) {
@@ -132,7 +132,7 @@ export function SidebarBoard({}: SidebarBoardProps) {
           ) : (
             <>
               {showProgress && (
-                <div className="text-atext-450 mt-2 flex w-full items-center gap-4 text-xs">
+                <div className="text-muted-foreground mt-2 flex w-full items-center gap-4 text-xs">
                   <Progress className="h-2" value={progress} />
                   <div className="shrink-0">
                     {isDoneTasks}/{initialTodayTasks.length} Done
@@ -163,7 +163,7 @@ export function SidebarBoard({}: SidebarBoardProps) {
                   setViewMode("capsule");
                   enterCapsule();
                 }}
-                className="bg-primary-400 hover:bg-primary-400/90 mt-4 rounded-full text-white shadow-sm"
+                className="mt-4 rounded-full shadow-sm"
               >
                 Focus on task
               </Button>
@@ -185,24 +185,24 @@ function AllDoneView({
   return (
     <div className="mt-5 flex flex-1 flex-col items-center justify-center gap-6 text-center">
       <div className="flex flex-col gap-1">
-        <div className="text-atext-500 text-lg font-semibold">
+        <div className="text-foreground text-lg font-semibold">
           Woohooo!! All tasks done for the day
         </div>
-        <div className="text-atext-460 text-xs">
+        <div className="text-muted-foreground text-xs">
           Take a breather — you earned it.
         </div>
       </div>
       <Button
         size="lg"
         onClick={onGoRelax}
-        className="bg-primary-400 hover:bg-primary-400/90 w-full rounded-full border border-[#796186] py-6 text-white shadow-sm hover:border-[#796186]/90"
+        className="w-full rounded-full py-6 shadow-sm"
       >
         Go Relax
       </Button>
       <button
         type="button"
         onClick={onCreateTask}
-        className="text-atext-460 inline-flex items-center gap-1 text-xs underline-offset-4 transition-colors hover:text-white hover:underline"
+        className="text-muted-foreground hover:text-foreground inline-flex items-center gap-1 text-xs underline-offset-4 transition-colors hover:underline"
       >
         <IconPlus className="size-3.5" />
         Create Task

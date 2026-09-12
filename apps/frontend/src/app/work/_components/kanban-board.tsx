@@ -44,10 +44,8 @@ const DropZone = ({
   return (
     <div
       className={cn(
-        "absolute top-0 h-[72px] w-full shrink-0 rounded-lg border-2 border-dashed border-[#515151] transition-all",
-        isDraggingOver
-          ? "border-[#363636] bg-[#232323] opacity-100"
-          : "opacity-60",
+        "border-muted-foreground/40 absolute top-0 h-[72px] w-full shrink-0 rounded-lg border-2 border-dashed transition-all",
+        isDraggingOver ? "border-border bg-muted opacity-100" : "opacity-60",
       )}
     />
   );
@@ -150,30 +148,29 @@ export function KanbanBoard({}: KanbanBoardProps) {
                   return (
                     <div
                       className={cn(
-                        "relative flex h-full flex-1 flex-col overflow-hidden rounded-xl border-2 border-[#282828] p-px",
+                        "border-border relative flex h-full flex-1 flex-col overflow-hidden rounded-xl border-2 p-px",
 
                         isOver && "",
-                        col.isHighlighted &&
-                          "border-3 border-[#3d3b3b] shadow-lg",
+                        col.isHighlighted && "border-ring border-3 shadow-lg",
                       )}
                       ref={provided.innerRef}
                       {...provided.droppableProps}
                     >
                       <div
                         className={cn(
-                          "relative flex h-full flex-1 flex-col overflow-hidden rounded-xl bg-[#181818] p-4 text-white",
+                          "bg-card text-card-foreground relative flex h-full flex-1 flex-col overflow-hidden rounded-lg p-4",
 
                           isOver && "opacity-75",
                         )}
                       >
-                        <div className="flex w-full shrink-0 items-center justify-between text-white">
+                        <div className="flex w-full shrink-0 items-center justify-between">
                           <div className="text-xl font-medium">{col.label}</div>
-                          <div className="text-atext-450 text-3xl">
+                          <div className="text-muted-foreground text-3xl">
                             <IconPlus className="size-5" />
                           </div>
                         </div>
                         {showProgress && (
-                          <div className="text-atext-450 mt-2 flex w-full items-center gap-4 text-xs">
+                          <div className="text-muted-foreground mt-2 flex w-full items-center gap-4 text-xs">
                             <Progress className="h-2" value={progress} />
                             <div className="shrink-0">
                               {isDoneTasks?.length}/{allTasks?.length} Done
@@ -231,14 +228,14 @@ export function KanbanBoard({}: KanbanBoardProps) {
                           {provided.placeholder}
                           <AddTask status={col.value} />
                           {colTasks?.length === 0 && (
-                            <div className="text-atext-460 flex h-full w-full flex-col items-center justify-center gap-2">
+                            <div className="text-muted-foreground flex h-full w-full flex-col items-center justify-center gap-2">
                               <IconCircleCheck className="size-10" />
-                              <div className="text-atext-460">All Clear</div>
+                              <div>All Clear</div>
                             </div>
                           )}
                           {col.isHighlighted && (
                             <Button
-                              className="mt-auto rounded-full border border-[#3a3a3a] bg-[#2b2b2b] py-6! text-white"
+                              className="mt-auto rounded-full py-6!"
                               size={"lg"}
                               onClick={() => {
                                 enterSidebar();

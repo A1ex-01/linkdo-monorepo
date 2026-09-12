@@ -69,7 +69,7 @@ export function TaskSearch() {
         aria-label="Search tasks"
         data-tauri-drag-region="false"
         onClick={() => setOpen(true)}
-        className="text-atext-460 flex size-8 items-center justify-center rounded-md border border-[#303030] bg-[#181818] transition-colors hover:bg-[#242424] hover:text-white focus-visible:ring-2 focus-visible:ring-white/30 focus-visible:outline-none"
+        className="text-muted-foreground border-border bg-card hover:bg-accent hover:text-accent-foreground focus-visible:ring-ring flex size-8 items-center justify-center rounded-md border transition-colors focus-visible:ring-2 focus-visible:outline-none"
       >
         <IconSearch className="size-4" />
       </button>
@@ -82,11 +82,11 @@ export function TaskSearch() {
         />
         <CommandList className="max-h-96">
           {!query ? (
-            <div className="text-atext-460 px-4 py-8 text-center text-sm">
+            <div className="text-muted-foreground px-4 py-8 text-center text-sm">
               Search tasks across all lists
             </div>
           ) : loading ? (
-            <div className="text-atext-460 px-4 py-8 text-center text-sm">
+            <div className="text-muted-foreground px-4 py-8 text-center text-sm">
               Loading tasks...
             </div>
           ) : (
@@ -107,13 +107,13 @@ export function TaskSearch() {
                       }}
                       className="flex items-center gap-3 px-3 py-2.5"
                     >
-                      <span className="flex size-6 shrink-0 items-center justify-center rounded-md bg-[#6f98e8]/15 text-xs font-semibold text-[#8eaeef]">
+                      <span className="bg-muted text-muted-foreground flex size-6 shrink-0 items-center justify-center rounded-md text-xs font-semibold">
                         {collection?.name.trim().charAt(0).toUpperCase() ?? "?"}
                       </span>
                       <span className="min-w-0 flex-1 truncate">
                         {task.title}
                       </span>
-                      <span className="text-atext-460 max-w-28 truncate text-xs">
+                      <span className="text-muted-foreground max-w-28 truncate text-xs">
                         {collection?.name}
                       </span>
                     </CommandItem>

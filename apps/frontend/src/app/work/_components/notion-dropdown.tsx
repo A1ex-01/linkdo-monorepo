@@ -97,7 +97,7 @@ export function NotionDropdown({ className }: IProps) {
       </DropdownMenuTrigger>
       <DropdownMenuContent
         align="end"
-        className="w-[380px] overflow-hidden rounded-xl border border-white/10 bg-[#181818] p-3 shadow-2xl shadow-black/40"
+        className="border-border bg-popover text-popover-foreground w-[380px] overflow-hidden rounded-xl border p-3 shadow-2xl"
         onCloseAutoFocus={(e) => e.preventDefault()}
         onInteractOutside={(e) => {
           if (e.target instanceof HTMLElement) {
@@ -109,17 +109,17 @@ export function NotionDropdown({ className }: IProps) {
       >
         {/* User Info */}
         <div className="flex items-center gap-3 px-1 py-1">
-          <div className="flex size-9 items-center justify-center rounded-lg border border-white/10 bg-[#242424] shadow-sm">
+          <div className="border-border bg-muted flex size-9 items-center justify-center rounded-lg border shadow-sm">
             <AIconNotion alt="" className="size-5" />
           </div>
           <div className="flex min-w-0 flex-1 flex-col gap-0.5">
-            <span className="text-[13px] font-semibold text-[#f1f1f1]">
+            <span className="text-popover-foreground text-[13px] font-semibold">
               Notion{" "}
-              <span className="ml-1 text-[10px] font-medium text-[#8b8b8b]">
+              <span className="text-muted-foreground/70 ml-1 text-[10px] font-medium">
                 Beta
               </span>
             </span>
-            <span className="truncate text-[12px] text-[#949494]">
+            <span className="text-muted-foreground truncate text-[12px]">
               {user?.notion_user_id
                 ? `Account · ${user.name}`
                 : "Connect a Notion account"}
@@ -134,18 +134,18 @@ export function NotionDropdown({ className }: IProps) {
                 toast.error("Unable to open Notion authorization");
               }
             }}
-            className="flex shrink-0 items-center gap-1.5 rounded-md px-2 py-1 text-[12px] font-medium text-[#9c9c9c] transition-colors hover:bg-white/5 hover:text-white"
+            className="text-muted-foreground hover:bg-accent hover:text-accent-foreground flex shrink-0 items-center gap-1.5 rounded-md px-2 py-1 text-[12px] font-medium transition-colors"
           >
             <IconLink className="size-3" />
             {user?.notion_user_id ? "ReLink" : "Connect"}
           </button>
         </div>
 
-        <DropdownMenuSeparator className="my-3 bg-white/8" />
+        <DropdownMenuSeparator className="my-3" />
 
         {/* Databases Section */}
-        <div className="flex items-center gap-1.5 px-1 pb-2 text-[12px] font-semibold text-[#f0f0f0]">
-          <IconDatabase className="size-3.5 text-[#8d8d8d]" />
+        <div className="text-popover-foreground flex items-center gap-1.5 px-1 pb-2 text-[12px] font-semibold">
+          <IconDatabase className="text-muted-foreground size-3.5" />
           Databases
           <div className="ml-auto">
             <UpdateDatabasesButton />
@@ -154,19 +154,19 @@ export function NotionDropdown({ className }: IProps) {
 
         {isFetchingCurrCollectionNotionDbs ? (
           <div className="flex items-center justify-center py-5">
-            <IconLoader2 className="size-4 animate-spin text-[#8d8d8d]" />
+            <IconLoader2 className="text-muted-foreground size-4 animate-spin" />
           </div>
         ) : currCollectionNotionDbs.length > 0 ? (
           currCollectionNotionDbs.map((db) => (
             <div
               key={db.uuid}
-              className="flex cursor-pointer flex-col gap-2 rounded-lg px-2 py-2.5 transition-colors hover:bg-white/[0.035]"
+              className="hover:bg-accent/50 flex cursor-pointer flex-col gap-2 rounded-lg px-2 py-2.5 transition-colors"
             >
               <div className="flex w-full items-center gap-2">
-                <div className="flex size-7 items-center justify-center rounded-md bg-white/[0.07]">
-                  <IconBrandNotion className="size-3.5 text-[#d5d5d5]" />
+                <div className="bg-muted text-muted-foreground flex size-7 items-center justify-center rounded-md">
+                  <IconBrandNotion className="size-3.5" />
                 </div>
-                <span className="truncate text-[13px] font-medium text-[#e9e9e9]">
+                <span className="text-popover-foreground truncate text-[13px] font-medium">
                   {db.name}
                 </span>
                 <div
@@ -176,7 +176,7 @@ export function NotionDropdown({ className }: IProps) {
                       `https://www.notion.so/${db.notion_database_id?.replaceAll("-", "")}`,
                     );
                   }}
-                  className="rounded p-1 text-[#858585] transition-colors hover:bg-white/8 hover:text-white"
+                  className="text-muted-foreground hover:bg-accent hover:text-accent-foreground rounded p-1 transition-colors"
                 >
                   <IconExternalLink className="text-muted-foreground size-4" />
                 </div>
@@ -190,7 +190,7 @@ export function NotionDropdown({ className }: IProps) {
                     e.stopPropagation();
                   }}
                   className={cn(
-                    "ml-auto flex size-6 items-center justify-center rounded-md text-[#858585] transition-all hover:bg-white/8 hover:text-white",
+                    "text-muted-foreground hover:bg-accent hover:text-accent-foreground ml-auto flex size-6 items-center justify-center rounded-md transition-all",
                     showDetailItem?.uuid === db.uuid ? "rotate-90" : "",
                   )}
                 >
@@ -199,15 +199,15 @@ export function NotionDropdown({ className }: IProps) {
               </div>
               {showDetailItem?.uuid === db.uuid && (
                 <div
-                  className="mt-1 flex w-full flex-col gap-3 rounded-lg border border-white/8 bg-black/15 p-3 text-sm"
+                  className="border-border bg-muted/50 mt-1 flex w-full flex-col gap-3 rounded-lg border p-3 text-sm"
                   onClick={(e) => {
                     e.preventDefault();
                     e.stopPropagation();
                   }}
                 >
-                  <div className="flex items-center gap-1.5 text-[12px] font-semibold text-[#f0f0f0]">
+                  <div className="text-popover-foreground flex items-center gap-1.5 text-[12px] font-semibold">
                     Status mapping
-                    <IconInfoCircle className="size-3.5 text-[#777]" />
+                    <IconInfoCircle className="text-muted-foreground/70 size-3.5" />
                   </div>
                   <div className="flex w-full flex-col gap-2">
                     {[
@@ -220,7 +220,7 @@ export function NotionDropdown({ className }: IProps) {
                         className="flex w-full items-center gap-3"
                         key={item.value}
                       >
-                        <div className="w-[82px] shrink-0 text-[12px] font-medium text-[#a2a2a2]">
+                        <div className="text-muted-foreground w-[82px] shrink-0 text-[12px] font-medium">
                           {item.label}
                         </div>
                         <StatusOptionSelector
@@ -235,7 +235,7 @@ export function NotionDropdown({ className }: IProps) {
                   <Button
                     variant={"default"}
                     size={"lg"}
-                    className="linkdo-gradient-action mt-1 h-9 w-full rounded-lg border-0 text-[12px] font-semibold text-white shadow-none"
+                    className="mt-1 h-9 w-full rounded-lg border-0 text-[12px] font-semibold shadow-none"
                     onClick={async () => {
                       // 更新状态
                       const res = await updateStatusMapping(
@@ -294,7 +294,7 @@ function StatusOptionSelector({
         });
       }}
     >
-      <SelectTrigger className="h-8 w-full min-w-0 flex-1 rounded-md border-white/10 bg-white/[0.045] px-2.5 text-[12px] text-[#e4e4e4] hover:bg-white/[0.07]">
+      <SelectTrigger className="border-input bg-background hover:bg-accent h-8 w-full min-w-0 flex-1 rounded-md px-2.5 text-[12px]">
         <SelectValue placeholder="Select a status" />
       </SelectTrigger>
       <SelectContent>

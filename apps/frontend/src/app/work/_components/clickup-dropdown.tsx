@@ -100,7 +100,7 @@ export function ClickUpDropdown() {
       </DropdownMenuTrigger>
       <DropdownMenuContent
         align="end"
-        className="w-[380px] overflow-hidden rounded-xl border border-white/10 bg-[#181818] p-3 shadow-2xl shadow-black/40"
+        className="border-border bg-popover text-popover-foreground w-[380px] overflow-hidden rounded-xl border p-3 shadow-2xl"
         onCloseAutoFocus={(e) => e.preventDefault()}
         onInteractOutside={(e) => {
           if (e.target instanceof HTMLElement) {
@@ -111,31 +111,31 @@ export function ClickUpDropdown() {
         }}
       >
         <div className="flex items-center gap-3 px-1 py-1">
-          <div className="flex size-9 items-center justify-center rounded-lg border border-white/10 bg-[#242424] shadow-sm">
+          <div className="border-border bg-muted flex size-9 items-center justify-center rounded-lg border shadow-sm">
             <AIconClickup className="size-5" />
           </div>
           <div className="flex min-w-0 flex-1 flex-col gap-0.5">
-            <span className="text-[13px] font-semibold text-[#f1f1f1]">
+            <span className="text-popover-foreground text-[13px] font-semibold">
               ClickUp
             </span>
-            <span className="truncate text-[12px] text-[#949494]">
+            <span className="text-muted-foreground truncate text-[12px]">
               Lists linked to this collection
             </span>
           </div>
           <button
             type="button"
             onClick={connect}
-            className="ml-auto flex shrink-0 items-center gap-1.5 rounded-md px-2 py-1 text-[12px] font-medium text-[#9c9c9c] transition-colors hover:bg-white/5 hover:text-white"
+            className="text-muted-foreground hover:bg-accent hover:text-accent-foreground ml-auto flex shrink-0 items-center gap-1.5 rounded-md px-2 py-1 text-[12px] font-medium transition-colors"
           >
             <IconLink />
             Link account
           </button>
         </div>
 
-        <DropdownMenuSeparator className="my-3 bg-white/8" />
+        <DropdownMenuSeparator className="my-3" />
 
-        <div className="flex items-center gap-1.5 px-1 pb-2 text-[12px] font-semibold text-[#f0f0f0]">
-          <IconChecklist className="size-3.5 text-[#8d8d8d]" />
+        <div className="text-popover-foreground flex items-center gap-1.5 px-1 pb-2 text-[12px] font-semibold">
+          <IconChecklist className="text-muted-foreground size-3.5" />
           Lists
           <div className="ml-auto">
             <UpdateClickUpListsButton />
@@ -150,13 +150,13 @@ export function ClickUpDropdown() {
           currCollectionClickUpLists.map((list) => (
             <div
               key={list.uuid}
-              className="flex flex-col gap-2 rounded-lg px-2 py-2.5 transition-colors hover:bg-white/[0.035]"
+              className="hover:bg-accent/50 flex flex-col gap-2 rounded-lg px-2 py-2.5 transition-colors"
             >
               <div className="flex items-center gap-2.5">
-                <div className="flex size-7 items-center justify-center rounded-md bg-white/[0.07]">
-                  <IconChecklist className="size-3.5 text-[#d5d5d5]" />
+                <div className="bg-muted text-muted-foreground flex size-7 items-center justify-center rounded-md">
+                  <IconChecklist className="size-3.5" />
                 </div>
-                <span className="truncate text-[13px] font-medium text-[#e9e9e9]">
+                <span className="text-popover-foreground truncate text-[13px] font-medium">
                   {list.name}
                 </span>
                 <button
@@ -167,7 +167,7 @@ export function ClickUpDropdown() {
                       showDetailItem?.uuid === list.uuid ? undefined : list,
                     );
                   }}
-                  className="ml-auto flex size-6 cursor-pointer items-center justify-center rounded-md text-[#858585] transition-all hover:bg-white/8 hover:text-white"
+                  className="text-muted-foreground hover:bg-accent hover:text-accent-foreground ml-auto flex size-6 cursor-pointer items-center justify-center rounded-md transition-all"
                 >
                   <IconChevronRight
                     className={
@@ -179,15 +179,15 @@ export function ClickUpDropdown() {
 
               {showDetailItem?.uuid === list.uuid ? (
                 <div
-                  className="mt-1 flex flex-col gap-3 rounded-lg border border-white/8 bg-black/15 p-3 text-sm"
+                  className="border-border bg-muted/50 mt-1 flex flex-col gap-3 rounded-lg border p-3 text-sm"
                   onClick={(e) => {
                     e.preventDefault();
                     e.stopPropagation();
                   }}
                 >
-                  <div className="flex items-center gap-1.5 text-[12px] font-semibold text-[#f0f0f0]">
+                  <div className="text-popover-foreground flex items-center gap-1.5 text-[12px] font-semibold">
                     Status mapping
-                    <IconInfoCircle className="size-3.5 text-[#777]" />
+                    <IconInfoCircle className="text-muted-foreground/70 size-3.5" />
                   </div>
                   {[
                     { label: "Backlog", value: "backlog" },
@@ -196,7 +196,7 @@ export function ClickUpDropdown() {
                     { label: "Done", value: "done" },
                   ].map((item) => (
                     <div className="flex items-center gap-3" key={item.value}>
-                      <div className="w-[82px] shrink-0 text-[12px] font-medium text-[#a2a2a2]">
+                      <div className="text-muted-foreground w-[82px] shrink-0 text-[12px] font-medium">
                         {item.label}
                       </div>
                       <ClickUpStatusSelector
@@ -210,7 +210,7 @@ export function ClickUpDropdown() {
                   <Button
                     variant="default"
                     size="lg"
-                    className="mt-1 h-9 w-full rounded-lg border-0 bg-gradient-to-r from-[#7c69ee] to-[#4bc7f5] text-[12px] font-semibold text-[#111] shadow-none hover:from-[#8b7af4] hover:to-[#5bd0fa]"
+                    className="mt-1 h-9 w-full rounded-lg border-0 text-[12px] font-semibold shadow-none"
                     onClick={async () => {
                       const res = await updateClickUpStatusMapping(
                         list.uuid,
@@ -266,7 +266,7 @@ function ClickUpStatusSelector({
         });
       }}
     >
-      <SelectTrigger className="h-8 w-full min-w-0 flex-1 rounded-md border-white/10 bg-white/[0.045] px-2.5 text-[12px] text-[#e4e4e4] hover:bg-white/[0.07]">
+      <SelectTrigger className="border-input bg-background hover:bg-accent h-8 w-full min-w-0 flex-1 rounded-md px-2.5 text-[12px]">
         <SelectValue placeholder="Select a status" />
       </SelectTrigger>
       <SelectContent>

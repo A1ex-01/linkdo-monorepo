@@ -91,7 +91,7 @@ export function AddTask({ className, status }: IProps) {
     <div className={cn("", className)}>
       <Button
         variant="ghost"
-        className="text-atext-460 hover:text-atext-450 flex w-full justify-start py-2 text-left font-bold hover:bg-transparent! hover:opacity-80"
+        className="text-muted-foreground hover:text-foreground flex w-full justify-start py-2 text-left font-bold hover:bg-transparent! hover:opacity-80"
         onClick={() => setIsOpen(!isOpen)}
       >
         {!isOpen ? (
@@ -108,13 +108,13 @@ export function AddTask({ className, status }: IProps) {
       </Button>
       {isOpen && (
         <div>
-          <div className="rounded-xl border border-[#363636] bg-[#262626] p-3 text-white">
+          <div className="border-border bg-card text-card-foreground rounded-xl border p-3">
             <form onSubmit={handleSubmit(onSubmit)}>
               <div className="flex gap-2">
                 <Input
                   {...register("title", { required: true })}
                   placeholder="What do you need to do?"
-                  className="border border-[#363636] bg-[#1c1c1c] text-white placeholder:text-[#808080]"
+                  className="bg-background"
                 />
                 <Controller
                   name="timer_mode"
@@ -123,7 +123,7 @@ export function AddTask({ className, status }: IProps) {
                     <div
                       role="radiogroup"
                       aria-label="计时模式"
-                      className="flex shrink-0 rounded-lg border border-[#363636] bg-[#1c1c1c] p-0.5"
+                      className="border-border bg-muted flex shrink-0 rounded-lg border p-0.5"
                     >
                       {(
                         [
@@ -138,10 +138,10 @@ export function AddTask({ className, status }: IProps) {
                           aria-checked={field.value === value}
                           onClick={() => field.onChange(value)}
                           className={cn(
-                            "rounded-md px-2.5 py-1 text-xs font-medium transition-colors focus-visible:ring-2 focus-visible:ring-[#6f98e8] focus-visible:outline-none",
+                            "focus-visible:ring-ring rounded-md px-2.5 py-1 text-xs font-medium transition-colors focus-visible:ring-2 focus-visible:outline-none",
                             field.value === value
-                              ? "bg-[#6f98e8] text-white"
-                              : "text-[#a0a0a0] hover:text-white",
+                              ? "bg-background text-foreground shadow-xs"
+                              : "text-muted-foreground hover:text-foreground",
                           )}
                         >
                           {label}
@@ -170,7 +170,7 @@ export function AddTask({ className, status }: IProps) {
                             type="button"
                             variant="outline"
                             data-empty={!field.value}
-                            className="flex-1 justify-between border border-[#363636] bg-[#1c1c1c] text-left font-normal text-white data-[empty=true]:text-[#808080]"
+                            className="data-[empty=true]:text-muted-foreground flex-1 justify-between text-left font-normal"
                           >
                             {selectedDate ? (
                               format(selectedDate, "yyyy-MM-dd")
@@ -199,7 +199,7 @@ export function AddTask({ className, status }: IProps) {
                             step="1"
                             value={field.value}
                             onChange={field.onChange}
-                            className="mt-2 border border-[#363636] bg-[#1c1c1c] text-white"
+                            className="mt-2"
                           />
                         </PopoverContent>
                       </Popover>
@@ -211,7 +211,7 @@ export function AddTask({ className, status }: IProps) {
                   <Input
                     type="time"
                     aria-label="Expected duration"
-                    className="w-max shrink-0 border border-[#363636] bg-[#1c1c1c] text-white"
+                    className="w-max shrink-0"
                     {...register("estimated_time")}
                   />
                 )}
@@ -233,26 +233,14 @@ export function AddTask({ className, status }: IProps) {
                       >
                         <SelectTrigger
                           aria-invalid={fieldState.invalid}
-                          className="min-w-[120px] border border-[#363636] bg-[#1c1c1c] text-white data-[placeholder]:text-[#808080]"
+                          className="min-w-[120px]"
                         >
                           <SelectValue placeholder="Select target" />
                         </SelectTrigger>
-                        <SelectContent
-                          position="item-aligned"
-                          className="border-[#363636] bg-[#262626] text-white"
-                        >
-                          <SelectItem
-                            value="none"
-                            className="text-white focus:bg-[#363636] focus:text-white"
-                          >
-                            No linked app
-                          </SelectItem>
+                        <SelectContent position="item-aligned">
+                          <SelectItem value="none">No linked app</SelectItem>
                           {linkTargets.map((target) => (
-                            <SelectItem
-                              key={target.value}
-                              value={target.value}
-                              className="text-white focus:bg-[#363636] focus:text-white"
-                            >
+                            <SelectItem key={target.value} value={target.value}>
                               {target.platform === "notion"
                                 ? "Notion"
                                 : "ClickUp"}{" "}
@@ -268,7 +256,7 @@ export function AddTask({ className, status }: IProps) {
                 <Button
                   type="submit"
                   variant="default"
-                  className="rounded-full bg-[#6f98e8] px-4 text-white hover:bg-[#5a86d8]"
+                  className="rounded-full px-4"
                 >
                   Confirm
                 </Button>

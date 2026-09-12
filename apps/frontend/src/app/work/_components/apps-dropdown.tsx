@@ -70,7 +70,7 @@ export function AppsDropdown() {
                   {integration.description}
                 </span>
               </span>
-              <span className="rounded-full border border-white/[0.08] bg-white/[0.05] px-2 py-0.5 text-[11px] font-medium text-[#9a9aa0]">
+              <span className="border-border bg-muted text-muted-foreground rounded-full border px-2 py-0.5 text-[11px] font-medium">
                 Coming soon
               </span>
             </DropdownMenuItem>

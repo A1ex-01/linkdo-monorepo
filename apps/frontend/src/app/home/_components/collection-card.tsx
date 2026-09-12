@@ -1,6 +1,7 @@
 import { CollectionCover } from "@/components/collection-cover";
 import { AIconClickup, AIconNotion } from "@/components/icons/base";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -65,128 +66,127 @@ export default function CollectionCard({
   };
 
   return (
-    <div
+    <Card
       onClick={onClick}
-      className="group relative flex h-[320px] cursor-pointer flex-col overflow-hidden rounded-2xl border-solid border-[#ffffff]/20! bg-[#161616] p-4 transition-[border-color,box-shadow,transform] duration-200 hover:border"
+      className="group relative aspect-square cursor-pointer"
+      // className="group relative flex h-[320px] cursor-pointer flex-col overflow-hidden rounded-2xl border-solid border-[#ffffff]/20! bg-[#161616] p-4 transition-[border-color,box-shadow,transform] duration-200 hover:border"
     >
-      {collection.cover ? (
-        <img
-          src={resolveFilePath(collection.cover)}
-          alt=""
-          className="absolute inset-0 h-full w-full object-cover opacity-[0.13]"
-        />
-      ) : null}
-      <div className="relative z-10 mb-4 flex items-start justify-between">
-        <div className="flex min-w-0 items-center gap-3">
-          <div className="flex -space-x-2">
-            <div className="z-10 flex size-9 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-white/10 bg-[#303030] shadow-sm">
-              <CollectionCover
-                cover={collection.cover}
-                alt={`${collection.name} cover`}
-                className="size-full object-cover"
-                fallback={
-                  <span className="text-sm font-bold text-[#f2f2f2]">
-                    {initial}
-                  </span>
-                }
-              />
+      <CardContent className="flex h-full flex-col">
+        {collection.cover ? (
+          <img
+            src={resolveFilePath(collection.cover)}
+            alt=""
+            className="absolute inset-0 h-full w-full object-cover opacity-[0.13]"
+          />
+        ) : null}
+        <div className="relative z-10 mb-4 flex items-start justify-between">
+          <div className="flex min-w-0 items-center gap-3">
+            <div className="flex -space-x-2">
+              <div className="border-border/10 z-10 flex size-9 shrink-0 items-center justify-center overflow-hidden rounded-lg border shadow-sm">
+                <CollectionCover
+                  cover={collection.cover}
+                  alt={`${collection.name} cover`}
+                  className="size-full object-cover"
+                  fallback={
+                    <span className="font-bold] text-sm">{initial}</span>
+                  }
+                />
+              </div>
+              {collection.notion_databases?.length ? (
+                <span className="z-[2] flex size-9 items-center justify-center rounded-lg border-2 border-[#161616] bg-white shadow-sm">
+                  <AIconNotion alt="Notion" className="size-5" />
+                </span>
+              ) : null}
+              {collection.clickup_lists?.length ? (
+                <span className="z-[1] flex size-9 items-center justify-center rounded-lg border-2 border-[#161616] bg-white shadow-sm">
+                  <AIconClickup alt="ClickUp" className="size-5" />
+                </span>
+              ) : null}
             </div>
-            {collection.notion_databases?.length ? (
-              <span className="z-[2] flex size-9 items-center justify-center rounded-lg border-2 border-[#161616] bg-white shadow-sm">
-                <AIconNotion alt="Notion" className="size-5" />
-              </span>
-            ) : null}
-            {collection.clickup_lists?.length ? (
-              <span className="z-[1] flex size-9 items-center justify-center rounded-lg border-2 border-[#161616] bg-white shadow-sm">
-                <AIconClickup alt="ClickUp" className="size-5" />
-              </span>
-            ) : null}
+            <h3 className="truncate text-[18px] font-semibold tracking-[-0.02em]">
+              {collection.name}
+            </h3>
           </div>
-          <h3 className="truncate text-[18px] font-semibold tracking-[-0.02em] text-[#f2f2f2]">
-            {collection.name}
-          </h3>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                size={"icon"}
+                type="button"
+                variant={"ghost"}
+                aria-label={`Actions for ${collection.name}`}
+                className="rounded-md p-1 transition-colors"
+                onClick={(e) => {
+                  e.stopPropagation();
+                }}
+              >
+                <IconDotsVertical className="size-5" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-[200px]">
+              <DropdownMenuItem
+                onSelect={(event) => {
+                  event.preventDefault();
+                  onEdit();
+                }}
+                onClick={(event) => event.stopPropagation()}
+              >
+                <IconPencil />
+                Edit collection
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                variant="destructive"
+                disabled={deleting}
+                onSelect={handleDelete}
+                onClick={(e) => e.stopPropagation()}
+              >
+                <IconTrash />
+                {deleting ? "Deleting..." : "Delete Collection"}
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <button
-              type="button"
-              aria-label={`Actions for ${collection.name}`}
-              className="rounded-md p-1 text-[#898989] transition-colors hover:bg-white/8 hover:text-white"
-              onClick={(e) => {
-                e.stopPropagation();
-              }}
-            >
-              <IconDotsVertical className="size-5" />
-            </button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-[200px]">
-            <DropdownMenuItem
-              onSelect={(event) => {
-                event.preventDefault();
-                onEdit();
-              }}
-              onClick={(event) => event.stopPropagation()}
-            >
-              <IconPencil />
-              Edit collection
-            </DropdownMenuItem>
-            <DropdownMenuItem
-              variant="destructive"
-              disabled={deleting}
-              onSelect={handleDelete}
-              onClick={(e) => e.stopPropagation()}
-            >
-              <IconTrash />
-              {deleting ? "Deleting..." : "Delete Collection"}
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </div>
 
-      <div className="relative z-10 flex flex-1 flex-col gap-2 overflow-hidden">
-        {taskPreview.map((task, index) => (
-          <div
-            key={task.uuid}
-            className="flex min-h-11 items-center gap-2.5 rounded-xl border border-white/[0.045] bg-[#222222]/80 px-3 transition-colors group-hover:bg-[#202020]/85"
+        <div className="relative z-10 flex flex-1 flex-col gap-2">
+          {taskPreview.map((task, index) => (
+            <div
+              key={task.uuid}
+              className="flex min-h-11 items-center gap-2.5 rounded-xl border px-3 transition-colors"
+            >
+              <span className="text-muted-foreground w-3 shrink-0 text-[12px] font-medium">
+                {index + 1}
+              </span>
+              <span className="text-muted-foreground min-w-0 flex-1 truncate text-[15px] font-medium">
+                {task.title}
+              </span>
+              <span className="text-muted-foreground/70 shrink-0 text-[13px] tabular-nums">
+                {formatTaskDuration(task.estimated_time)}
+              </span>
+            </div>
+          ))}
+        </div>
+
+        <div className="bg-foreground/20 pointer-events-none absolute inset-0 z-20 flex items-center justify-center opacity-0 transition-opacity duration-200 group-hover:opacity-100">
+          <Button
+            onClick={(event) => {
+              event.stopPropagation();
+              onClick();
+            }}
           >
-            <span className="w-3 shrink-0 text-[12px] font-medium text-[#666]">
-              {index + 1}
-            </span>
-            <span className="min-w-0 flex-1 truncate text-[15px] font-medium text-[#c1c1c1]">
-              {task.title}
-            </span>
-            <span className="shrink-0 text-[13px] text-[#858585] tabular-nums">
-              {formatTaskDuration(task.estimated_time)}
-            </span>
-          </div>
-        ))}
-      </div>
+            <IconArrowUpRight className="size-4" />
+            Open
+          </Button>
+        </div>
 
-      <div className="pointer-events-none absolute inset-0 z-20 flex items-center justify-center bg-black/25 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
-        <Button
-          type="button"
-          onClick={(event) => {
-            event.stopPropagation();
-            onClick();
-          }}
-          className="focus-visible:ring-linkdo-blue/80 bg-accent pointer-events-auto flex h-10 items-center gap-1.5 rounded-full px-5 text-[14px] font-semibold text-white transition-transform duration-200 hover:scale-[1.03] focus-visible:ring-2 focus-visible:outline-none"
-        >
-          <IconArrowUpRight className="size-4" />
-          Open
-        </Button>
-      </div>
-
-      <div className="relative z-10 mt-3 flex items-center justify-between border-t border-white/[0.06] pt-3">
-        <span className="text-[13px] font-semibold text-[#b0b0b0]">
-          {collection.pending_count} pending tasks
-        </span>
-        {estimated && (
-          <span className="text-[13px] font-semibold text-[#b0b0b0]">
-            Est: {estimated}
+        <div className="border-border text-muted-foreground/50 relative z-10 mt-auto flex items-center justify-between border-t pt-3">
+          <span className="text-[13px] font-semibold">
+            {collection.pending_count} pending tasks
           </span>
-        )}
-      </div>
-    </div>
+          {estimated && (
+            <span className="text-[13px] font-semibold">Est: {estimated}</span>
+          )}
+        </div>
+      </CardContent>
+    </Card>
   );
 }
 

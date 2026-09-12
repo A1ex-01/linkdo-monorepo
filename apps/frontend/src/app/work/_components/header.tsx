@@ -65,14 +65,14 @@ export function WorkHeader() {
   return (
     <header
       data-tauri-drag-region
-      className="text-atext-500 sticky top-0 z-30 flex h-14 w-screen items-center justify-between px-5"
+      className="text-foreground sticky top-0 z-30 flex h-14 w-screen items-center justify-between px-5"
     >
       {/* Left: Brand + Collection */}
       <div className="flex items-center gap-4">
         <button
           type="button"
           onClick={() => router.push("/home")}
-          className="group/brand flex items-center gap-1 rounded-md px-2 py-1 text-[15px] font-semibold tracking-tight text-[#858585] transition-colors hover:text-[#858585]"
+          className="text-muted-foreground hover:text-foreground group/brand flex items-center gap-1 rounded-md px-2 py-1 text-[15px] font-semibold tracking-tight transition-colors"
         >
           <IconChevronLeft />
           BACK
@@ -84,9 +84,9 @@ export function WorkHeader() {
               <button
                 type="button"
                 aria-label="Switch list"
-                className="group/collection flex items-center gap-1.5 rounded-md bg-[#181818] px-4 py-1 text-lg font-medium text-white transition-colors hover:bg-[#242424] focus-visible:ring-2 focus-visible:ring-white/30 focus-visible:outline-none"
+                className="bg-card text-card-foreground hover:bg-accent focus-visible:ring-ring group/collection flex items-center gap-1.5 rounded-md px-4 py-1 text-lg font-medium transition-colors focus-visible:ring-2 focus-visible:outline-none"
               >
-                <span className="flex size-5 shrink-0 items-center justify-center overflow-hidden rounded-md bg-[#6f98e8]/15 text-xs font-semibold text-[#8eaeef]">
+                <span className="bg-muted text-muted-foreground flex size-5 shrink-0 items-center justify-center overflow-hidden rounded-md text-xs font-semibold">
                   <CollectionCover
                     cover={collection.cover}
                     alt=""
@@ -95,7 +95,7 @@ export function WorkHeader() {
                   />
                 </span>
                 <span className="max-w-[28ch] truncate">{collection.name}</span>
-                <IconChevronDown className="size-4 text-[#858585] transition-transform group-data-[state=open]/collection:rotate-180" />
+                <IconChevronDown className="text-muted-foreground size-4 transition-transform group-data-[state=open]/collection:rotate-180" />
               </button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="start" className="max-h-72 w-64">
@@ -105,7 +105,7 @@ export function WorkHeader() {
                   disabled={item.uuid === collection.uuid}
                   onSelect={() => router.replace(`/work?uuid=${item.uuid}`)}
                 >
-                  <span className="flex size-5 shrink-0 items-center justify-center overflow-hidden rounded-md bg-[#6f98e8]/15 text-xs font-semibold text-[#8eaeef]">
+                  <span className="bg-muted text-muted-foreground flex size-5 shrink-0 items-center justify-center overflow-hidden rounded-md text-xs font-semibold">
                     <CollectionCover
                       cover={item.cover}
                       alt=""
@@ -120,7 +120,7 @@ export function WorkHeader() {
           </DropdownMenu>
         ) : null}
         {collection ? (
-          <div className="text-atext-460 text-sm">
+          <div className="text-muted-foreground text-sm">
             This list has {collection.pending_count} pending tasks
             {formatEstimated(collection.estimated_total)
               ? `, Est: ${formatEstimated(collection.estimated_total)}`
@@ -140,17 +140,17 @@ export function WorkHeader() {
           <DropdownMenuTrigger asChild data-tauri-drag-region="false">
             <button
               type="button"
-              className="text-atext-460 flex cursor-pointer items-center gap-2 rounded-xs bg-[#181818] px-3 py-1.5 transition-colors hover:bg-[#222] focus-visible:outline-none"
+              className="text-muted-foreground bg-card hover:bg-accent focus-visible:ring-ring flex cursor-pointer items-center gap-2 rounded-xs px-3 py-1.5 transition-colors focus-visible:ring-2 focus-visible:outline-none"
             >
-              <Avatar size="default" className="ring-1 ring-white/10">
+              <Avatar size="default" className="ring-border ring-1">
                 <AvatarImage
                   src={resolveFilePath(user?.avatar_url)}
                   className="object-cover"
                 />
-                <AvatarFallback className="bg-[#2f2f2f] text-xs text-white">
+                <AvatarFallback className="bg-muted text-muted-foreground text-xs">
                   {user?.name?.slice(0, 2)?.toUpperCase() ?? "U"}
                 </AvatarFallback>
-                <AvatarBadge className="bg-green-600 dark:bg-green-800" />
+                <AvatarBadge />
               </Avatar>
               <IconChevronDown className="size-4" />
             </button>
