@@ -1,16 +1,16 @@
 "use client";
 
-import { IconAi, IconCheck, IconX } from "@tabler/icons-react";
-import { AnimatePresence, motion } from "framer-motion";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useData } from "@/app/work/data-provider";
 import {
   type AgentEvent,
   confirmAgentPlan,
   isCancelledMutation,
-  type SSEEvent,
   sendAgentMessage,
+  type SSEEvent,
 } from "@/services/agent";
+import { IconAi, IconCheck, IconX } from "@tabler/icons-react";
+import { AnimatePresence, motion } from "framer-motion";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ReasoningText } from "../agents/loading-states/reasoning-text";
 import {
   Message,

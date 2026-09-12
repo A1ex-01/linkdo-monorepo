@@ -79,11 +79,7 @@ export function ClickUpDropdown() {
   }, [showDetailItem?.uuid]);
 
   const connect = async () => {
-    try {
-      await launchDesktopLinkOAuth("clickup", fetchUser);
-    } catch {
-      toast.error("Unable to open ClickUp authorization");
-    }
+    await launchDesktopLinkOAuth("clickup", fetchUser);
   };
 
   return (

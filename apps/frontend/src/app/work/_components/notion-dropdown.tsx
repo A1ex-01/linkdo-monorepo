@@ -128,11 +128,7 @@ export function NotionDropdown({ className }: IProps) {
           <button
             type="button"
             onClick={async () => {
-              try {
-                await launchDesktopLinkOAuth("notion", fetchUser);
-              } catch {
-                toast.error("Unable to open Notion authorization");
-              }
+              await launchDesktopLinkOAuth("notion", fetchUser);
             }}
             className="text-muted-foreground hover:bg-accent hover:text-accent-foreground flex shrink-0 items-center gap-1.5 rounded-md px-2 py-1 text-[12px] font-medium transition-colors"
           >

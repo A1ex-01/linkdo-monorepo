@@ -1,7 +1,5 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import toast from "react-hot-toast";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   Dialog,
@@ -12,6 +10,8 @@ import {
 import { updateProfile } from "@/services/base";
 import { resolveFilePath, uploadImage } from "@/services/file";
 import { useUserStore } from "@/stores/user";
+import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 
 export function AccountSettingsDialog({
   open,
@@ -24,14 +24,14 @@ export function AccountSettingsDialog({
   const [name, setName] = useState("");
   const [avatarPath, setAvatarPath] = useState<string | undefined>();
   const [saving, setSaving] = useState(false);
-  
+
   useEffect(() => {
     if (open) {
       setName(user?.name ?? "");
       setAvatarPath(user?.avatar_url);
     }
   }, [open, user]);
-  
+
   const save = async () => {
     setSaving(true);
     try {
@@ -48,7 +48,7 @@ export function AccountSettingsDialog({
       setSaving(false);
     }
   };
-  
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-lg p-7">

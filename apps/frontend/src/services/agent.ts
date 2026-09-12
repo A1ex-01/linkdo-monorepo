@@ -181,6 +181,11 @@ async function readSSEStream(
 
   const decoder = new TextDecoder();
   let buffer = "";
+  const consumeLine = (line: string) => {
+    const trimmed = line.trim();
+    if (!trimmed.startsWith("data:")) return;
+    handlers.onEvent?.(parseAgentEvent(trimmed.slice(5).trim()));
+  };
   try {
     while (true) {
       const { done, value } = await reader.read();
@@ -188,13 +193,10 @@ async function readSSEStream(
       buffer += decoder.decode(value, { stream: true });
       const lines = buffer.split("\n");
       buffer = lines.pop() ?? "";
-      for (const line of lines) {
-        const trimmed = line.trim();
-        if (!trimmed.startsWith("data:")) continue;
-        const event = parseAgentEvent(trimmed.slice(5).trim());
-        handlers.onEvent?.(event);
-      }
+      for (const line of lines) consumeLine(line);
     }
+    buffer += decoder.decode();
+    if (buffer) consumeLine(buffer);
   } finally {
     reader.releaseLock();
   }

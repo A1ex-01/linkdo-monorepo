@@ -13,7 +13,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useUserStore } from "@/stores/user";
 import { IconApps } from "@tabler/icons-react";
-import toast from "react-hot-toast";
 import { COMING_SOON_INTEGRATIONS } from "./coming-soon-integrations";
 import { launchDesktopLinkOAuth } from "./link-oauth";
 
@@ -114,9 +113,7 @@ function ConnectionItem({
       className="gap-3"
       onSelect={(event) => {
         event.preventDefault();
-        void onConnect().catch(() => {
-          toast.error(`Unable to open ${name} authorization`);
-        });
+        void onConnect();
       }}
     >
       <span className="bg-muted flex size-8 items-center justify-center rounded-md">

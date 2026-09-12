@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/button";
 import {
   exchangeLinkCode,
   getLinkOAuthUrl,
@@ -57,8 +58,46 @@ export async function launchDesktopLinkOAuth(
       );
     }
     await open(response.data.url);
-  } catch (error) {
+  } catch (error: any) {
+    if (error?.startsWith("Address already in use")) {
+      toast.custom((t) => (
+        <div
+          className={`${
+            t.visible ? "animate-custom-enter" : "animate-custom-leave"
+          } bg-background border-border flex w-[300px] max-w-md items-center rounded-lg border shadow-lg`}
+        >
+          <div className="w-0 flex-1 p-4">
+            <div className="flex items-start">
+              {/* <div className="flex-shrink-0 pt-0.5">
+                {platformLabel[platform]}
+              </div> */}
+              <div className="ml-3 flex-1">
+                <p className="text-sm font-medium">请打开授权链接</p>
+              </div>
+            </div>
+          </div>
+          <div className="border-border flex border-l pr-4">
+            <Button
+              variant={"default"}
+              // className="text-blue-500"
+              onClick={async () => {
+                const response = await getLinkOAuthUrl(platform);
+                if (!response.success || !response.data?.url) {
+                  throw new Error(
+                    `Failed to start ${platformLabel[platform]} authorization`,
+                  );
+                }
+                await open(response.data.url);
+                toast.dismiss(t.id);
+              }}
+            >
+              打开授权链接
+            </Button>
+          </div>
+        </div>
+      ));
+    }
+
     unlisten?.();
-    throw error;
   }
 }
