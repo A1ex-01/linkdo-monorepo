@@ -12,7 +12,9 @@ import { handler as deleteTodo } from "./tools/delete-todo.js";
 function extractToken(
   extra: RequestHandlerExtra<any, any>,
 ): string | undefined {
-  return extra.requestInfo?.headers?.authorization?.replace("Bearer ", "");
+  return extra.requestInfo?.headers?.authorization
+    ?.toString()
+    .replace("Bearer ", "");
 }
 
 export function createServer(): McpServer {

@@ -17,5 +17,5 @@ export default function Home() {
     }
   }, [isFetchedUser, user?.uuid]);
 
-  return <div className="h-screen w-full bg-[#181818]" />;
+  return <div className="bg-background h-screen w-full" />;
 }

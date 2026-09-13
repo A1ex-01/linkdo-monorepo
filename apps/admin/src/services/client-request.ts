@@ -18,7 +18,7 @@ export interface ApiResponse<T> {
 }
 
 const instance = axios.create({
-  baseURL: '/api/v1',
+  baseURL: '/api',
   timeout: 50000,
 })
 
@@ -50,6 +50,12 @@ instance.interceptors.response.use(
     if (error.response?.data?.error) {
       // eslint-disable-next-line no-console
       console.error('API Error:', error.response.data.error)
+      if (error.response.status === 401) {
+        localStorage.removeItem(TOKEN_KEY)
+        window.location.href = '/sign-in'
+      } else {
+        return Promise.reject(error)
+      }
     }
     return Promise.reject(error)
   }

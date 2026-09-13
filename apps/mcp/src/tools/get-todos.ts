@@ -60,18 +60,26 @@ export async function handler(args: GetTodosArgs, token?: string) {
   }
 
   const sorted = filtered.sort(
-    (a, b) => new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime()
+    (a, b) =>
+      new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime(),
   );
   const truncated = sorted.slice(0, limit);
   const truncatedNote =
-    sorted.length > limit ? `\n（共 ${sorted.length} 条 Todo，已截断至前 ${limit} 条）` : "";
+    sorted.length > limit
+      ? `\n（共 ${sorted.length} 条 Todo，已截断至前 ${limit} 条）`
+      : "";
 
   const grouped = groupByStatus(truncated);
 
   const lines: string[] = [];
-  for (const [status, tasks] of Object.entries(grouped) as [TaskStatus, ITask[]][]) {
+  for (const [status, tasks] of Object.entries(grouped) as [
+    TaskStatus,
+    ITask[],
+  ][]) {
     if (tasks.length > 0) {
-      lines.push(`\n### ${status.toUpperCase().replace("_", " ")} (${tasks.length})`);
+      lines.push(
+        `\n### ${status.toUpperCase().replace("_", " ")} (${tasks.length})`,
+      );
       lines.push(...tasks.map(formatTask));
     }
   }
@@ -80,9 +88,10 @@ export async function handler(args: GetTodosArgs, token?: string) {
     content: [
       {
         type: "text" as const,
-        text: lines.length > 0
-          ? `## Todos (${truncated.length}${truncatedNote})\n\n${lines.join("\n")}`
-          : "当前没有任何 Todo。",
+        text:
+          lines.length > 0
+            ? `## Todos (${truncated.length}${truncatedNote})\n\n${lines.join("\n")}`
+            : "当前没有任何 Todo。",
       },
     ],
   };

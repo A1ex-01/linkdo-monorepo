@@ -1,277 +1,231 @@
 /**
- * Agent SSE Streaming API Service
- * Endpoint: POST http://localhost:6001/v1/chat/stream
+ * Versioned LinkDo agent protocol.
+ *
+ * The chat UI is deliberately isolated from LangGraph node names and internal
+ * checkpoint ids. HTTP inputs and SSE outputs are correlated by a public
+ * conversation id, a client request id, and (for mutations) an operation id.
  */
 
-import { AGENT_API_KEY, AGENT_URL } from "@/config";
+import { AGENT_URL } from "@/config";
+import { getToken } from "./client-request";
 
-// ---------------------------------------------------------------------------
-// Types
-// ---------------------------------------------------------------------------
+export type AgentAction =
+  | "intent-classify"
+  | "get_tasks"
+  | "create_task"
+  | "update_task"
+  | "delete_task"
+  | "chitchat"
+  | "send_message";
 
-export interface PlanStep {
-  step: number;
-  action: string;
-  tool: string | null;
-  args: Record<string, unknown> | null;
+export type AgentEventType =
+  | "run_started"
+  | "action_started"
+  | "assistant_message"
+  | "approval_required"
+  | "action_completed"
+  | "error"
+  | "run_completed";
+
+export interface AgentEvent {
+  v: 1;
+  type: AgentEventType;
+  conversationId: string;
+  requestId: string;
+  operationId?: string;
+  action?: AgentAction;
+  payload: Record<string, unknown>;
 }
 
-export type SSEEvent =
-  | {
-      type: "confirm_required";
-      intent: string;
-      summary: string;
-      steps: PlanStep[];
-      session_id: string;
-    }
-  | { type: "execute_start"; session_id: string }
-  | { type: "text"; content: string }
-  | { type: "done"; session_id: string; message: string }
-  | { type: "error"; code: string; message: string }
-  | { type: "unknown"; raw: string };
+export interface SSEUnknownEvent {
+  type: "unknown";
+  raw: string;
+}
+
+export type SSEEvent = AgentEvent | SSEUnknownEvent;
+
+export interface AgentMessageRequest {
+  conversation_id: string;
+  request_id: string;
+  context: { active_collection_id?: string };
+  input: { message: string };
+}
+
+export interface AgentConfirmationRequest {
+  conversation_id: string;
+  operation_id: string;
+  decision: "approve" | "deny";
+}
 
 export interface SendMessageOptions {
+  conversationId: string;
+  requestId: string;
   message: string;
-  sessionId?: string;
-  confirm?: boolean;
+  activeCollectionId?: string;
   onEvent?: (event: SSEEvent) => void;
-  onConfirmRequired?: (
-    intent: string,
-    summary: string,
-    steps: PlanStep[],
-    sessionId: string,
-  ) => void;
-  onExecuteStart?: (sessionId: string) => void;
-  onText?: (content: string) => void;
-  onDone?: (message: string) => void;
   onError?: (code: string, message: string) => void;
 }
 
 export interface ConfirmOptions {
-  sessionId: string;
+  conversationId: string;
+  operationId: string;
+  decision: "approve" | "deny";
   onEvent?: (event: SSEEvent) => void;
-  onExecuteStart?: (sessionId: string) => void;
-  onText?: (content: string) => void;
-  onDone?: (message: string) => void;
   onError?: (code: string, message: string) => void;
 }
 
-// ---------------------------------------------------------------------------
-// Internal SSE parser (handles both text and EventSource format)
-// ---------------------------------------------------------------------------
+const EVENT_TYPES = new Set<AgentEventType>([
+  "run_started",
+  "action_started",
+  "assistant_message",
+  "approval_required",
+  "action_completed",
+  "error",
+  "run_completed",
+]);
 
-function parseSSEEvent(data: string): SSEEvent {
-  try {
-    const parsed = JSON.parse(data) as Record<string, unknown>;
-    const { type, ...rest } = parsed;
-
-    switch (type) {
-      case "confirm_required":
-        return {
-          type: "confirm_required",
-          ...(parsed as {
-            intent: string;
-            summary: string;
-            steps: PlanStep[];
-            session_id: string;
-          }),
-        };
-      case "execute_start":
-        return {
-          type: "execute_start",
-          session_id: (parsed as { session_id: string }).session_id,
-        };
-      case "text":
-        return {
-          type: "text",
-          content: (parsed as { content: string }).content,
-        };
-      case "done":
-        return {
-          type: "done",
-          session_id: (parsed as { session_id: string }).session_id,
-          message: (parsed as { message: string }).message,
-        };
-      case "error":
-        return {
-          type: "error",
-          code: (parsed as { code: string }).code,
-          message: (parsed as { message: string }).message,
-        };
-      default:
-        return { type: "unknown", raw: data };
-    }
-  } catch {
-    return { type: "unknown", raw: data };
-  }
+function asRecord(value: unknown): Record<string, unknown> {
+  return value && typeof value === "object" && !Array.isArray(value)
+    ? (value as Record<string, unknown>)
+    : {};
 }
 
-// ---------------------------------------------------------------------------
-// Streaming fetch with SSE parsing
-// ---------------------------------------------------------------------------
+function asOptionalString(value: unknown): string | undefined {
+  return typeof value === "string" && value.length > 0 ? value : undefined;
+}
+
+/**
+ * A completed mutation can represent an explicit HITL denial. Keep this
+ * distinction in the shared protocol layer so every presentation surface
+ * avoids treating a cancelled plan as a successful write.
+ */
+export function isCancelledMutation(payload: Record<string, unknown>): boolean {
+  return payload.approved === false;
+}
+
+export function buildAgentMessageRequest(
+  input: Omit<SendMessageOptions, "onEvent" | "onError">,
+): AgentMessageRequest {
+  const context = input.activeCollectionId
+    ? { active_collection_id: input.activeCollectionId }
+    : {};
+  return {
+    conversation_id: input.conversationId,
+    request_id: input.requestId,
+    context,
+    input: { message: input.message },
+  };
+}
+
+export function buildAgentConfirmationRequest(
+  input: Pick<ConfirmOptions, "conversationId" | "operationId" | "decision">,
+): AgentConfirmationRequest {
+  return {
+    conversation_id: input.conversationId,
+    operation_id: input.operationId,
+    decision: input.decision,
+  };
+}
+
+export function parseAgentEvent(raw: string): SSEEvent {
+  let parsed: Record<string, unknown>;
+  try {
+    parsed = JSON.parse(raw) as Record<string, unknown>;
+  } catch {
+    return { type: "unknown", raw };
+  }
+
+  const type = parsed.type;
+  const conversationId = asOptionalString(parsed.conversation_id);
+  const requestId = asOptionalString(parsed.request_id);
+  if (
+    parsed.v !== 1 ||
+    typeof type !== "string" ||
+    !EVENT_TYPES.has(type as AgentEventType) ||
+    !conversationId ||
+    !requestId
+  ) {
+    return { type: "unknown", raw };
+  }
+
+  return {
+    v: 1,
+    type: type as AgentEventType,
+    conversationId,
+    requestId,
+    operationId: asOptionalString(parsed.operation_id),
+    action: asOptionalString(parsed.action) as AgentAction | undefined,
+    payload: asRecord(parsed.payload),
+  };
+}
+
+async function readSSEStream(
+  response: Response,
+  handlers: {
+    onEvent?: (event: SSEEvent) => void;
+    onError?: (code: string, message: string) => void;
+  },
+): Promise<void> {
+  if (!response.ok) {
+    handlers.onError?.(
+      "HTTP_ERROR",
+      `请求失败: ${response.status} ${response.statusText}`,
+    );
+    return;
+  }
+  const reader = response.body?.getReader();
+  if (!reader) {
+    handlers.onError?.("NO_STREAM", "无法读取响应流");
+    return;
+  }
+
+  const decoder = new TextDecoder();
+  let buffer = "";
+  const consumeLine = (line: string) => {
+    const trimmed = line.trim();
+    if (!trimmed.startsWith("data:")) return;
+    handlers.onEvent?.(parseAgentEvent(trimmed.slice(5).trim()));
+  };
+  try {
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      buffer += decoder.decode(value, { stream: true });
+      const lines = buffer.split("\n");
+      buffer = lines.pop() ?? "";
+      for (const line of lines) consumeLine(line);
+    }
+    buffer += decoder.decode();
+    if (buffer) consumeLine(buffer);
+  } finally {
+    reader.releaseLock();
+  }
+}
 
 export async function sendAgentMessage(
   options: SendMessageOptions,
 ): Promise<void> {
-  const {
-    message,
-    sessionId,
-    confirm = false,
-    onEvent,
-    onConfirmRequired,
-    onExecuteStart,
-    onText,
-    onDone,
-    onError,
-  } = options;
-
-  const body: Record<string, unknown> = { message, confirm };
-  if (sessionId) body.session_id = sessionId;
-
-  const response = await fetch(`${AGENT_URL}/v1/chat/stream`, {
+  const token = getToken();
+  const response = await fetch(`${AGENT_URL}/api/chat/send-message`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      "X-API-Key": AGENT_API_KEY,
+      Authorization: token ? `Bearer ${token}` : "",
     },
-    body: JSON.stringify(body),
+    body: JSON.stringify(buildAgentMessageRequest(options)),
   });
-
-  if (!response.ok) {
-    onError?.(
-      "HTTP_ERROR",
-      `请求失败: ${response.status} ${response.statusText}`,
-    );
-    return;
-  }
-
-  const reader = response.body?.getReader();
-  if (!reader) {
-    onError?.("NO_STREAM", "无法读取响应流");
-    return;
-  }
-
-  const decoder = new TextDecoder();
-  let buffer = "";
-
-  try {
-    while (true) {
-      const { done, value } = await reader.read();
-      if (done) break;
-
-      buffer += decoder.decode(value, { stream: true });
-
-      // Process complete lines (SSE format: "data: {...}\n\n")
-      const lines = buffer.split("\n");
-      buffer = lines.pop() ?? "";
-
-      for (const line of lines) {
-        const trimmed = line.trim();
-        if (!trimmed || !trimmed.startsWith("data:")) continue;
-
-        const data = trimmed.slice(5).trim();
-        if (!data) continue;
-
-        const event = parseSSEEvent(data);
-        onEvent?.(event);
-
-        switch (event.type) {
-          case "confirm_required":
-            onConfirmRequired?.(
-              event.intent,
-              event.summary,
-              event.steps,
-              event.session_id,
-            );
-            break;
-          case "execute_start":
-            onExecuteStart?.(event.session_id);
-            break;
-          case "text":
-            onText?.(event.content);
-            break;
-          case "done":
-            onDone?.(event.message);
-            break;
-          case "error":
-            onError?.(event.code, event.message);
-            break;
-        }
-      }
-    }
-  } finally {
-    reader.releaseLock();
-  }
+  await readSSEStream(response, options);
 }
 
 export async function confirmAgentPlan(options: ConfirmOptions): Promise<void> {
-  const { sessionId, onEvent, onExecuteStart, onText, onDone, onError } =
-    options;
-
-  const response = await fetch(
-    `${AGENT_URL}/v1/chat/confirm?session_id=${encodeURIComponent(sessionId)}`,
-    {
-      method: "POST",
-      headers: {
-        "X-API-Key": AGENT_API_KEY,
-      },
+  const token = getToken();
+  const response = await fetch(`${AGENT_URL}/api/chat/confirm-message`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: token ? `Bearer ${token}` : "",
     },
-  );
-
-  if (!response.ok) {
-    onError?.(
-      "HTTP_ERROR",
-      `请求失败: ${response.status} ${response.statusText}`,
-    );
-    return;
-  }
-
-  const reader = response.body?.getReader();
-  if (!reader) {
-    onError?.("NO_STREAM", "无法读取响应流");
-    return;
-  }
-
-  const decoder = new TextDecoder();
-  let buffer = "";
-
-  try {
-    while (true) {
-      const { done, value } = await reader.read();
-      if (done) break;
-
-      buffer += decoder.decode(value, { stream: true });
-
-      const lines = buffer.split("\n");
-      buffer = lines.pop() ?? "";
-
-      for (const line of lines) {
-        const trimmed = line.trim();
-        if (!trimmed || !trimmed.startsWith("data:")) continue;
-
-        const data = trimmed.slice(5).trim();
-        if (!data) continue;
-
-        const event = parseSSEEvent(data);
-        onEvent?.(event);
-
-        switch (event.type) {
-          case "execute_start":
-            onExecuteStart?.(event.session_id);
-            break;
-          case "text":
-            onText?.(event.content);
-            break;
-          case "done":
-            onDone?.(event.message);
-            break;
-          case "error":
-            onError?.(event.code, event.message);
-            break;
-        }
-      }
-    }
-  } finally {
-    reader.releaseLock();
-  }
+    body: JSON.stringify(buildAgentConfirmationRequest(options)),
+  });
+  await readSSEStream(response, options);
 }

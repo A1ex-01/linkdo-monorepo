@@ -1,0 +1,190 @@
+name: ${COMPOSE_PROJECT_NAME:-linkdo}
+
+x-backend: &backend
+  image: ${REGISTRY_HOST}/${CCR_NAMESPACE}/linkdo-backend:${IMAGE_TAG}
+  restart: unless-stopped
+  init: true
+  env_file: .env.backend.production
+  depends_on:
+    mysql:
+      condition: service_healthy
+    redis:
+      condition: service_healthy
+    rabbitmq:
+      condition: service_healthy
+  networks:
+    - internal
+  logging:
+    driver: local
+    options:
+      max-size: 10m
+      max-file: "3"
+
+services:
+  admin:
+    image: ${REGISTRY_HOST}/${CCR_NAMESPACE}/linkdo-admin:${IMAGE_TAG}
+    restart: unless-stopped
+    env_file: .env.admin.production
+    depends_on:
+      gateway:
+        condition: service_healthy
+    ports:
+      - "${HTTP_PORT}:80"
+    networks:
+      - public
+      - internal
+    logging:
+      driver: local
+      options:
+        max-size: 10m
+        max-file: "3"
+
+  gateway:
+    <<: *backend
+    command: ["./app-gateway"]
+    depends_on:
+      base-service:
+        condition: service_healthy
+      link-service:
+        condition: service_healthy
+      file-service:
+        condition: service_healthy
+    ports:
+      - "${GATEWAY_PORT}:8080"
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:8080/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 6
+      start_period: 30s
+    networks:
+      - public
+      - internal
+
+  base-service:
+    <<: *backend
+    command: ["./app-base"]
+    networks:
+      - internal
+      - egress
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:8081/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 6
+      start_period: 30s
+
+  link-service:
+    <<: *backend
+    command: ["./app-link"]
+    depends_on:
+      base-service:
+        condition: service_healthy
+    networks:
+      - internal
+      - egress
+
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:8082/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 6
+      start_period: 30s
+
+  file-service:
+    <<: *backend
+    command: ["./app-file"]
+    networks:
+      - internal
+      - egress
+    depends_on:
+      base-service:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:8083/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 6
+      start_period: 30s
+
+  worker-email:
+    <<: *backend
+    command: ["./app-worker"]
+    networks:
+      - internal
+      - public
+
+  mysql:
+    image: mysql:8.4
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:3307:3306"
+    env_file: .env.backend.production
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+    volumes:
+      - mysql-data:/var/lib/mysql
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          'mysqladmin ping -h 127.0.0.1 -uroot -p"$$MYSQL_ROOT_PASSWORD" --silent',
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+      start_period: 60s
+    networks:
+      - internal
+      - tunnel
+
+  redis:
+    image: redis:7.4-alpine
+    restart: unless-stopped
+    env_file: .env.backend.production
+    command:
+      [
+        "sh",
+        "-ec",
+        'exec redis-server --appendonly yes --requirepass "$$REDIS_PASSWORD"',
+      ]
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ["CMD-SHELL", 'redis-cli -a "$$REDIS_PASSWORD" ping | grep -q PONG']
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    networks:
+      - internal
+
+  rabbitmq:
+    image: rabbitmq:3.13-management-alpine
+    restart: unless-stopped
+    env_file: .env.backend.production
+    volumes:
+      - rabbitmq-data:/var/lib/rabbitmq
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 15s
+      timeout: 10s
+      retries: 10
+      start_period: 30s
+    networks:
+      - internal
+
+networks:
+  public: {}
+
+  internal:
+    internal: true
+
+  tunnel: {}
+
+  egress: {}
+
+volumes:
+  mysql-data:
+  redis-data:
+  rabbitmq-data:

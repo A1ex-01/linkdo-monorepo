@@ -1,49 +1,52 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { IconMoon, IconSun } from "@tabler/icons-react";
-import { useMount } from "ahooks";
+import { Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export function ThemeToggle({ className }: { className?: string }) {
-  const { resolvedTheme, setTheme } = useTheme();
+  const { theme, setTheme, resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
-  useMount(() => {
-    setMounted(true);
-  });
 
-  if (!mounted) {
-    return (
-      <button
-        className={cn(
-          "text-atext-450 hover:bg-muted flex size-9 items-center justify-center rounded-lg transition-colors",
-          className,
-        )}
-      >
-        <span className="size-5" />
-      </button>
-    );
-  }
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const toggle = () => {
+    // If on system mode, switch to the opposite of current resolved theme
+    // Otherwise toggle between light and dark
+    if (theme === "system") {
+      setTheme(resolvedTheme === "dark" ? "light" : "dark");
+    } else {
+      setTheme(theme === "dark" ? "light" : "dark");
+    }
+  };
+
+  const isDark = mounted && resolvedTheme === "dark";
 
   return (
-    <button
-      onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
+    <div
+      onClick={toggle}
+      aria-label={isDark ? "Switch to light theme" : "Switch to dark theme"}
+      title={isDark ? "Switch to light theme" : "Switch to dark theme"}
       className={cn(
-        "text-atext-450 hover:bg-muted flex size-9 items-center justify-center rounded-lg transition-colors",
-        className,
+        "text-muted-foreground hover:text-accent-foreground relative size-6 cursor-pointer",
       )}
-      title={
-        resolvedTheme === "dark"
-          ? "Switch to light mode"
-          : "Switch to dark mode"
-      }
     >
-      {resolvedTheme === "dark" ? (
-        <IconSun className="size-5" strokeWidth={2} />
-      ) : (
-        <IconMoon className="size-5" strokeWidth={2} />
-      )}
-    </button>
+      <Sun
+        className={cn(
+          "absolute inset-0 size-6 transition-all",
+          isDark ? "scale-0 opacity-0" : "scale-100 opacity-100",
+        )}
+      />
+      <Moon
+        className={cn(
+          "absolute inset-0 size-6 transition-all",
+          isDark ? "scale-100 opacity-100" : "scale-0 opacity-0",
+        )}
+      />
+      <span className="sr-only">Toggle theme</span>
+    </div>
   );
 }

@@ -1,16 +1,16 @@
 // frontend/src/stores/use-auth-store.ts
 
 import { TOKEN_KEY } from "@/config";
-import { ApiResponse, getMe, MeResponse } from "@/services/base";
-import { getMyPermissions } from "@/services/permission";
-import { IUser } from "@/types/base";
+import { clearToken } from "@/services/auth-session";
+import { type ApiResponse, getMe, type MeResponse } from "@/services/base";
+import type { IUser } from "@/types/base";
 import { create } from "zustand";
-import { usePermissionStore } from "./permission";
 
 interface IST {
   isFetchedUser: boolean;
   user: IUser | undefined;
   fetchUser: () => Promise<ApiResponse<MeResponse>>;
+  clearUser: () => void;
 }
 
 export const useUserStore = create<IST>((set) => ({
@@ -25,15 +25,14 @@ export const useUserStore = create<IST>((set) => ({
     const response = await getMe();
     if (response.success) {
       set({ user: response.data, isFetchedUser: true });
-      const permRes = await getMyPermissions();
-      if (permRes.success && permRes.data) {
-        usePermissionStore.getState().setPermissions(permRes.data);
-      }
     } else {
-      localStorage.removeItem(TOKEN_KEY);
-      usePermissionStore.getState().clear();
+      clearToken();
       set({ isFetchedUser: true });
     }
     return response;
+  },
+  clearUser: () => {
+    clearToken();
+    set({ user: undefined, isFetchedUser: false });
   },
 }));

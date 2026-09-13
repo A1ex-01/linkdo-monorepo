@@ -89,6 +89,19 @@ export function getTasksColumns({
       ),
     },
     {
+      id: 'source',
+      header: 'Source',
+      cell: ({ row }) => {
+        if (row.original.clickup_list_uuid) {
+          return <Badge variant='secondary'>ClickUp</Badge>
+        }
+        if (row.original.notion_database_uuid) {
+          return <Badge variant='outline'>Notion</Badge>
+        }
+        return <Badge variant='outline'>Local</Badge>
+      },
+    },
+    {
       accessorKey: 'estimated_time',
       header: 'Estimated',
       cell: ({ row }) => (

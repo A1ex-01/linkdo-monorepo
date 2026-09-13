@@ -12,7 +12,7 @@ export interface SearchNotionDatabaseResult {
 
 export function searchNotionDatabases(query?: string) {
   return request<SearchNotionDatabaseResult[]>({
-    url: "/api/v1/auth/notion/databases",
+    url: "/api/link/notion/databases",
     method: "get",
     params: query ? { query } : undefined,
   });
@@ -20,14 +20,14 @@ export function searchNotionDatabases(query?: string) {
 
 export function getNotionDatabases() {
   return request<INotionDatabase[]>({
-    url: "/api/v1/notion-databases",
+    url: "/api/notion-databases",
     method: "get",
   });
 }
 
 export function getNotionDatabasesByCollection(collectionUuid: string) {
   return request<INotionDatabase[]>({
-    url: `/api/v1/collections/${collectionUuid}/notion-databases`,
+    url: `/api/collections/${collectionUuid}/notion-databases`,
     method: "get",
   });
 }
@@ -41,7 +41,7 @@ export interface CreateNotionDatabaseDTO {
 
 export function createNotionDatabase(data: CreateNotionDatabaseDTO) {
   return request<INotionDatabase>({
-    url: "/api/v1/notion-databases",
+    url: "/api/notion-databases",
     method: "post",
     data,
   });
@@ -50,9 +50,9 @@ export function createNotionDatabase(data: CreateNotionDatabaseDTO) {
 export function getStatusMapping(notionDbUuid: string) {
   return request<{
     notion_options: string[];
-    mapping: Record<string, string[]>;
+    mapping: Record<string, string>;
   }>({
-    url: `/api/v1/notion-databases/${notionDbUuid}/status-mapping`,
+    url: `/api/notion-databases/${notionDbUuid}/status-mapping`,
     method: "get",
   });
 }
@@ -62,7 +62,7 @@ export function updateStatusMapping(
   mapping: Record<string, string>,
 ) {
   return request<void>({
-    url: `/api/v1/notion-databases/${notionDbUuid}/status-mapping`,
+    url: `/api/notion-databases/${notionDbUuid}/status-mapping`,
     method: "put",
     data: { mapping },
   });
@@ -70,29 +70,29 @@ export function updateStatusMapping(
 
 export function fetchStatusOptions(notionDbUuid: string) {
   return request<string[]>({
-    url: `/api/v1/notion-databases/${notionDbUuid}/status-mapping/fetch`,
+    url: `/api/notion-databases/${notionDbUuid}/status-mapping/fetch`,
     method: "post",
   });
 }
 
 export function getOAuthUrl() {
   return request<{ url: string }>({
-    url: "/api/v1/auth/notion/url",
+    url: "/api/link/notion/url",
     method: "get",
   });
 }
 
-export function exchangeCode(code: string) {
+export function exchangeCode(code: string, state: string) {
   return request<{ url: string }>({
-    url: "/api/v1/auth/notion/callback",
+    url: "/api/link/notion/callback",
     method: "get",
-    params: { code },
+    params: { code, state },
   });
 }
 
 export function removeNotionDatabase(notionDbUuid: string) {
   return request<void>({
-    url: `/api/v1/notion-databases/${notionDbUuid}`,
+    url: `/api/notion-databases/${notionDbUuid}`,
     method: "delete",
   });
 }

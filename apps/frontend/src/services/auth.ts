@@ -24,14 +24,14 @@ export interface VerifyCodeResponse {
 export const authService = {
   sendCode: (data: SendCodeRequest) =>
     request<SendCodeResponse>({
-      url: "/api/v1/auth/email/send-code",
+      url: "/api/auth/email/send-code",
       method: "POST",
       data,
     }),
 
   verifyCode: (data: VerifyCodeRequest) =>
     request<VerifyCodeResponse>({
-      url: "/api/v1/auth/email/verify",
+      url: "/api/auth/email/verify",
       method: "POST",
       data,
     }),

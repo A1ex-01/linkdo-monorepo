@@ -59,6 +59,7 @@ export async function handler(args: CreateTodoArgs, token?: string) {
     body.estimated_time = args.estimated_time;
   }
 
+  console.log("🐽🐽 ~ create-todo.ts ~ handler ~ token:", token);
   const res = await createTask(targetCollectionUuid, body, token);
 
   if (!res.success || !res.data) {
@@ -73,7 +74,8 @@ export async function handler(args: CreateTodoArgs, token?: string) {
   }
 
   const task: ITask = res.data;
-  const timeNote = task.estimated_time > 0 ? `, 预估 ${task.estimated_time} 分钟` : "";
+  const timeNote =
+    task.estimated_time > 0 ? `, 预估 ${task.estimated_time} 分钟` : "";
 
   return {
     content: [

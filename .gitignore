@@ -22,13 +22,55 @@ apps/mcp/dist/
 
 # Python
 services/agent/__pycache__/
+services/a-agent/agent/__pycache__/
 services/agent/*.egg-info/
 services/agent/.venv/
+services/a-agent/.venv/
+
 
 # Go
 services/backend/link-do-backend
 
 # 环境变量
 .env
+.env.development
+.env.product
+.env.production
 .env.local
 .env.*.local
+!.env.example
+
+
+__pycache__/
+services/a-agent/agent/__pycache__/
+services/agent/__pycache__/
+
+
+
+*.log
+
+__debug_bin*
+
+services/backend/cmd/__debug_bin*
+
+
+k8s/
+
+
+
+backups
+
+*.example
+
+
+.env.server
+deploy/.env.admin.production
+deploy/.env.backend.production
+deploy/.env.image
+
+
+.pytest_cache/
+.pytest_pkgs/
+
+
+*.tgz

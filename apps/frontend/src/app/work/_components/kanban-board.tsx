@@ -2,11 +2,10 @@
 
 import { useData } from "@/app/work/data-provider";
 import { AddTask } from "@/components/add-task";
-import AIChat from "@/components/ai-chat";
 import TaskCardItem from "@/components/task-card-item";
 import { Button } from "@/components/ui/button";
+import { Progress } from "@/components/ui/progress";
 import { cn } from "@/lib/utils";
-import { updateTaskStatus } from "@/services/task";
 import type { TaskStatus } from "@/types/base";
 import { toGroupedTasks } from "@/utils/base";
 import {
@@ -18,6 +17,7 @@ import {
   type DroppableProvided,
   type DropResult,
 } from "@hello-pangea/dnd";
+import { IconCircleCheck, IconPlus } from "@tabler/icons-react";
 import { useCallback, useState } from "react";
 
 const COLUMNS: Array<{
@@ -44,15 +44,16 @@ const DropZone = ({
   return (
     <div
       className={cn(
-        "absolute top-0 h-[72px] w-full shrink-0 rounded-lg border-2 border-dashed border-[#515151] transition-all",
-        isDraggingOver ? "border-[#6bff8f] bg-white opacity-100" : "opacity-60",
+        "border-muted-foreground/40 absolute top-0 h-[72px] w-full shrink-0 rounded-lg border-2 border-dashed transition-all",
+        isDraggingOver ? "border-border bg-muted opacity-100" : "opacity-60",
       )}
     />
   );
 };
 
 export function KanbanBoard({}: KanbanBoardProps) {
-  const { tasks, enterSidebar, handleStartFocus, getTasks } = useData();
+  const { tasks, enterSidebar, handleStartFocus, moveTaskOptimistic } =
+    useData();
   const groupedTasks = toGroupedTasks(tasks);
 
   const [activeId, setActiveId] = useState<string | null>(null);
@@ -80,10 +81,34 @@ export function KanbanBoard({}: KanbanBoardProps) {
 
     const taskUuid = result.draggableId;
     const newStatus = destination.droppableId as TaskStatus;
-    const res = await updateTaskStatus(taskUuid, newStatus);
-    if (res.success) {
-      getTasks();
-    }
+
+    // Compute the ranks of the items immediately above and below the drop
+    // position in the destination column. Empty neighbours mean "no rank on
+    // that side yet" and the server will treat them as virtual bounds.
+    //
+    // hello-pangea/dnd gives us the index in the *post-move* list, so the
+    // item at destination.index in destinationTasks is the neighbour that
+    // sits *below* the drop position (or the task itself if it's still
+    // there). We skip the moving task itself when scanning so we get the
+    // real neighbours regardless of whether source and destination live in
+    // the same column.
+    const destinationTasks = groupedTasks[newStatus] || [];
+    const remaining = destinationTasks.filter((t) => t.uuid !== taskUuid);
+    const insertAt = Math.max(0, Math.min(destination.index, remaining.length));
+    const above = remaining[insertAt - 1];
+    const below = remaining[insertAt];
+    const prevRank = above?.sort_order ?? "";
+    const nextRank = below?.sort_order ?? "";
+
+    await moveTaskOptimistic({
+      taskUuid,
+      newStatus,
+      prevRank,
+      nextRank,
+      destinationIndex: destination.index,
+      sourceIndex: source.index,
+      sourceStatus: source.droppableId as TaskStatus,
+    });
   };
 
   return (
@@ -95,36 +120,64 @@ export function KanbanBoard({}: KanbanBoardProps) {
       <div className="flex h-full flex-col gap-8">
         <div className="flex h-full justify-center gap-6">
           {COLUMNS.map((col) => {
-            const colTasks = groupedTasks[col.value];
+            const colTasks = groupedTasks[col.value] || [];
 
             return (
               <Droppable key={col.value} droppableId={col.value}>
                 {(provided: DroppableProvided, snapshot) => {
                   const isOver = snapshot.isDraggingOver && activeId !== null;
 
+                  const allTasks = tasks?.filter(
+                    (task) => task.initial_status === col.value,
+                  );
+
+                  const isDoneTasks = allTasks?.filter(
+                    (task) => task.status === "done",
+                  );
+
+                  const progress =
+                    isDoneTasks?.length && allTasks?.length
+                      ? (isDoneTasks?.length / allTasks?.length) * 100
+                      : 0;
+
+                  const showProgress =
+                    allTasks &&
+                    allTasks?.length > 0 &&
+                    !["backlog", "done"].includes(col.value);
+
                   return (
                     <div
                       className={cn(
-                        "relative flex h-full flex-1 flex-col overflow-hidden rounded-xl border-2 border-gray-200 p-px",
+                        "border-border relative flex h-full flex-1 flex-col overflow-hidden rounded-xl border-2 p-px",
 
                         isOver && "",
+                        col.isHighlighted && "border-ring border-3 shadow-lg",
                       )}
                       ref={provided.innerRef}
                       {...provided.droppableProps}
                     >
                       <div
                         className={cn(
-                          "text-atext-500 bg-background relative flex h-full flex-1 flex-col overflow-hidden rounded-xl p-4",
+                          "bg-card text-card-foreground relative flex h-full flex-1 flex-col overflow-hidden rounded-lg p-4",
 
                           isOver && "opacity-75",
-                          col.isHighlighted && "bg-secondary",
                         )}
                       >
-                        <div className="text-atext-500 flex w-full shrink-0 items-center justify-between">
+                        <div className="flex w-full shrink-0 items-center justify-between">
                           <div className="text-xl font-medium">{col.label}</div>
-                          <div className="text-3xl">+</div>
+                          <div className="text-muted-foreground text-3xl">
+                            <IconPlus className="size-5" />
+                          </div>
                         </div>
-                        <div className="relative mt-4 flex flex-1 flex-col gap-3 overflow-x-hidden overflow-y-auto">
+                        {showProgress && (
+                          <div className="text-muted-foreground mt-2 flex w-full items-center gap-4 text-xs">
+                            <Progress className="h-2" value={progress} />
+                            <div className="shrink-0">
+                              {isDoneTasks?.length}/{allTasks?.length} Done
+                            </div>
+                          </div>
+                        )}
+                        <div className="relative mt-4 flex flex-1 scrollbar-none flex-col gap-3 overflow-x-hidden overflow-y-auto">
                           {colTasks?.map((task, index) => {
                             const isActive = activeId === task.uuid;
                             const targetIndex = overIndex;
@@ -174,9 +227,15 @@ export function KanbanBoard({}: KanbanBoardProps) {
 
                           {provided.placeholder}
                           <AddTask status={col.value} />
+                          {colTasks?.length === 0 && (
+                            <div className="text-muted-foreground flex h-full w-full flex-col items-center justify-center gap-2">
+                              <IconCircleCheck className="size-10" />
+                              <div>All Clear</div>
+                            </div>
+                          )}
                           {col.isHighlighted && (
                             <Button
-                              className="bg-primary-400 mt-auto rounded-full text-white"
+                              className="mt-auto rounded-full py-6!"
                               size={"lg"}
                               onClick={() => {
                                 enterSidebar();
@@ -196,7 +255,7 @@ export function KanbanBoard({}: KanbanBoardProps) {
             );
           })}
         </div>
-        <AIChat />
+        {/* <AIChat /> */}
       </div>
     </DragDropContext>
   );

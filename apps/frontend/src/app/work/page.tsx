@@ -9,13 +9,15 @@ import { DataProvider } from "./data-provider";
 export default function WorkPage() {
   const searchParams = useSearchParams();
   const collectionUuid = searchParams.get("uuid");
-  const { fetchCurrCollectionNotionDbs } = useCommonStore();
+  const { fetchCurrCollectionNotionDbs, fetchCurrCollectionClickUpLists } =
+    useCommonStore();
 
   useEffect(() => {
     if (collectionUuid) {
       fetchCurrCollectionNotionDbs(collectionUuid);
+      fetchCurrCollectionClickUpLists(collectionUuid);
     }
-  }, [collectionUuid]);
+  }, [collectionUuid, fetchCurrCollectionClickUpLists, fetchCurrCollectionNotionDbs]);
   return (
     <DataProvider>
       <Content />

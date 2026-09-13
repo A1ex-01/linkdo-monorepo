@@ -4,7 +4,6 @@ export interface ICollection {
   uuid: string;
   name: string;
   icon: string;
-  notion_uuid?: string;
   pending_count: number;
   estimated_total: number;
   is_archived: boolean;
@@ -32,7 +31,6 @@ export interface ITask {
   title: string;
   status: TaskStatus;
   notion_page_id?: string;
-  notion_uuid?: string;
   estimated_time: number;
   actual_time: number;
   completed_at?: string;

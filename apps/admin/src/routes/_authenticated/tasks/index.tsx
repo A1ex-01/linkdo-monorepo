@@ -20,16 +20,14 @@ function Tasks() {
   useEffect(() => {
     queueMicrotask(() => setLoading(true))
 
-    const params = {}
-
     adminService
-      .listTasks(params)
+      .listTasks({})
       .then((res) => {
         if (res.success && res.data) {
           setData(res.data.list)
           setTotal(res.data.total)
         } else {
-          toast.error(res.error || 'Failed to load tasks')
+          toast.error('Failed to load tasks')
         }
       })
       .catch(() => toast.error('Failed to load tasks'))

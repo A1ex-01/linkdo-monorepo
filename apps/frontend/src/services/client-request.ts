@@ -1,10 +1,11 @@
-import axios, { AxiosError, AxiosRequestConfig } from "axios";
+import axios, { type AxiosError, type AxiosRequestConfig } from "axios";
 import toast from "react-hot-toast";
 
-const TOKEN_KEY = "linkdo_token";
+import { TOKEN_KEY } from "@/config";
+import { clearToken, redirectToLogin } from "./auth-session";
 
 function getToken(): string | null {
-  return localStorage.getItem(TOKEN_KEY) || "62ec6a2c39a211f1a1036c58743dd36e";
+  return localStorage.getItem(TOKEN_KEY);
 }
 
 export interface ApiResponse<T> {
@@ -15,7 +16,8 @@ export interface ApiResponse<T> {
 }
 
 const instance = axios.create({
-  baseURL: "http://localhost:8080",
+  // baseURL: "http://localhost:8080",
+  baseURL: process.env.NEXT_PUBLIC_BASE_URL,
   timeout: 50000,
 });
 
@@ -42,6 +44,10 @@ instance.interceptors.response.use(
     return res;
   },
   (error: AxiosError<ApiResponse<unknown>>) => {
+    if (error.response?.status === 401) {
+      clearToken();
+      redirectToLogin();
+    }
     if (error.response?.data?.error) {
       toast.error(error.response.data.error);
     }

@@ -7,7 +7,9 @@ export type { ApiResponse, getToken };
 export interface MeResponse {
   uuid: string;
   notion_user_id: string;
+  clickup_connected: boolean;
   name: string;
+  email?: string;
   avatar_url?: string;
   created_at: string;
   updated_at: string;
@@ -15,14 +17,18 @@ export interface MeResponse {
 
 export function getMe(): Promise<ApiResponse<MeResponse>> {
   return request<MeResponse>({
-    url: "/api/v1/auth/me",
+    url: "/api/auth/me",
     method: "get",
   });
 }
 
+export function updateProfile(data: { name?: string; avatar_path?: string }) {
+  return request<MeResponse>({ url: "/api/auth/me", method: "patch", data });
+}
+
 export function logout(): Promise<ApiResponse<void>> {
   return request<void>({
-    url: "/api/v1/auth/logout",
+    url: "/api/auth/logout",
     method: "post",
   });
 }

@@ -52,10 +52,20 @@ export function TaskSessionsModal({
     if (!open || !taskUuid) return
     queueMicrotask(() => setLoading(true))
     adminService
-      .getTaskSessions(taskUuid)
+      .getReportSessions()
       .then((res) => {
         if (res.success && res.data) {
-          setSessions(res.data)
+          setSessions(
+            res.data
+              .filter((session) => session.task_uuid === taskUuid)
+              .map((session) => ({
+                uuid: session.uuid,
+                task_uuid: session.task_uuid,
+                started_at: session.started_at,
+                ended_at: session.ended_at,
+                duration: session.duration,
+              }))
+          )
         } else {
           toast.error(res.error || 'Failed to load sessions')
         }

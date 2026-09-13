@@ -1,15 +1,20 @@
 import { useData } from "@/app/work/data-provider";
+import { buildTaskLinkTargets, splitTaskLinkTarget } from "@/lib/link-targets";
+import { toScheduledDateRequest } from "@/lib/scheduled-date";
+import { getEstimatedMinutes, type TaskTimerMode } from "@/lib/task-timer-mode";
 import { cn } from "@/lib/utils";
-import { createTask } from "@/services/task";
 import { useCommonStore } from "@/stores/common";
 import { TaskStatus } from "@/types/base";
-import { IconPlus, IconX } from "@tabler/icons-react";
-import { useState } from "react";
+import { IconCalendar, IconPlus, IconX } from "@tabler/icons-react";
+import { format } from "date-fns";
+import { useMemo, useState } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { Button } from "./ui/button";
+import { Calendar } from "./ui/calendar";
 import { Field } from "./ui/field";
 import { Input } from "./ui/input";
+import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 import {
   Select,
   SelectContent,
@@ -24,49 +29,69 @@ interface IProps {
 
 interface IAddTaskForm {
   title: string;
+  timer_mode: TaskTimerMode;
   estimated_time: string;
-  notion_database_uuid: string;
+  link_target: string;
+  scheduled_date: string;
 }
 
 export function AddTask({ className, status }: IProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const { currCollectionNotionDbs } = useCommonStore();
-  const { collection, getTasks } = useData();
+  const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
+  const today = format(new Date(), "yyyy-MM-dd");
+  const { currCollectionNotionDbs, currCollectionClickUpLists } =
+    useCommonStore();
+  const { createTaskOptimistic } = useData();
+  const linkTargets = useMemo(
+    () =>
+      buildTaskLinkTargets(currCollectionNotionDbs, currCollectionClickUpLists),
+    [currCollectionClickUpLists, currCollectionNotionDbs],
+  );
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    control,
-  } = useForm<IAddTaskForm>({
+  const { register, handleSubmit, control, watch } = useForm<IAddTaskForm>({
     defaultValues: {
+      timer_mode: "countdown",
       estimated_time: "00:30",
-      notion_database_uuid: currCollectionNotionDbs[0]?.uuid || "",
+      link_target: "none",
+      scheduled_date: `${today}T00:00:00`,
     },
   });
   const onSubmit: SubmitHandler<IAddTaskForm> = async (data) => {
+    if (data.timer_mode === "countdown" && !data.estimated_time) {
+      toast.error("Please set an expected duration for the countdown");
+      return;
+    }
+
+    const target = splitTaskLinkTarget(data.link_target);
     const params = {
-      ...data,
-      estimated_time:
-        parseInt(data.estimated_time.split(":")[0]) * 60 +
-        parseInt(data.estimated_time.split(":")[1]),
+      title: data.title,
+      estimated_time: getEstimatedMinutes(data.timer_mode, data.estimated_time),
       status: status,
+      scheduled_date: data.scheduled_date
+        ? toScheduledDateRequest(data.scheduled_date)
+        : undefined,
+      content: "-",
+      notion_database_uuid:
+        target?.platform === "notion" ? target.uuid : undefined,
+      clickup_list_uuid:
+        target?.platform === "clickup" ? target.uuid : undefined,
     };
-    // 新建任务
-    const res = await createTask(collection?.uuid ?? "", params);
-    if (res.success) {
+    const creation = createTaskOptimistic(params);
+    setIsOpen(false);
+
+    if (await creation) {
       toast.success("Task created successfully");
-      getTasks();
-      setIsOpen(false);
     } else {
-      toast.error(res.message ?? "Failed to create task");
+      toast.error("Failed to create task");
     }
   };
+  const timerMode = watch("timer_mode");
+
   return (
     <div className={cn("", className)}>
       <Button
         variant="ghost"
-        className="text-atext-450 hover:text-atext-450 flex w-full justify-start py-2 text-left font-bold hover:bg-transparent! hover:opacity-80"
+        className="text-muted-foreground hover:text-foreground flex w-full justify-start py-2 text-left font-bold hover:bg-transparent! hover:opacity-80"
         onClick={() => setIsOpen(!isOpen)}
       >
         {!isOpen ? (
@@ -83,30 +108,123 @@ export function AddTask({ className, status }: IProps) {
       </Button>
       {isOpen && (
         <div>
-          <div className="border-divider/50 rounded-xl border bg-white p-3">
+          <div className="border-border bg-card text-card-foreground rounded-xl border p-3">
             <form onSubmit={handleSubmit(onSubmit)}>
               <div className="flex gap-2">
                 <Input
                   {...register("title", { required: true })}
                   placeholder="What do you need to do?"
-                  className="border-divider border"
+                  className="bg-background"
                 />
-                <Input
-                  type="time"
-                  className="border-divider w-max shrink-0 border"
-                  {...register("estimated_time", { required: true })}
+                <Controller
+                  name="timer_mode"
+                  control={control}
+                  render={({ field }) => (
+                    <div
+                      role="radiogroup"
+                      aria-label="计时模式"
+                      className="border-border bg-muted flex shrink-0 rounded-lg border p-0.5"
+                    >
+                      {(
+                        [
+                          ["countdown", "倒计时"],
+                          ["stopwatch", "正计时"],
+                        ] as const
+                      ).map(([value, label]) => (
+                        <button
+                          key={value}
+                          type="button"
+                          role="radio"
+                          aria-checked={field.value === value}
+                          onClick={() => field.onChange(value)}
+                          className={cn(
+                            "focus-visible:ring-ring rounded-md px-2.5 py-1 text-xs font-medium transition-colors focus-visible:ring-2 focus-visible:outline-none",
+                            field.value === value
+                              ? "bg-background text-foreground shadow-xs"
+                              : "text-muted-foreground hover:text-foreground",
+                          )}
+                        >
+                          {label}
+                        </button>
+                      ))}
+                    </div>
+                  )}
                 />
               </div>
-              {/* errors will return when field validation fails  */}
-              {errors.estimated_time && <span>This field is required</span>}
-              <div className="mt-4 flex gap-4">
+              <div className="mt-2 flex gap-2">
                 <Controller
-                  name="notion_database_uuid"
+                  name="scheduled_date"
+                  control={control}
+                  render={({ field }) => {
+                    const selectedDate = field.value
+                      ? new Date(`${field.value.slice(0, 10)}T00:00:00`)
+                      : undefined;
+
+                    return (
+                      <Popover
+                        open={isDatePickerOpen}
+                        onOpenChange={setIsDatePickerOpen}
+                      >
+                        <PopoverTrigger asChild>
+                          <Button
+                            type="button"
+                            variant="outline"
+                            data-empty={!field.value}
+                            className="data-[empty=true]:text-muted-foreground flex-1 justify-between text-left font-normal"
+                          >
+                            {selectedDate ? (
+                              format(selectedDate, "yyyy-MM-dd")
+                            ) : (
+                              <span>Pick a date</span>
+                            )}
+                            <IconCalendar data-icon="inline-end" />
+                          </Button>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-auto p-0" align="start">
+                          <Calendar
+                            mode="single"
+                            selected={selectedDate}
+                            defaultMonth={selectedDate}
+                            onSelect={(date) => {
+                              field.onChange(
+                                date
+                                  ? `${format(date, "yyyy-MM-dd")}T${field.value.slice(11) || "00:00:00"}`
+                                  : "",
+                              );
+                              setIsDatePickerOpen(false);
+                            }}
+                          />
+                          <Input
+                            type="datetime-local"
+                            step="1"
+                            value={field.value}
+                            onChange={field.onChange}
+                            className="mt-2"
+                          />
+                        </PopoverContent>
+                      </Popover>
+                    );
+                  }}
+                />
+
+                {timerMode === "countdown" && (
+                  <Input
+                    type="time"
+                    aria-label="Expected duration"
+                    className="w-max shrink-0"
+                    {...register("estimated_time")}
+                  />
+                )}
+              </div>
+              <div className="mt-4 flex items-center gap-4">
+                <Controller
+                  name="link_target"
                   control={control}
                   render={({ field, fieldState }) => (
                     <Field
                       orientation="responsive"
                       data-invalid={fieldState.invalid}
+                      className="flex-1"
                     >
                       <Select
                         name={field.name}
@@ -115,21 +233,18 @@ export function AddTask({ className, status }: IProps) {
                       >
                         <SelectTrigger
                           aria-invalid={fieldState.invalid}
-                          className="border-divider min-w-[120px] border"
+                          className="min-w-[120px]"
                         >
-                          <SelectValue placeholder="Select" />
+                          <SelectValue placeholder="Select target" />
                         </SelectTrigger>
-                        <SelectContent
-                          position="item-aligned"
-                          className="text-atext-500"
-                        >
-                          {currCollectionNotionDbs.map((db) => (
-                            <SelectItem
-                              key={db.uuid}
-                              value={db.uuid}
-                              className="text-atext-450"
-                            >
-                              {db.name}
+                        <SelectContent position="item-aligned">
+                          <SelectItem value="none">No linked app</SelectItem>
+                          {linkTargets.map((target) => (
+                            <SelectItem key={target.value} value={target.value}>
+                              {target.platform === "notion"
+                                ? "Notion"
+                                : "ClickUp"}{" "}
+                              / {target.label}
                             </SelectItem>
                           ))}
                         </SelectContent>
@@ -141,7 +256,7 @@ export function AddTask({ className, status }: IProps) {
                 <Button
                   type="submit"
                   variant="default"
-                  className="bg-primary-400 rounded-full px-4 text-white"
+                  className="rounded-full px-4"
                 >
                   Confirm
                 </Button>

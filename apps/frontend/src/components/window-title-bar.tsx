@@ -77,12 +77,12 @@ export function WindowTitleBar() {
           </svg>
         </button>
         {/* Maximize */}
-        <button className="group pointer-events-none flex h-3 w-3 items-center justify-center rounded-full border border-[rgba(255,255,255,0.1)] bg-gray-400"></button>
+        <button className="group pointer-events-none flex h-3 w-3 items-center justify-center rounded-full border border-[rgba(255,255,255,0.1)] bg-muted"></button>
       </div>
 
       {/* Center title (optional, can be used for page title) */}
       <div
-        className="absolute left-1/2 -translate-x-1/2 text-xs text-[#6b7280] select-none"
+        className="text-muted-foreground absolute left-1/2 -translate-x-1/2 select-none text-xs"
         data-tauri-drag-region
       >
         link-do
@@ -129,7 +129,7 @@ export function HomeWindowTitleBar() {
     >
       {/* Traffic Lights */}
       <div
-        className="flex h-full w-[280px] items-center gap-2 bg-white px-3"
+        className="bg-card flex h-full w-[280px] items-center gap-2 px-3"
         data-tauri-drag-region
       >
         {/* Close */}
@@ -167,12 +167,12 @@ export function HomeWindowTitleBar() {
           </svg>
         </button>
         {/* Maximize */}
-        <button className="group pointer-events-none flex h-3 w-3 items-center justify-center rounded-full border border-[rgba(255,255,255,0.1)] bg-gray-400"></button>
+        <button className="group pointer-events-none flex h-3 w-3 items-center justify-center rounded-full border border-[rgba(255,255,255,0.1)] bg-muted"></button>
       </div>
 
       {/* Center title (optional, can be used for page title) */}
       <div
-        className="absolute left-1/2 -translate-x-1/2 text-xs text-[#6b7280] select-none"
+        className="absolute left-1/2 -translate-x-1/2 text-xs text-muted-foreground select-none"
         data-tauri-drag-region
       ></div>
     </div>

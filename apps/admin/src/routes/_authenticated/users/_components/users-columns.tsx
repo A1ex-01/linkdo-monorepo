@@ -31,7 +31,9 @@ export const usersColumns: ColumnDef<User>[] = [
       <DataTableColumnHeader column={column} title='Email' />
     ),
     cell: ({ row }) => (
-      <div className='text-muted-foreground'>{row.getValue('email')}</div>
+      <div className='text-muted-foreground'>
+        {row.original.email || 'No email field'}
+      </div>
     ),
   },
   {
@@ -68,7 +70,7 @@ export const usersColumns: ColumnDef<User>[] = [
     ),
     cell: ({ row }) => (
       <div className='text-muted-foreground'>
-        {formatDate(row.original.created_at)}
+        {row.original.created_at ? formatDate(row.original.created_at) : '—'}
       </div>
     ),
     enableSorting: true,
