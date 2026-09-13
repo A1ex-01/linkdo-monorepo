@@ -164,3 +164,13 @@ docker compose --env-file .env.backend.production --env-file .env.admin.producti
 ~~~
 
 不要执行 docker compose down -v，除非明确要删除全部持久化数据。
+
+
+
+
+<!-- db 通道 -->
+```
+ssh -N \
+  -L 3307:127.0.0.1:3307 \
+  ubuntu@xxx
+```

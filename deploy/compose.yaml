@@ -64,6 +64,9 @@ services:
   base-service:
     <<: *backend
     command: ["./app-base"]
+    networks:
+      - internal
+      - egress
     healthcheck:
       test: ["CMD", "wget", "-qO-", "http://localhost:8081/health"]
       interval: 15s
@@ -77,6 +80,10 @@ services:
     depends_on:
       base-service:
         condition: service_healthy
+    networks:
+      - internal
+      - egress
+
     healthcheck:
       test: ["CMD", "wget", "-qO-", "http://localhost:8082/health"]
       interval: 15s
@@ -87,6 +94,9 @@ services:
   file-service:
     <<: *backend
     command: ["./app-file"]
+    networks:
+      - internal
+      - egress
     depends_on:
       base-service:
         condition: service_healthy
@@ -107,6 +117,8 @@ services:
   mysql:
     image: mysql:8.4
     restart: unless-stopped
+    ports:
+      - "127.0.0.1:3307:3306"
     env_file: .env.backend.production
     command:
       - --character-set-server=utf8mb4
@@ -114,23 +126,33 @@ services:
     volumes:
       - mysql-data:/var/lib/mysql
     healthcheck:
-      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -uroot -p\"$$MYSQL_ROOT_PASSWORD\" --silent"]
+      test:
+        [
+          "CMD-SHELL",
+          'mysqladmin ping -h 127.0.0.1 -uroot -p"$$MYSQL_ROOT_PASSWORD" --silent',
+        ]
       interval: 10s
       timeout: 5s
       retries: 30
       start_period: 60s
     networks:
       - internal
+      - tunnel
 
   redis:
     image: redis:7.4-alpine
     restart: unless-stopped
     env_file: .env.backend.production
-    command: ["sh", "-ec", "exec redis-server --appendonly yes --requirepass \"$$REDIS_PASSWORD\""]
+    command:
+      [
+        "sh",
+        "-ec",
+        'exec redis-server --appendonly yes --requirepass "$$REDIS_PASSWORD"',
+      ]
     volumes:
       - redis-data:/data
     healthcheck:
-      test: ["CMD-SHELL", "redis-cli -a \"$$REDIS_PASSWORD\" ping | grep -q PONG"]
+      test: ["CMD-SHELL", 'redis-cli -a "$$REDIS_PASSWORD" ping | grep -q PONG']
       interval: 10s
       timeout: 5s
       retries: 10
@@ -153,9 +175,14 @@ services:
       - internal
 
 networks:
-  public:
+  public: {}
+
   internal:
     internal: true
+
+  tunnel: {}
+
+  egress: {}
 
 volumes:
   mysql-data:
