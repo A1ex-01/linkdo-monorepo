@@ -1,8 +1,8 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "link-do",
+  "productName": "Linkdo",
   "version": "0.1.5",
-  "identifier": "com.tauri.link-do",
+  "identifier": "com.tauri.linkdo",
   "build": {
     "beforeDevCommand": "pnpm dev",
     "devUrl": "http://localhost:3000",
@@ -13,7 +13,7 @@
     "macOSPrivateApi": true,
     "windows": [
       {
-        "title": "link-do",
+        "title": "Linkdo",
         "width": 1400,
         "height": 850,
         "decorations": false,
@@ -21,7 +21,8 @@
         "fullscreen": false,
         "transparent": true,
         "alwaysOnTop": false,
-        "shadow": false
+        "shadow": false,
+        "devtools": false
       }
     ],
     "security": {
