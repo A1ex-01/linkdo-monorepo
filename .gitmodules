@@ -1,6 +1,6 @@
-[submodule "services/backend"]
-	path = services/backend
-	url = git@github.com:A1ex-01/linkdo-backend.git
 [submodule "services/agent"]
 	path = services/agent
 	url = git@github.com:A1ex-01/linkdo-agent.git
+[submodule "services/backend"]
+	path = services/backend
+	url = git@github.com:A1ex-01/linkdo-backend.git
