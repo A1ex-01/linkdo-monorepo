@@ -1,11 +1,11 @@
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-import { Separator } from '@/components/ui/separator'
+import { Badge } from '@linkdo/ui/components/badge'
+import { Button } from '@linkdo/ui/components/button'
+import { Separator } from '@linkdo/ui/components/separator'
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
-} from '@/components/ui/tooltip'
+} from '@linkdo/ui/components/tooltip'
 import { cn } from '@/lib/utils'
 import { type Table } from '@tanstack/react-table'
 import { X } from 'lucide-react'

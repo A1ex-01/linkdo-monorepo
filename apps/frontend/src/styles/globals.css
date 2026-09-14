@@ -7,6 +7,7 @@
 @custom-variant dark (&:is(.dark *));
 
 @source "../src/**/*.{js,jsx,mjs,ts,tsx}";
+@source "../../../../packages/ui/src";
 
 @layer base {
   button {

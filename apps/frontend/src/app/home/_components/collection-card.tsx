@@ -1,13 +1,13 @@
 import { CollectionCover } from "@/components/collection-cover";
 import { AIconClickup, AIconNotion } from "@/components/icons/base";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@linkdo/ui/components/button";
+import { Card, CardContent } from "@linkdo/ui/components/card";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from "@linkdo/ui/components/dropdown-menu";
 import { getTaskPreview } from "@/lib/collection-tasks";
 import { deleteCollection, getTasks } from "@/services/collection";
 import type { ICollection } from "@/types/base";

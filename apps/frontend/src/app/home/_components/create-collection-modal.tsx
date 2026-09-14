@@ -1,12 +1,12 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
+import { Button } from "@linkdo/ui/components/button";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
+} from "@linkdo/ui/components/dialog";
 import { resolveFilePath, uploadImage } from "@/services/file";
 import type { ICollection } from "@/types/base";
 import {

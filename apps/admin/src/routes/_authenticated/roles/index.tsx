@@ -1,4 +1,4 @@
-import { Badge } from '@/components/ui/badge'
+import { Badge } from '@linkdo/ui/components/badge'
 import { createFileRoute } from '@tanstack/react-router'
 
 function RolesPage() {

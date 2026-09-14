@@ -1,5 +1,5 @@
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
+import { Button } from '@linkdo/ui/components/button'
+import { Input } from '@linkdo/ui/components/input'
 import { Cross2Icon } from '@radix-ui/react-icons'
 import { type Table } from '@tanstack/react-table'
 import { DataTableFacetedFilter } from './faceted-filter'

@@ -1,11 +1,11 @@
-import { Button } from '@/components/ui/button'
+import { Button } from '@linkdo/ui/components/button'
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select'
+} from '@linkdo/ui/components/select'
 import { cn, getPageNumbers } from '@/lib/utils'
 import {
   ChevronLeftIcon,

@@ -1,5 +1,5 @@
 import { NavigationProgress } from '@/components/navigation-progress'
-import { Toaster } from '@/components/ui/sonner'
+import { Toaster } from '@linkdo/ui/components/sonner'
 import { type QueryClient } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { createRootRouteWithContext, Outlet } from '@tanstack/react-router'

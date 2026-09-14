@@ -1,18 +1,22 @@
 {
   "name": "linkdo",
   "private": true,
+  "packageManager": "pnpm@10.33.0",
   "scripts": {
+    "dev": "turbo dev",
+    "build": "turbo build",
+    "lint": "turbo lint",
+    "typecheck": "turbo typecheck",
     "dev:frontend": "pnpm --filter @linkdo/frontend dev",
     "dev:admin": "pnpm --filter @linkdo/admin dev",
-    "dev:mcp": "pnpm --filter @linkdo/mcp dev",
     "build:frontend": "pnpm --filter @linkdo/frontend build",
-    "build:admin": "pnpm --filter @linkdo/admin build",
-    "build:mcp": "pnpm --filter @linkdo/mcp build",
-    "lint": "pnpm -r lint",
-    "typecheck": "pnpm -r typecheck"
+    "build:admin": "pnpm --filter @linkdo/admin build"
   },
   "engines": {
     "node": ">=18",
     "pnpm": ">=9"
+  },
+  "devDependencies": {
+    "turbo": "^2.10.12"
   }
 }

@@ -3,7 +3,7 @@ import { request } from "./base";
 export type ImagePurpose = "avatars" | "collection-covers";
 
 export const DEFAULT_FILE_BASE_URL =
-  "https://a-linkkk-do.oss-cn-shanghai.aliyuncs.com";
+  "https://a-link-do.oss-cn-shanghai.aliyuncs.com";
 
 export function createImageUploadForm(file: File, purpose: ImagePurpose) {
   const form = new FormData();

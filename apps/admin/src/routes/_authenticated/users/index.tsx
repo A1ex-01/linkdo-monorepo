@@ -4,8 +4,8 @@ import { Main } from '@/components/layout/main'
 import { ProfileDropdown } from '@/components/profile-dropdown'
 import { Search } from '@/components/search'
 import { ThemeSwitch } from '@/components/theme-switch'
-import { Badge } from '@/components/ui/badge'
-import { Skeleton } from '@/components/ui/skeleton'
+import { Badge } from '@linkdo/ui/components/badge'
+import { Skeleton } from '@linkdo/ui/components/skeleton'
 import {
   Table,
   TableBody,
@@ -13,7 +13,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table'
+} from '@linkdo/ui/components/table'
 import { adminService, type User } from '@/services/admin'
 import { createFileRoute } from '@tanstack/react-router'
 import { useEffect, useState } from 'react'

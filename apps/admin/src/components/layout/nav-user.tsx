@@ -1,5 +1,6 @@
 import { SignOutDialog } from '@/components/sign-out-dialog'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { SystemSettingsDialog } from '@/components/system-settings-dialog'
+import { Avatar, AvatarFallback, AvatarImage } from '@linkdo/ui/components/avatar'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -7,20 +8,22 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
+} from '@linkdo/ui/components/dropdown-menu'
 import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
   useSidebar,
-} from '@/components/ui/sidebar'
+} from '@linkdo/ui/components/sidebar'
 import useDialogState from '@/hooks/use-dialog-state'
 import { useAuthStore } from '@/stores/auth-store'
-import { ChevronsUpDown, LogOut } from 'lucide-react'
+import { ChevronsUpDown, LogOut, Palette } from 'lucide-react'
+import { useState } from 'react'
 
 export function NavUser() {
   const { isMobile } = useSidebar()
   const [open, setOpen] = useDialogState()
+  const [settingsOpen, setSettingsOpen] = useState(false)
   const { auth } = useAuthStore()
   const user = auth.user
 
@@ -77,6 +80,13 @@ export function NavUser() {
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
 
+              <DropdownMenuItem onSelect={() => setSettingsOpen(true)}>
+                <Palette />
+                Appearance
+              </DropdownMenuItem>
+
+              <DropdownMenuSeparator />
+
               <DropdownMenuItem
                 variant='destructive'
                 onClick={() => setOpen(true)}
@@ -90,6 +100,10 @@ export function NavUser() {
       </SidebarMenu>
 
       <SignOutDialog open={!!open} onOpenChange={setOpen} />
+      <SystemSettingsDialog
+        open={settingsOpen}
+        onOpenChange={setSettingsOpen}
+      />
     </>
   )
 }

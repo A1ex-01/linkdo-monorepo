@@ -21,6 +21,7 @@
     "test:browser:install": "playwright install chromium --with-deps"
   },
   "dependencies": {
+    "@linkdo/ui": "workspace:*",
     "@clerk/react": "^6.4.2",
     "@hookform/resolvers": "^5.2.2",
     "@radix-ui/react-alert-dialog": "^1.1.15",

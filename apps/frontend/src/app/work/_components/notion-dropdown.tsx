@@ -1,6 +1,6 @@
 import { AIconNotion } from "@/components/icons/base";
-import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
+import { Button } from "@linkdo/ui/components/button";
+import { Checkbox } from "@linkdo/ui/components/checkbox";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,8 +11,8 @@ import {
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
+} from "@linkdo/ui/components/dropdown-menu";
+import { Field, FieldGroup, FieldLabel } from "@linkdo/ui/components/field";
 import {
   Select,
   SelectContent,
@@ -20,7 +20,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from "@linkdo/ui/components/select";
 import { cn } from "@/lib/utils";
 import {
   createNotionDatabase,

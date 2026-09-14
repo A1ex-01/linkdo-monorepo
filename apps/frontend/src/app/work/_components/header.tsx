@@ -16,7 +16,7 @@ import {
   AvatarBadge,
   AvatarFallback,
   AvatarImage,
-} from "@/components/ui/avatar";
+} from "@linkdo/ui/components/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -24,7 +24,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from "@linkdo/ui/components/dropdown-menu";
 import { TOKEN_KEY } from "@/config";
 import { logout } from "@/services/base";
 import { resolveFilePath } from "@/services/file";

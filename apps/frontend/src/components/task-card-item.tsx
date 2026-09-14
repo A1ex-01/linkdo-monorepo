@@ -1,14 +1,14 @@
 "use client";
 import { useData } from "@/app/work/data-provider";
 import { CollectionCover } from "@/components/collection-cover";
-import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
-import { Input } from "@/components/ui/input";
+import { Button } from "@linkdo/ui/components/button";
+import { Calendar } from "@linkdo/ui/components/calendar";
+import { Input } from "@linkdo/ui/components/input";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover";
+} from "@linkdo/ui/components/popover";
 import {
   toScheduledDateInput,
   toScheduledDateRequest,

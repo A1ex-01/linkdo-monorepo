@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button";
+import { Button } from "@linkdo/ui/components/button";
 import { IconChartBar, IconGridScan, IconPlus } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";

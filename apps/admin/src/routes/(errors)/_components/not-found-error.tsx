@@ -1,4 +1,4 @@
-import { Button } from '@/components/ui/button'
+import { Button } from '@linkdo/ui/components/button'
 import { useNavigate, useRouter } from '@tanstack/react-router'
 
 export function NotFoundError() {

@@ -1,9 +1,9 @@
-import { Button } from '@/components/ui/button'
+import { Button } from '@linkdo/ui/components/button'
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from '@/components/ui/popover'
+} from '@linkdo/ui/components/popover'
 import { cn } from '@/lib/utils'
 import { type Content, type Root, type Trigger } from '@radix-ui/react-popover'
 import { CircleQuestionMark } from 'lucide-react'

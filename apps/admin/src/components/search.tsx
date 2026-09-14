@@ -3,7 +3,7 @@
 import { useSearch } from '@/context/search-provider'
 import { cn } from '@/lib/utils'
 import { SearchIcon } from 'lucide-react'
-import { Button } from './ui/button'
+import { Button } from '@linkdo/ui/components/button'
 
 export function Search({
   className = '',

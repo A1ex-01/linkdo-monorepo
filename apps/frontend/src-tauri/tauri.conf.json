@@ -4,9 +4,9 @@
   "version": "0.1.5",
   "identifier": "com.tauri.linkdo",
   "build": {
-    "beforeDevCommand": "pnpm dev",
+    "beforeDevCommand": "pnpm dev:web",
     "devUrl": "http://localhost:3000",
-    "beforeBuildCommand": "pnpm build",
+    "beforeBuildCommand": "pnpm build:web",
     "frontendDist": "../dist"
   },
   "app": {

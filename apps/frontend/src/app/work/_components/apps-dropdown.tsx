@@ -9,7 +9,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from "@linkdo/ui/components/dropdown-menu";
 import { useUserStore } from "@/stores/user";
 import { Grip } from "lucide-react";
 import { COMING_SOON_INTEGRATIONS } from "./coming-soon-integrations";

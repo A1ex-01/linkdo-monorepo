@@ -9,7 +9,7 @@ import { IconSidebarSidebar } from '@/assets/custom/icon-sidebar-sidebar'
 import { IconThemeDark } from '@/assets/custom/icon-theme-dark'
 import { IconThemeLight } from '@/assets/custom/icon-theme-light'
 import { IconThemeSystem } from '@/assets/custom/icon-theme-system'
-import { Button } from '@/components/ui/button'
+import { Button } from '@linkdo/ui/components/button'
 import {
   Sheet,
   SheetContent,
@@ -18,26 +18,28 @@ import {
   SheetHeader,
   SheetTitle,
   SheetTrigger,
-} from '@/components/ui/sheet'
+} from '@linkdo/ui/components/sheet'
 import { useDirection } from '@/context/direction-provider'
 import { type Collapsible, useLayout } from '@/context/layout-provider'
-import { useTheme } from '@/context/theme-provider'
+import { useStyleTheme, useTheme } from '@/context/theme-provider'
 import { cn } from '@/lib/utils'
 import { Item, Root as Radio } from '@radix-ui/react-radio-group'
 import { CircleCheck, RotateCcw, Settings } from 'lucide-react'
 import { type SVGProps } from 'react'
-import { useSidebar } from './ui/sidebar'
+import { useSidebar } from '@linkdo/ui/components/sidebar'
 
 export function ConfigDrawer() {
   const { setOpen } = useSidebar()
   const { resetDir } = useDirection()
   const { resetTheme } = useTheme()
+  const { resetStyleTheme } = useStyleTheme()
   const { resetLayout } = useLayout()
 
   const handleReset = () => {
     setOpen(true)
     resetDir()
     resetTheme()
+    resetStyleTheme()
     resetLayout()
   }
 

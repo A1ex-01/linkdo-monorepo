@@ -3,8 +3,8 @@
 import { useData } from "@/app/work/data-provider";
 import { AddTask } from "@/components/add-task";
 import TaskCardItem from "@/components/task-card-item";
-import { Button } from "@/components/ui/button";
-import { Progress } from "@/components/ui/progress";
+import { Button } from "@linkdo/ui/components/button";
+import { Progress } from "@linkdo/ui/components/progress";
 import { cn } from "@/lib/utils";
 import type { TaskStatus } from "@/types/base";
 import { toGroupedTasks } from "@/utils/base";

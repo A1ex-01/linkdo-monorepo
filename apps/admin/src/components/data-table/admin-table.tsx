@@ -5,7 +5,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table'
+} from '@linkdo/ui/components/table'
 import { cn } from '@/lib/utils'
 import {
   type ColumnDef,

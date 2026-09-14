@@ -13,6 +13,7 @@
 # pnpm
 node_modules/
 .pnpm-store/
+.turbo/
 
 # 构建产物
 apps/frontend/.next/

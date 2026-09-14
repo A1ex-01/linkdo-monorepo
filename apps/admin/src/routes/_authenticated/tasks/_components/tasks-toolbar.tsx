@@ -1,5 +1,5 @@
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
+import { Button } from '@linkdo/ui/components/button'
+import { Input } from '@linkdo/ui/components/input'
 import { getRouteApi } from '@tanstack/react-router'
 import { Search } from 'lucide-react'
 

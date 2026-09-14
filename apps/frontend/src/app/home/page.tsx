@@ -9,8 +9,8 @@ import {
   AvatarBadge,
   AvatarFallback,
   AvatarImage,
-} from "@/components/ui/avatar";
-import { Card, CardContent } from "@/components/ui/card";
+} from "@linkdo/ui/components/avatar";
+import { Card, CardContent } from "@linkdo/ui/components/card";
 import { HomeWindowTitleBar } from "@/components/window-title-bar";
 import {
   createCollection,

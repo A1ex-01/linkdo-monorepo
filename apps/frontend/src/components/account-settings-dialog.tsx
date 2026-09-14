@@ -1,12 +1,12 @@
 "use client";
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@linkdo/ui/components/avatar";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
+} from "@linkdo/ui/components/dialog";
 import { updateProfile } from "@/services/base";
 import { resolveFilePath, uploadImage } from "@/services/file";
 import { useUserStore } from "@/stores/user";

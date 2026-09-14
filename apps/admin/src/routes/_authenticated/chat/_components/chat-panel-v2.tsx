@@ -1,7 +1,7 @@
 'use client'
 
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
+import { Badge } from '@linkdo/ui/components/badge'
+import { Button } from '@linkdo/ui/components/button'
 import { IconSend } from '@tabler/icons-react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useEffect, useRef, useState } from 'react'
