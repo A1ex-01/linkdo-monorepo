@@ -3,7 +3,7 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-} from '@/components/ui/dialog'
+} from '@linkdo/ui/components/dialog'
 import { adminService, type TimeSession } from '@/services/admin'
 import { Clock, PlayCircle } from 'lucide-react'
 import { useEffect, useState } from 'react'

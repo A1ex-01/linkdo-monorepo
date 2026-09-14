@@ -1,6 +1,6 @@
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
+import { Badge } from '@linkdo/ui/components/badge'
+import { Button } from '@linkdo/ui/components/button'
+import { Input } from '@linkdo/ui/components/input'
 import {
   Table,
   TableBody,
@@ -8,7 +8,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table'
+} from '@linkdo/ui/components/table'
 import {
   adminService,
   type CollectionBreakdown,

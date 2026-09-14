@@ -1,4 +1,4 @@
-name: link-do
+name: linkdo
 options:
   bundleIdPrefix: com.tauri.dev
   deploymentTarget:
@@ -10,7 +10,7 @@ configs:
 settingGroups:
   app:
     base:
-      PRODUCT_NAME: link-do
+      PRODUCT_NAME: linkdo
       PRODUCT_BUNDLE_IDENTIFIER: com.tauri.dev
 targetTemplates:
   app:

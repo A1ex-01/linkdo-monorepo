@@ -28,7 +28,7 @@
 		626697052DAB2098F4FA743F /* Metal.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Metal.framework; path = System/Library/Frameworks/Metal.framework; sourceTree = SDKROOT; };
 		6B4E0036AF3BB72B7B2106EF /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		7277A4BCF6E1487925564CA3 /* bindings.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = bindings.h; sourceTree = "<group>"; };
-		7B225852B93DE1202D357EAB /* link-do.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "link-do.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		7B225852B93DE1202D357EAB /* linkdo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "linkdo.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		83A7250EB23EADCFCAC4D8E9 /* MetalKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MetalKit.framework; path = System/Library/Frameworks/MetalKit.framework; sourceTree = SDKROOT; };
 		A4B72FADE3B7DBFA7BD0A292 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		AC76FDD4624A0B394D5854B1 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
@@ -79,7 +79,7 @@
 		14EECBE6B6F26D05C16013B6 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				7B225852B93DE1202D357EAB /* link-do.app */,
+				7B225852B93DE1202D357EAB /* linkdo.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -87,7 +87,7 @@
 		2CC11E931D3C812AB31478BB /* Sources */ = {
 			isa = PBXGroup;
 			children = (
-				A85B4B2E68D9CEB1825169F4 /* link-do */,
+				A85B4B2E68D9CEB1825169F4 /* linkdo */,
 			);
 			path = Sources;
 			sourceTree = "<group>";
@@ -126,13 +126,13 @@
 			path = ../../src;
 			sourceTree = "<group>";
 		};
-		A85B4B2E68D9CEB1825169F4 /* link-do */ = {
+		A85B4B2E68D9CEB1825169F4 /* linkdo */ = {
 			isa = PBXGroup;
 			children = (
 				1C3FAF73AAD5225B2C0A5B26 /* main.mm */,
 				7BBE3F9B2F25C9919C3DB1E3 /* bindings */,
 			);
-			path = "link-do";
+			path = "linkdo";
 			sourceTree = "<group>";
 		};
 		BA6A22B7D520CC706E125C41 /* Frameworks */ = {
@@ -170,7 +170,7 @@
 			packageProductDependencies = (
 			);
 			productName = "link-do_iOS";
-			productReference = 7B225852B93DE1202D357EAB /* link-do.app */;
+			productReference = 7B225852B93DE1202D357EAB /* linkdo.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -284,7 +284,7 @@
 					"$(TOOLCHAIN_DIR)/usr/lib/swift-5.0/$(PLATFORM_NAME)",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.tauri.ablitzit;
-				PRODUCT_NAME = "link-do";
+				PRODUCT_NAME = "linkdo";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALID_ARCHS = arm64;
@@ -445,7 +445,7 @@
 					"$(TOOLCHAIN_DIR)/usr/lib/swift-5.0/$(PLATFORM_NAME)",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.tauri.ablitzit;
-				PRODUCT_NAME = "link-do";
+				PRODUCT_NAME = "linkdo";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALID_ARCHS = arm64;

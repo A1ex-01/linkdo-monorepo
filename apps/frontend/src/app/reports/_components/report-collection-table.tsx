@@ -3,7 +3,7 @@
 "use client";
 
 import type { ICollectionBreakdown } from "@/types/base";
-import { Progress } from "@/components/ui/progress";
+import { Progress } from "@linkdo/ui/components/progress";
 
 interface ReportCollectionTableProps {
   data: ICollectionBreakdown[] | undefined;

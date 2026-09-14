@@ -1,12 +1,16 @@
 import { getCookie, removeCookie, setCookie } from '@/lib/cookies'
 import { createContext, useContext, useEffect, useMemo, useState } from 'react'
 
-type Theme = 'dark' | 'light' | 'system'
+export type Theme = 'dark' | 'light' | 'system'
 type ResolvedTheme = Exclude<Theme, 'system'>
+export const STYLE_THEMES = ['default', 'twitter', 'vercel'] as const
+export type StyleTheme = (typeof STYLE_THEMES)[number]
 
 const DEFAULT_THEME = 'system'
 const THEME_COOKIE_NAME = 'vite-ui-theme'
 const THEME_COOKIE_MAX_AGE = 60 * 60 * 24 * 365 // 1 year
+const STYLE_THEME_STORAGE_KEY = 'linkdo-style-theme'
+const DEFAULT_STYLE_THEME: StyleTheme = 'default'
 
 type ThemeProviderProps = {
   children: React.ReactNode
@@ -31,6 +35,26 @@ const initialState: ThemeProviderState = {
 }
 
 const ThemeContext = createContext<ThemeProviderState>(initialState)
+
+type StyleThemeProviderState = {
+  styleTheme: StyleTheme
+  setStyleTheme: (theme: StyleTheme) => void
+  resetStyleTheme: () => void
+}
+
+const StyleThemeContext = createContext<StyleThemeProviderState | null>(null)
+
+export function normalizeStyleTheme(theme: string | null): StyleTheme {
+  return STYLE_THEMES.includes(theme as StyleTheme)
+    ? (theme as StyleTheme)
+    : DEFAULT_STYLE_THEME
+}
+
+export function applyStyleTheme(theme: StyleTheme) {
+  if (typeof document !== 'undefined') {
+    document.documentElement.dataset.theme = theme
+  }
+}
 
 export function ThemeProvider({
   children,
@@ -100,10 +124,56 @@ export function ThemeProvider({
   )
 }
 
+export function StyleThemeProvider({ children }: { children: React.ReactNode }) {
+  const [styleTheme, setStyleThemeState] = useState<StyleTheme>(() => {
+    if (typeof window === 'undefined') return DEFAULT_STYLE_THEME
+
+    return normalizeStyleTheme(
+      window.localStorage.getItem(STYLE_THEME_STORAGE_KEY)
+    )
+  })
+
+  useEffect(() => {
+    applyStyleTheme(styleTheme)
+  }, [styleTheme])
+
+  const setStyleTheme = (theme: StyleTheme) => {
+    const nextStyleTheme = normalizeStyleTheme(theme)
+    window.localStorage.setItem(STYLE_THEME_STORAGE_KEY, nextStyleTheme)
+    setStyleThemeState(nextStyleTheme)
+  }
+
+  const resetStyleTheme = () => {
+    window.localStorage.removeItem(STYLE_THEME_STORAGE_KEY)
+    setStyleThemeState(DEFAULT_STYLE_THEME)
+  }
+
+  const contextValue = useMemo(
+    () => ({ styleTheme, setStyleTheme, resetStyleTheme }),
+    [styleTheme]
+  )
+
+  return (
+    <StyleThemeContext.Provider value={contextValue}>
+      {children}
+    </StyleThemeContext.Provider>
+  )
+}
+
 export const useTheme = () => {
   const context = useContext(ThemeContext)
 
   if (!context) throw new Error('useTheme must be used within a ThemeProvider')
+
+  return context
+}
+
+export const useStyleTheme = () => {
+  const context = useContext(StyleThemeContext)
+
+  if (!context) {
+    throw new Error('useStyleTheme must be used within a StyleThemeProvider')
+  }
 
   return context
 }

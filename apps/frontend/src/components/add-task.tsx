@@ -10,18 +10,18 @@ import { format } from "date-fns";
 import { useMemo, useState } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
-import { Button } from "./ui/button";
-import { Calendar } from "./ui/calendar";
-import { Field } from "./ui/field";
-import { Input } from "./ui/input";
-import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
+import { Button } from "@linkdo/ui/components/button";
+import { Calendar } from "@linkdo/ui/components/calendar";
+import { Field } from "@linkdo/ui/components/field";
+import { Input } from "@linkdo/ui/components/input";
+import { Popover, PopoverContent, PopoverTrigger } from "@linkdo/ui/components/popover";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "./ui/select";
+} from "@linkdo/ui/components/select";
 interface IProps {
   className?: string;
   status: TaskStatus;

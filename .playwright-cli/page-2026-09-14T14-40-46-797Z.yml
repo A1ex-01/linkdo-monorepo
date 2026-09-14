@@ -1,0 +1,26 @@
+- generic [ref=e2]:
+  - generic [ref=e6]:
+    - generic [ref=e7]:
+      - generic [ref=e9]:
+        - img "Shadcn-Admin" [ref=e10]
+        - heading "Shadcn Admin" [level=1] [ref=e12]
+      - generic [ref=e13]:
+        - generic [ref=e14]:
+          - heading "Sign in" [level=2] [ref=e15]
+          - paragraph [ref=e16]: Enter your email to receive a verification code. No password needed.
+        - generic [ref=e17]:
+          - generic [ref=e18]:
+            - generic [ref=e19]: Email
+            - textbox "Email" [ref=e20]:
+              - /placeholder: name@example.com
+          - button "Send Verification Code" [ref=e21] [cursor=pointer]
+        - paragraph [ref=e25]:
+          - text: By clicking sign in, you agree to our
+          - link "Terms of Service" [ref=e26] [cursor=pointer]:
+            - /url: /terms
+          - text: and
+          - link "Privacy Policy" [ref=e27] [cursor=pointer]:
+            - /url: /privacy
+          - text: .
+    - generic [ref=e28]: dashborad
+  - region "Notifications alt+T"

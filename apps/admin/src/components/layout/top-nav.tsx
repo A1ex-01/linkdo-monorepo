@@ -1,10 +1,10 @@
-import { Button } from '@/components/ui/button'
+import { Button } from '@linkdo/ui/components/button'
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
+} from '@linkdo/ui/components/dropdown-menu'
 import { cn } from '@/lib/utils'
 import { Link } from '@tanstack/react-router'
 import { Menu } from 'lucide-react'

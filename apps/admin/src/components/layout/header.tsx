@@ -1,5 +1,5 @@
-import { Separator } from '@/components/ui/separator'
-import { SidebarTrigger } from '@/components/ui/sidebar'
+import { Separator } from '@linkdo/ui/components/separator'
+import { SidebarTrigger } from '@linkdo/ui/components/sidebar'
 import { cn } from '@/lib/utils'
 import { useEffect, useState } from 'react'
 

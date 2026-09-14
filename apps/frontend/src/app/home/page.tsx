@@ -9,8 +9,8 @@ import {
   AvatarBadge,
   AvatarFallback,
   AvatarImage,
-} from "@/components/ui/avatar";
-import { Card, CardContent } from "@/components/ui/card";
+} from "@linkdo/ui/components/avatar";
+import { Card, CardContent } from "@linkdo/ui/components/card";
 import { HomeWindowTitleBar } from "@/components/window-title-bar";
 import {
   createCollection,
@@ -119,9 +119,9 @@ export default function HomePage() {
         <div className="left bg-card text-foreground w-[280px] px-4">
           <div className="flex flex-col items-start gap-4 pt-4">
             <div className="mb-1 flex items-center gap-2">
-              <AIconLinkdo alt="LinkDo" className="size-10 rounded-md" />
+              <AIconLinkdo alt="Linkdo" className="size-10 rounded-md" />
               <span className="text-foreground text-2xl leading-tight font-extrabold">
-                LinkDo
+                Linkdo
               </span>
             </div>
             <span className="-mt-2 mb-2 text-[15px] font-medium">v1.0.0</span>

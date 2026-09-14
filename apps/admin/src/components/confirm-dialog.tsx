@@ -6,8 +6,8 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from '@/components/ui/alert-dialog'
-import { Button } from '@/components/ui/button'
+} from '@linkdo/ui/components/alert-dialog'
+import { Button } from '@linkdo/ui/components/button'
 import { cn } from '@/lib/utils'
 
 type ConfirmDialogProps = {

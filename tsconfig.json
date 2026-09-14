@@ -1,11 +1,14 @@
 {
   "compilerOptions": {
     "paths": {
-      "@link-do/shared": [
+      "@linkdo/shared": [
         "./packages/shared/src/index.ts"
       ],
-      "@link-do/shared/*": [
+      "@linkdo/shared/*": [
         "./packages/shared/src/*"
+      ],
+      "@linkdo/ui/*": [
+        "./packages/ui/src/*"
       ]
     }
   },
@@ -17,10 +20,10 @@
       "path": "./apps/admin"
     },
     {
-      "path": "./apps/mcp"
+      "path": "./packages/shared"
     },
     {
-      "path": "./packages/shared"
+      "path": "./packages/ui"
     }
   ],
   "files": []

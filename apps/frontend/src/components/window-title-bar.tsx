@@ -77,15 +77,15 @@ export function WindowTitleBar() {
           </svg>
         </button>
         {/* Maximize */}
-        <button className="group pointer-events-none flex h-3 w-3 items-center justify-center rounded-full border border-[rgba(255,255,255,0.1)] bg-muted"></button>
+        <button className="group bg-muted pointer-events-none flex h-3 w-3 items-center justify-center rounded-full border border-[rgba(255,255,255,0.1)]"></button>
       </div>
 
       {/* Center title (optional, can be used for page title) */}
       <div
-        className="text-muted-foreground absolute left-1/2 -translate-x-1/2 select-none text-xs"
+        className="text-muted-foreground absolute left-1/2 -translate-x-1/2 text-xs select-none"
         data-tauri-drag-region
       >
-        link-do
+        linkdo
       </div>
 
       {/* Spacer to balance the traffic lights */}
@@ -167,12 +167,12 @@ export function HomeWindowTitleBar() {
           </svg>
         </button>
         {/* Maximize */}
-        <button className="group pointer-events-none flex h-3 w-3 items-center justify-center rounded-full border border-[rgba(255,255,255,0.1)] bg-muted"></button>
+        <button className="group bg-muted pointer-events-none flex h-3 w-3 items-center justify-center rounded-full border border-[rgba(255,255,255,0.1)]"></button>
       </div>
 
       {/* Center title (optional, can be used for page title) */}
       <div
-        className="absolute left-1/2 -translate-x-1/2 text-xs text-muted-foreground select-none"
+        className="text-muted-foreground absolute left-1/2 -translate-x-1/2 text-xs select-none"
         data-tauri-drag-region
       ></div>
     </div>

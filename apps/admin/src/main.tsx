@@ -10,9 +10,10 @@ import { AxiosError } from 'axios'
 import { StrictMode } from 'react'
 import ReactDOM from 'react-dom/client'
 import { toast } from 'sonner'
+import { TooltipProvider } from '@linkdo/ui/components/tooltip'
 import { DirectionProvider } from './context/direction-provider'
 import { FontProvider } from './context/src/context/font-provider'
-import { ThemeProvider } from './context/theme-provider'
+import { StyleThemeProvider, ThemeProvider } from './context/theme-provider'
 // Generated Routes
 import { routeTree } from './routeTree.gen'
 // Styles
@@ -94,13 +95,17 @@ if (!rootElement.innerHTML) {
   root.render(
     <StrictMode>
       <QueryClientProvider client={queryClient}>
-        <ThemeProvider>
-          <FontProvider>
-            <DirectionProvider>
-              <RouterProvider router={router} />
-            </DirectionProvider>
-          </FontProvider>
-        </ThemeProvider>
+        <TooltipProvider>
+          <ThemeProvider>
+            <StyleThemeProvider>
+              <FontProvider>
+                <DirectionProvider>
+                  <RouterProvider router={router} />
+                </DirectionProvider>
+              </FontProvider>
+            </StyleThemeProvider>
+          </ThemeProvider>
+        </TooltipProvider>
       </QueryClientProvider>
     </StrictMode>
   )

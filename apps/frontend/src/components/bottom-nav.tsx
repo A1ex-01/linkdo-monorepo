@@ -37,7 +37,7 @@ export default function BottomNav({
       </div>
 
       <div className="flex items-center gap-4">
-        <span className="text-muted-foreground text-xs">Link-Do</span>
+        <span className="text-muted-foreground text-xs">Linkdo</span>
         <AIconLinkdo alt="avatar" className="h-8 w-8 rounded-md opacity-80" />
       </div>
     </nav>

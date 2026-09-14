@@ -16,10 +16,10 @@
   "menuAccent": "subtle",
   "aliases": {
     "components": "@/components",
-    "utils": "@/lib/utils",
-    "ui": "@/components/ui",
+    "utils": "@linkdo/ui/lib/utils",
+    "ui": "@linkdo/ui/components",
     "lib": "@/lib",
-    "hooks": "@/hooks"
+    "hooks": "@linkdo/ui/hooks"
   },
   "registries": {
     "@acme": "https://acme.com/r/{name}.json",

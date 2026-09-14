@@ -1,14 +1,14 @@
 "use client";
 
-import { Badge } from "@/components/ui/badge";
+import { Badge } from "@linkdo/ui/components/badge";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
-import { Label } from "@/components/ui/label";
-import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+} from "@linkdo/ui/components/dialog";
+import { Label } from "@linkdo/ui/components/label";
+import { ToggleGroup, ToggleGroupItem } from "@linkdo/ui/components/toggle-group";
 import { useStyleTheme } from "@/providers/style-theme-provider";
 import { cn } from "cn";
 import { Monitor, Moon, Palette, Sun } from "lucide-react";
@@ -71,7 +71,7 @@ export function SystemSettingsDialog({
               </ToggleGroupItem>
             </ToggleGroup>
             <p className="text-muted-foreground text-xs">
-              Choose how LinkDo looks. System will use your device&apos;s theme.
+              Choose how Linkdo looks. System will use your device&apos;s theme.
             </p>
           </div>
 

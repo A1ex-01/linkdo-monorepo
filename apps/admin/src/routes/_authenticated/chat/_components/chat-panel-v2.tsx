@@ -1,7 +1,7 @@
 'use client'
 
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
+import { Badge } from '@linkdo/ui/components/badge'
+import { Button } from '@linkdo/ui/components/button'
 import { IconSend } from '@tabler/icons-react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useEffect, useRef, useState } from 'react'
@@ -111,7 +111,7 @@ export default function ChatPanelV2() {
         {/* Header */}
         <div className='flex h-10 items-center border-b border-[rgba(77,67,84,0.15)] bg-[rgba(24,23,27,0.97)] px-4'>
           <span className='flex-1 text-xs font-medium text-[rgba(229,226,227,0.53)] select-none'>
-            LinkDo AI – BetaV2
+            Linkdo AI – BetaV2
           </span>
         </div>
 
@@ -127,7 +127,7 @@ export default function ChatPanelV2() {
               Hey there <span>👋</span>
             </span>
             <span className='mt-2 text-base font-bold text-white'>
-              I&apos;m LinkDo, your AI assistant.
+              I&apos;m Linkdo, your AI assistant.
             </span>
             <p className='mt-5 max-w-[285px] text-center text-xs leading-relaxed font-normal text-[#c7b9d7]'>
               Just tell me what&apos;s on your mind and I can turn

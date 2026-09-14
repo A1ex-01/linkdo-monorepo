@@ -2,7 +2,7 @@ import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
-} from '@/components/ui/collapsible'
+} from '@linkdo/ui/components/collapsible'
 import {
   SidebarGroup,
   SidebarGroupLabel,
@@ -13,11 +13,11 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem,
   useSidebar,
-} from '@/components/ui/sidebar'
+} from '@linkdo/ui/components/sidebar'
 import { Link, useLocation } from '@tanstack/react-router'
 import { ChevronRight } from 'lucide-react'
 import { type ReactNode } from 'react'
-import { Badge } from '../ui/badge'
+import { Badge } from '@linkdo/ui/components/badge'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -25,7 +25,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '../ui/dropdown-menu'
+} from '@linkdo/ui/components/dropdown-menu'
 import {
   type NavCollapsible,
   type NavGroup as NavGroupProps,

@@ -1,6 +1,6 @@
 import { Header } from '@/components/layout/header'
 import { Main } from '@/components/layout/main'
-import { Badge } from '@/components/ui/badge'
+import { Badge } from '@linkdo/ui/components/badge'
 import {
   Table,
   TableBody,
@@ -8,7 +8,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table'
+} from '@linkdo/ui/components/table'
 import {
   backendApiCatalog,
   flattenBackendApiCatalog,

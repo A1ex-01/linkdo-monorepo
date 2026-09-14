@@ -1,0 +1,32 @@
+- generic [ref=f1e2]:
+  - generic [ref=f1e6]:
+    - generic [ref=f1e7]:
+      - generic [ref=f1e9]:
+        - img "Shadcn-Admin" [ref=f1e10]
+        - heading "Shadcn Admin" [level=1] [ref=f1e12]
+      - generic [ref=f1e13]:
+        - generic [ref=f1e14]:
+          - heading "Sign in" [level=2] [ref=f1e15]
+          - paragraph [ref=f1e16]: Enter your email to receive a verification code. No password needed.
+        - generic [ref=f1e17]:
+          - generic [ref=f1e18]:
+            - generic [ref=f1e19]: Email
+            - textbox "Email" [ref=f1e20]:
+              - /placeholder: name@example.com
+          - button "Send Verification Code" [ref=f1e21] [cursor=pointer]
+        - paragraph [ref=f1e25]:
+          - text: By clicking sign in, you agree to our
+          - link "Terms of Service" [ref=f1e26] [cursor=pointer]:
+            - /url: /terms
+          - text: and
+          - link "Privacy Policy" [ref=f1e27] [cursor=pointer]:
+            - /url: /privacy
+          - text: .
+    - generic [ref=f1e28]: dashborad
+  - region "Notifications alt+T"
+  - button "Open Tanstack query devtools" [ref=f1e79] [cursor=pointer]
+  - generic:
+    - contentinfo:
+      - button "Open TanStack Router Devtools" [ref=f1e128] [cursor=pointer]:
+        - generic [ref=f1e200]: "-"
+        - generic [ref=f1e201]: TanStack Router

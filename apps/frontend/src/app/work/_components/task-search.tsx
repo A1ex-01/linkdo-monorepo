@@ -8,7 +8,7 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-} from "@/components/ui/command";
+} from "@linkdo/ui/components/command";
 import { searchTasksByTitle } from "@/lib/task-search";
 import { getTasks } from "@/services/collection";
 import type { ITask } from "@/types/base";

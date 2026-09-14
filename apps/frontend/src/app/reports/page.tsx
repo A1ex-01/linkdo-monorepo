@@ -22,20 +22,20 @@ import { ReportSummaryCards } from "@/app/reports/_components/report-summary-car
 import { ReportTimelineChart } from "@/app/reports/_components/report-timeline-chart";
 import BottomNav from "@/components/bottom-nav";
 import { AIconClickup, AIconNotion } from "@/components/icons/base";
-import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
+import { Button } from "@linkdo/ui/components/button";
+import { Calendar } from "@linkdo/ui/components/calendar";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover";
+} from "@linkdo/ui/components/popover";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from "@linkdo/ui/components/select";
 import { WindowTitleBar } from "@/components/window-title-bar";
 import {
   formatReportDate,

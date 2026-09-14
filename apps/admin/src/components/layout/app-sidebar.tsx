@@ -4,7 +4,7 @@ import {
   SidebarFooter,
   SidebarHeader,
   SidebarRail,
-} from '@/components/ui/sidebar'
+} from '@linkdo/ui/components/sidebar'
 import { useLayout } from '@/context/layout-provider'
 import { sidebarData } from './data/sidebar-data'
 import { NavGroup } from './nav-group'

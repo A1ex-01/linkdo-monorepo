@@ -2,8 +2,8 @@
 
 import { useData } from "@/app/work/data-provider";
 import TaskCardItem, { CardSimpleItem } from "@/components/task-card-item";
-import { Button } from "@/components/ui/button";
-import { Progress } from "@/components/ui/progress";
+import { Button } from "@linkdo/ui/components/button";
+import { Progress } from "@linkdo/ui/components/progress";
 import { cn } from "@/lib/utils";
 import type { ITask } from "@/types/base";
 import { IconHome, IconPlus } from "@tabler/icons-react";

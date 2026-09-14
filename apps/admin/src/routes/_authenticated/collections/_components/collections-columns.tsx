@@ -1,4 +1,4 @@
-import { Badge } from '@/components/ui/badge'
+import { Badge } from '@linkdo/ui/components/badge'
 import type { Collection } from '@/services/admin'
 import { type ColumnDef } from '@tanstack/react-table'
 import { Clock } from 'lucide-react'

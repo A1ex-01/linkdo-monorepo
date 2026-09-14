@@ -13,7 +13,7 @@ describe("createImageUploadForm", () => {
 describe("resolveFilePath", () => {
   it("renders stored OSS paths with the default public base URL", () => {
     expect(resolveFilePath("collection-covers/user-1/cover.png")).toBe(
-      "https://a-link-do.oss-cn-shanghai.aliyuncs.com/collection-covers/user-1/cover.png",
+      "https://a-linkdo.oss-cn-shanghai.aliyuncs.com/collection-covers/user-1/cover.png",
     );
   });
 });

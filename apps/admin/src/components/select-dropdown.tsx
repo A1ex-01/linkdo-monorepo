@@ -1,11 +1,11 @@
-import { FormControl } from '@/components/ui/form'
+import { FormControl } from '@linkdo/ui/components/form'
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select'
+} from '@linkdo/ui/components/select'
 import { cn } from '@/lib/utils'
 import { Loader } from 'lucide-react'
 

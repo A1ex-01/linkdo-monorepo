@@ -1,5 +1,5 @@
 import { DataTableColumnHeader } from '@/components/data-table'
-import { Badge } from '@/components/ui/badge'
+import { Badge } from '@linkdo/ui/components/badge'
 import type { User } from '@/services/admin'
 import { type ColumnDef } from '@tanstack/react-table'
 

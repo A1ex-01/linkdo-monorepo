@@ -9,7 +9,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from "@linkdo/ui/components/dropdown-menu";
 import { useUserStore } from "@/stores/user";
 import { Grip } from "lucide-react";
 import { COMING_SOON_INTEGRATIONS } from "./coming-soon-integrations";
@@ -73,7 +73,7 @@ export function AppsDropdown() {
             <span className="flex min-w-0 flex-1 flex-col gap-0.5">
               <span className="text-foreground font-medium">MCP Server</span>
               <span className="text-muted-foreground text-xs">
-                Bring your tools into Link-Do
+                Bring your tools into Linkdo
               </span>
             </span>
             <span className="bg-muted text-muted-foreground rounded-full px-2 py-0.5 text-xs">

@@ -1,7 +1,7 @@
 "use client";
 
 import { AIconClickup } from "@/components/icons/base";
-import { Button } from "@/components/ui/button";
+import { Button } from "@linkdo/ui/components/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -12,8 +12,8 @@ import {
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Field } from "@/components/ui/field";
+} from "@linkdo/ui/components/dropdown-menu";
+import { Field } from "@linkdo/ui/components/field";
 import {
   Select,
   SelectContent,
@@ -21,7 +21,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from "@linkdo/ui/components/select";
 import {
   ClickUpFolder,
   ClickUpRemoteList,

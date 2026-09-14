@@ -1,6 +1,10 @@
 @import 'tailwindcss';
 @import 'tw-animate-css';
 @import './theme.css';
+@import '../../../frontend/src/styles/themes/twitter.css';
+@import '../../../frontend/src/styles/themes/vercel.css';
+
+@source "../../../../packages/ui/src";
 
 @custom-variant dark (&:is(.dark *));
 
