@@ -75,3 +75,5 @@ deploy/.env.image
 
 
 *.tgz
+
+.playwright-cli/
