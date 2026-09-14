@@ -1,3 +1,4 @@
+import { cn } from '@/lib/utils'
 import { Badge } from '@linkdo/ui/components/badge'
 import { Button } from '@linkdo/ui/components/button'
 import { Separator } from '@linkdo/ui/components/separator'
@@ -6,7 +7,6 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from '@linkdo/ui/components/tooltip'
-import { cn } from '@/lib/utils'
 import { type Table } from '@tanstack/react-table'
 import { X } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
