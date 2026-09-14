@@ -76,11 +76,11 @@ export default function HomePage() {
       return;
     }
     try {
-      toast.loading("Creating collection...");
+      const toastId = toast.loading("Creating collection...");
       const res = await submitCreate(data);
       if (res.success) {
         refresh();
-        toast.success("Collection created successfully");
+        toast.success("Collection created successfully", { id: toastId });
       }
     } catch (err) {
       console.error("Failed to create collection:", err);
