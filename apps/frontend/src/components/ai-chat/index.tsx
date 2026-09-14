@@ -615,7 +615,7 @@ export default function AIChat() {
             {/* Header */}
             <div className="flex h-10 items-center border-b border-[rgba(77,67,84,0.15)] bg-[rgba(24,23,27,0.97)] px-4">
               <span className="flex-1 text-xs font-medium text-[rgba(229,226,227,0.53)] select-none">
-                LinkDo AI – Beta
+                Linkdo AI – Beta
               </span>
               <button
                 type="button"
@@ -638,7 +638,7 @@ export default function AIChat() {
                   Hey there <span>👋</span>
                 </span>
                 <span className="mt-2 text-base font-bold text-white">
-                  I&apos;m LinkDo, your AI assistant.
+                  I&apos;m Linkdo, your AI assistant.
                 </span>
                 <p className="mt-5 max-w-[285px] text-center text-xs leading-relaxed font-normal text-[#c7b9d7]">
                   Just tell me what&apos;s on your mind and I can turn

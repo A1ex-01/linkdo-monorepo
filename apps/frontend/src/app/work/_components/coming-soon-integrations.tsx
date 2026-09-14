@@ -1,5 +1,4 @@
 import { AIconFigma, AIconMCP } from "@/components/icons/base";
-import React from "react";
 
 export const COMING_SOON_INTEGRATIONS = [
   {
@@ -9,7 +8,7 @@ export const COMING_SOON_INTEGRATIONS = [
   },
   {
     name: "MCP Server",
-    description: "Bring your tools into Link-Do",
+    description: "Bring your tools into Linkdo",
     icon: <AIconMCP className="size-7" />,
   },
 ] as const;

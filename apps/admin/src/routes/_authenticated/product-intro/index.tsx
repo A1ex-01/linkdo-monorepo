@@ -17,7 +17,7 @@ export function ProductIntro() {
     {
       title: 'Dashboard Overview',
       description:
-        'Get a real-time overview of your Link-Do platform. See total users, tasks, collections, and daily completion stats at a glance.',
+        'Get a real-time overview of your Linkdo platform. See total users, tasks, collections, and daily completion stats at a glance.',
       icon: LayoutDashboard,
       highlight: 'Real-time Stats',
     },
@@ -93,7 +93,7 @@ export function ProductIntro() {
           Product Introduction
         </h2>
         <p className='mt-1 text-muted-foreground'>
-          An overview of all features and capabilities available in the Link-Do
+          An overview of all features and capabilities available in the Linkdo
           Admin panel.
         </p>
       </div>

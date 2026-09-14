@@ -125,8 +125,8 @@ export default function LoginPage() {
             <div className="relative z-20 flex h-full flex-col justify-center">
               {/* Logo */}
               <div className="text-foreground mb-12 flex items-center gap-2.5 text-[24px] font-bold">
-                <AIconLinkdo className="size-10 rounded-sm" alt="link-do" />
-                LinkDo
+                <AIconLinkdo className="size-10 rounded-sm" alt="linkdo" />
+                Linkdo
               </div>
 
               {/* 欢迎标题 */}

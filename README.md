@@ -1,4 +1,4 @@
-# Link-Do
+# Linkdo
 
 > macOS 桌面端任务管理与专注计时工具。通过 Notion 同步实现数据持久化，支持三种窗口形态无缝切换。
 
@@ -105,7 +105,7 @@ macOS 桌面端应用，Tauri 2 + React 19 构建。
 ```bash
 make dev-frontend
 # 或
-pnpm --filter @link-do/frontend dev
+pnpm --filter @linkdo/frontend dev
 ```
 
 **主要依赖**: Next.js 15, Tailwind CSS, Zustand, ahooks, Shadcn UI, Radix UI, React Hook Form + Zod, dayjs, Framer Motion, @tabler/icons-react, Vercel AI SDK
@@ -158,20 +158,20 @@ Ant Design Pro 管理后台。
 ```bash
 make dev-admin
 # 或
-pnpm --filter @link-do/admin dev
+pnpm --filter @linkdo/admin dev
 ```
 
 ### MCP Server — `apps/mcp/`
 
-Model Context Protocol 服务器，将 Link-Do 任务管理能力暴露给 Cursor、Claude Desktop 等 AI 助手。
+Model Context Protocol 服务器，将 Linkdo 任务管理能力暴露给 Cursor、Claude Desktop 等 AI 助手。
 
 ```bash
 make dev-mcp
 # 或
-pnpm --filter @link-do/mcp dev
+pnpm --filter @linkdo/mcp dev
 ```
 
-**认证**: 通过 Link-Do 后端 OAuth 2.0 完成用户鉴权，无需单独注册 API Token。
+**认证**: 通过 Linkdo 后端 OAuth 2.0 完成用户鉴权，无需单独注册 API Token。
 
 **可用工具**:
 

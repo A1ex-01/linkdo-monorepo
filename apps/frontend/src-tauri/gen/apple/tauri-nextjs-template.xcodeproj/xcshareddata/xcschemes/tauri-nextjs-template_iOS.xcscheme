@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "E3484B31FC8BDC8BC7B2D0DB"
-               BuildableName = "link-do.app"
+               BuildableName = "linkdo.app"
                BlueprintName = "link-do_iOS"
-               ReferencedContainer = "container:link-do.xcodeproj">
+               ReferencedContainer = "container:linkdo.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -31,9 +31,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "E3484B31FC8BDC8BC7B2D0DB"
-            BuildableName = "link-do.app"
+            BuildableName = "linkdo.app"
             BlueprintName = "link-do_iOS"
-            ReferencedContainer = "container:link-do.xcodeproj">
+            ReferencedContainer = "container:linkdo.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <EnvironmentVariables>
@@ -66,9 +66,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "E3484B31FC8BDC8BC7B2D0DB"
-            BuildableName = "link-do.app"
+            BuildableName = "linkdo.app"
             BlueprintName = "link-do_iOS"
-            ReferencedContainer = "container:link-do.xcodeproj">
+            ReferencedContainer = "container:linkdo.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <EnvironmentVariables>
@@ -95,9 +95,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "E3484B31FC8BDC8BC7B2D0DB"
-            BuildableName = "link-do.app"
+            BuildableName = "linkdo.app"
             BlueprintName = "link-do_iOS"
-            ReferencedContainer = "container:link-do.xcodeproj">
+            ReferencedContainer = "container:linkdo.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <EnvironmentVariables>

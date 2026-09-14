@@ -71,7 +71,7 @@ export function SystemSettingsDialog({
               </ToggleGroupItem>
             </ToggleGroup>
             <p className="text-muted-foreground text-xs">
-              Choose how LinkDo looks. System will use your device&apos;s theme.
+              Choose how Linkdo looks. System will use your device&apos;s theme.
             </p>
           </div>
 

@@ -67,7 +67,7 @@ export function Dashboard() {
       <div>
         <h2 className='text-2xl font-bold tracking-tight'>Dashboard</h2>
         <p className='text-muted-foreground'>
-          Overview of your Link-Do platform.
+          Overview of your Linkdo platform.
         </p>
       </div>
 

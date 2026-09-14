@@ -18,13 +18,13 @@ dev:
 
 # JS/TS 应用
 dev-frontend:
-	pnpm --filter @link-do/frontend dev
+	pnpm --filter @linkdo/frontend dev
 
 dev-admin:
-	pnpm --filter @link-do/admin dev
+	pnpm --filter @linkdo/admin dev
 
 dev-mcp:
-	pnpm --filter @link-do/mcp dev
+	pnpm --filter @linkdo/mcp dev
 
 # 后端服务
 dev-backend:
@@ -35,10 +35,10 @@ dev-agent:
 
 # 构建
 build-frontend:
-	pnpm --filter @link-do/frontend build
+	pnpm --filter @linkdo/frontend build
 
 build-admin:
-	pnpm --filter @link-do/admin build
+	pnpm --filter @linkdo/admin build
 
 # 代码检查
 lint:

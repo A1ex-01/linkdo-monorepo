@@ -1,5 +1,5 @@
 /**
- * Versioned LinkDo agent protocol.
+ * Versioned Linkdo agent protocol.
  *
  * The chat UI is deliberately isolated from LangGraph node names and internal
  * checkpoint ids. HTTP inputs and SSE outputs are correlated by a public

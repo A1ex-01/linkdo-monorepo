@@ -29,7 +29,7 @@ services/a-agent/.venv/
 
 
 # Go
-services/backend/link-do-backend
+services/backend/linkdo-backend
 
 # 环境变量
 .env
