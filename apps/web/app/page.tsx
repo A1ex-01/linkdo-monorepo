@@ -1,20 +1,20 @@
-import { Navbar } from "@/components/Navbar";
-import { PageMotion } from "./_components/PageMotion";
-import { HeroSection } from "./_components/HeroSection";
-import { HowItWorksSection } from "./_components/HowItWorksSection";
-import { FeatureGridSection } from "./_components/FeatureGridSection";
-import { LinkdoAiSection } from "./_components/LinkdoAiSection";
-import { Footer } from "@/components/Footer";
-import { ClosingCta } from "./_components/ClosingCta";
-import { FaqSection } from "./_components/FaqSection";
-import { MobileShowcase } from "./_components/MobileShowcase";
-import { PricingSection } from "./_components/PricingSection";
-import { ReportsSection } from "./_components/ReportsSection";
-import { ReviewBadges } from "./_components/ReviewBadges";
-import { RoadmapSection } from "./_components/RoadmapSection";
-import { SessionsSection } from "./_components/SessionsSection";
-import { SocialProofSection } from "./_components/SocialProofSection";
-import { TestimonialsSection } from "./_components/TestimonialsSection";
+import { Navbar } from "@/components/navbar";
+import { PageMotion } from "./_components/page-motion";
+import { HeroSection } from "./_components/hero-section";
+import { HowItWorksSection } from "./_components/how-it-works-section";
+import { FeatureGridSection } from "./_components/feature-grid-section";
+import { LinkdoAiSection } from "./_components/linkdo-ai-section";
+import { Footer } from "@/components/footer";
+import { ClosingCta } from "./_components/closing-cta";
+import { FaqSection } from "./_components/faq-section";
+import { MobileShowcase } from "./_components/mobile-showcase";
+import { PricingSection } from "./_components/pricing-section";
+import { ReportsSection } from "./_components/reports-section";
+import { ReviewBadges } from "./_components/review-badges";
+import { RoadmapSection } from "./_components/roadmap-section";
+import { SessionsSection } from "./_components/sessions-section";
+import { SocialProofSection } from "./_components/social-proof-section";
+import { TestimonialsSection } from "./_components/testimonials-section";
 
 export default function Home() {
   return (
