@@ -9,6 +9,7 @@
     "typecheck": "turbo typecheck",
     "dev:frontend": "pnpm --filter @linkdo/frontend dev",
     "dev:admin": "pnpm --filter @linkdo/admin dev",
+    "dev:web": "pnpm --filter @linkdo/web dev",
     "build:frontend": "pnpm --filter @linkdo/frontend build",
     "build:admin": "pnpm --filter @linkdo/admin build"
   },
