@@ -18,32 +18,32 @@ interface RoadmapCard {
 
 const roadmap: RoadmapCard[] = [
   {
-    title: "Break Time",
-    description: "Receive rejuvenating ideas for your break time",
-    badge: "65% DONE",
+    title: "休息时光",
+    description: "在休息期间获取焕发活力的灵感",
+    badge: "已完成 65%",
     image: "/images/RkLf9p9z7B04lZvKZBoYc0Gcjg.png",
   },
   {
-    title: "AI Task Creation",
-    description: "Tell us your plan, our AI takes care of the rest",
-    badge: "LIVE",
+    title: "AI 创建任务",
+    description: "告诉我们你的计划，其余交给 AI",
+    badge: "已上线",
     kind: "ai",
   },
   {
-    title: "New Integrations",
+    title: "新增集成",
     description:
-      "More integrations to centralize your workflows in one actionable list",
-    badge: "24% DONE",
+      "通过更多集成，把工作流集中到一个可执行的列表中",
+    badge: "已完成 24%",
     kind: "integrations",
   },
   {
-    title: "Eisenhower Matrix",
-    description: "Prioritize work by urgency and importance",
+    title: "艾森豪威尔矩阵",
+    description: "按紧急程度与重要性确定工作优先级",
     kind: "matrix",
   },
   {
-    title: "Dark / Light Mode",
-    description: "Choose the perfect theme for your environment",
+    title: "深色 / 浅色模式",
+    description: "为你的环境选择合适的主题",
     kind: "theme",
   },
 ];
@@ -76,7 +76,7 @@ function RoadmapArtwork({ card }: { card: RoadmapCard }) {
         <div className="flex size-[62px] items-center justify-center rounded-full border-2 border-[#55d9c6] text-[18px] font-bold">
           50%
         </div>
-        <p className="mt-4 text-[24px] font-bold">Generating tasks...</p>
+        <p className="mt-4 text-[24px] font-bold">正在生成任务…</p>
         <div className="mt-3 h-9 w-[256px] rounded-lg bg-white/[.055]" />
         <div className="mt-2 h-9 w-[256px] rounded-lg bg-white/[.055]" />
       </div>
@@ -87,10 +87,10 @@ function RoadmapArtwork({ card }: { card: RoadmapCard }) {
     return (
       <div className="mt-8 space-y-2">
         {[
-          "Clickup Tasks",
-          "Figma Comments",
-          "Trello Tasks",
-          "Asana Tasks",
+          "ClickUp 任务",
+          "Figma 评论",
+          "Trello 任务",
+          "Asana 任务",
           "Linear",
         ].map((item, index) => (
           <div
@@ -113,7 +113,7 @@ function RoadmapArtwork({ card }: { card: RoadmapCard }) {
         <div className="absolute inset-x-6 -top-9 h-16 rounded-t-[32px] bg-gradient-to-b from-[#aaa] to-[#262626]" />
         <div className="absolute inset-0 flex flex-col items-center justify-center rounded-[46px] border-[7px] border-[#343434] bg-[#151515] shadow-2xl">
           <strong className="text-[22px]">01:02:23</strong>
-          <span className="mt-2 text-[#666]">Accounts...</span>
+          <span className="mt-2 text-[#666]">账户…</span>
         </div>
         <div className="absolute inset-x-6 -bottom-9 h-16 rounded-b-[32px] bg-gradient-to-t from-[#111] to-[#333]" />
       </div>
@@ -224,18 +224,18 @@ export function RoadmapSection() {
     >
       <div className="mx-auto flex max-w-[1080px] flex-col items-center text-center">
         <h2 className="font-heading text-[44px] font-medium leading-[52.8px]">
-          Planned for the <span className="linkdo-gradient-text">future</span>
+          为<span className="linkdo-gradient-text">未来</span>而规划
         </h2>
         <a
           href="#roadmap"
           className="mt-6 text-[20px] leading-8 text-[#ef82ef] transition hover:text-white"
         >
-          Submit a feature / Upvote Features
+          提交功能建议 / 为功能投票
         </a>
         <div className="mt-9 flex gap-3">
           <button
             type="button"
-            aria-label="Previous"
+            aria-label="上一个"
             onClick={() => move(-1)}
             disabled={position === 0}
             className="grid size-10 place-items-center rounded-full bg-[#262626] text-white transition hover:bg-[#363636] disabled:opacity-35"
@@ -244,7 +244,7 @@ export function RoadmapSection() {
           </button>
           <button
             type="button"
-            aria-label="Next"
+            aria-label="下一个"
             onClick={() => move(1)}
             disabled={position === roadmap.length - 1}
             className="grid size-10 place-items-center rounded-full bg-[#262626] text-white transition hover:bg-[#363636] disabled:opacity-35"

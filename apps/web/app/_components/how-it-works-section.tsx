@@ -8,24 +8,24 @@ gsap.registerPlugin(ScrollTrigger);
 
 const steps = [
   {
-    label: "Step 1: Plan your week/day",
-    title: "Plan a day that feels achievable",
-    text: "Pull the right tasks into today, order them, and estimate the time you need.",
+    label: "第 1 步：规划每周 / 每天",
+    title: "规划一个切实可行的日程",
+    text: "把合适的任务安排到今天，确定顺序，并预估所需时间。",
   },
   {
-    label: "Step 2: Go into Focus mode",
-    title: "Remove everything except the task",
-    text: "Flow mode keeps your current task and timer visible while distractions disappear.",
+    label: "第 2 步：进入专注模式",
+    title: "只留下眼前的任务",
+    text: "心流模式会保留当前任务与计时器，让干扰自动淡出视野。",
   },
   {
-    label: "Step 3: Get momentum",
-    title: "Turn small wins into a flow state",
-    text: "Track time, finish the task, and move directly into the next meaningful action.",
+    label: "第 3 步：建立节奏",
+    title: "让每次小胜利带你进入心流",
+    text: "记录时间，完成任务，然后直接投入下一个有意义的行动。",
   },
   {
-    label: "Step 4: Win the day & relax",
-    title: "Know when the important work is done",
-    text: "Close the loop with a satisfying review and leave work without the mental clutter.",
+    label: "第 4 步：完成当天工作，好好放松",
+    title: "清楚知道重要工作已经完成",
+    text: "用一次令人满足的回顾收尾，下班时不再带着纷乱的思绪。",
   },
 ];
 
@@ -100,7 +100,7 @@ export function HowItWorksSection() {
         className="mx-auto mt-[72px] flex min-h-[calc(100svh-72px)] max-w-[1080px] flex-col justify-center max-[809px]:mt-12 max-[809px]:min-h-0"
       >
         <h2 className="text-center font-heading text-[28px] font-medium leading-[33.6px]">
-          So how does it work?
+          它是如何工作的？
         </h2>
         <div className="mt-12 overflow-x-auto pb-3">
           <div className="mx-auto flex min-w-[880px] justify-center gap-6 max-[809px]:justify-start">
@@ -135,7 +135,7 @@ export function HowItWorksSection() {
             className="absolute bottom-8 left-8 max-w-[430px] animate-[linkdo-fade-up_.45s_ease_both] rounded-2xl border border-white/10 bg-[#111]/90 p-6 backdrop-blur-xl max-[809px]:inset-x-5 max-[809px]:bottom-5"
           >
             <p className="text-xs font-bold uppercase tracking-[.16em] text-[#ef82ef]">
-              Step {active + 1}
+              第 {active + 1} 步
             </p>
             <h3 className="mt-3 font-heading text-3xl leading-tight">
               {steps[active].title}

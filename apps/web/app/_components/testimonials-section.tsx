@@ -10,48 +10,48 @@ interface Testimonial {
 const testimonials: Testimonial[] = [
   {
     name: "Jakub Wieckowski",
-    role: "Product builder",
-    quote: "Absolutely the best productivity app I've found so far! It is simple, fast and keeps the task I should be doing right in front of me.",
+    role: "产品创作者",
+    quote: "这是我至今发现的最佳效率应用！它简单、快速，而且总能把我该做的任务放在眼前。",
     avatar: "/images/PuoEYuuIeepyWwrekieqn8syGks.png",
   },
   {
     name: "Jordan B.",
-    role: "UX Designer",
-    quote: "It's the perfect accountability buddy. I needed a tool to keep myself accountable and this has massively helped me keep on track.",
+    role: "用户体验设计师",
+    quote: "它是完美的自律伙伴。我需要一个帮助自己保持自律的工具，而它大大帮助我始终走在正轨上。",
     avatar: "/images/8AUImYA2E1BlhJ0jbyuOsRNBKw.png",
   },
   {
     name: "Cameron Nimmo",
-    quote: "Game changer of a product and the founder is on it with the customer service. It fits into my day without adding more noise.",
+    quote: "这是改变工作方式的产品，创始人也非常重视客户服务。它融入了我的一天，却没有增加任何干扰。",
     avatar: "/images/6hhzTEWqSaB08Vmr352myBXePi8.png",
   },
   {
     name: "Vikas Tiwari",
-    role: "Consultant",
-    quote: "I love how slick this product is without any compromise on use cases and features. Focus mode is now part of my daily routine.",
+    role: "顾问",
+    quote: "我喜欢这款产品简洁顺滑的体验，同时没有牺牲使用场景和功能。专注模式现在已成为我的日常习惯。",
     avatar: "/images/J6BR3dKNtxAVdv6O5YoVoiQPKU.jpg",
   },
   {
     name: "Christian H.",
-    role: "Senior Product Designer",
-    quote: "It's the right balance of simple yet powerful. The Flow mode hides all distractions so I can get work done.",
+    role: "高级产品设计师",
+    quote: "它在简洁与强大之间取得了恰到好处的平衡。心流模式隐藏所有干扰，让我能专心完成工作。",
     avatar: "/images/oVUWGFBvQDHJvfOVjEuLjJel9D0.png",
   },
   {
     name: "Brittany McNicholas",
-    role: "Strategic Marketing Designer",
-    quote: "This one is different than most apps I've tried. I love the simplicity and focus on TODAY, and that you can rearrange tasks as you go.",
+    role: "战略营销设计师",
+    quote: "它与我试过的大多数应用都不同。我喜欢它的简洁、对“今天”的关注，以及能随时调整任务顺序的能力。",
     avatar: "/images/AKkdoCVxmQ1GMxay7gVVRObkQ.png",
   },
   {
     name: "Char B",
-    quote: "This app has kept me motivated and focused on tasks. I would highly recommend it to everyone who just needs to focus.",
+    quote: "这款应用让我保持动力并专注于任务。我非常推荐给每一位需要专注的人。",
     avatar: "/images/I727fO1GyBbCut2CyVa4eRc5sqU.png",
   },
   {
     name: "George K.",
-    role: "Independent creator",
-    quote: "Linkdo has been incredibly helpful for organising my to-do list and, most importantly, tracking the time spent on each task.",
+    role: "独立创作者",
+    quote: "Linkdo 在整理我的待办清单方面非常有帮助，尤其是追踪每项任务所花时间这一点。",
     avatar: "/images/5afHk04dydj1urP5S6C4klUfPM.jpg",
   },
 ];
@@ -82,7 +82,7 @@ export function TestimonialsSection() {
     <section data-fast-reveal className="px-5 py-[120px] max-[809px]:py-[72px]">
       <div className="mx-auto max-w-[1080px]">
         <h2 className="mx-auto max-w-[624px] text-center font-heading text-[28px] font-medium leading-[33.6px]">
-          <span className="linkdo-gradient-text">People just like you</span> are already using Linkdo to stay super focused, crush more tasks and save hours of their time
+          <span className="linkdo-gradient-text">和你一样的人</span>已经在使用 Linkdo，保持高度专注，完成更多任务，并节省数小时的时间
         </h2>
         <div className="relative mt-20 h-[833px] overflow-hidden max-[809px]:mt-14 max-[809px]:h-[680px]">
           <div className="grid grid-cols-3 gap-3 max-[809px]:block">

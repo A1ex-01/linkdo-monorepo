@@ -1,7 +1,7 @@
 import Image from "next/image";
 
-const explore = ["Blog"];
-const support = ["Changelog", "Roadmap"];
+const explore = ["博客"];
+const support = ["更新日志", "产品路线图"];
 const compare = ["TickTick"];
 
 function FooterColumn({ title, links }: { title: string; links: string[] }) {
@@ -34,7 +34,7 @@ export function Footer() {
           <a
             href="#"
             className="flex items-center gap-1.5"
-            aria-label="Linkdo home"
+            aria-label="Linkdo 首页"
           >
             <Image
               src="/linkdo-dark.png"
@@ -48,18 +48,18 @@ export function Footer() {
             </span>
           </a>
           <a href="#get-linkdo" className="linkdo-button h-12 min-w-32">
-            Download
+            下载
           </a>
         </div>
 
         <div className="mt-[76px] grid grid-cols-[168px_120px_1fr_280px] gap-12 max-[809px]:mt-[72px] max-[809px]:grid-cols-2 max-[809px]:gap-x-8 max-[809px]:gap-y-16">
-          <FooterColumn title="Explore" links={explore} />
-          <FooterColumn title="Support" links={support} />
-          <FooterColumn title="Compare" links={compare} />
+          <FooterColumn title="探索" links={explore} />
+          <FooterColumn title="支持" links={support} />
+          <FooterColumn title="对比" links={compare} />
 
           <div className="max-[809px]:col-span-2">
             <h3 className="text-[12px] font-semibold uppercase leading-5 text-[#444]">
-              Connect with us
+              联系我们
             </h3>
             <div className="mt-5 flex flex-wrap gap-2">
               <a
@@ -74,14 +74,14 @@ export function Footer() {
 
         <div className="mt-auto flex items-end justify-between gap-8 text-[14px] leading-[22.4px] text-[#858585] max-[809px]:flex-col max-[809px]:items-start">
           <p>
-            © 2025 Linkdo App Ltd. All Rights Reserved. Company No 14163956.
+            © 2025 Linkdo App Ltd. 保留所有权利。公司编号：14163956。
           </p>
           <div className="flex gap-8">
             <a href="#" className="transition hover:text-white">
-              Terms of use
+              使用条款
             </a>
             <a href="#" className="transition hover:text-white">
-              Privacy Policy
+              隐私政策
             </a>
           </div>
         </div>

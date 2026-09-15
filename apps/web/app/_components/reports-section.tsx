@@ -47,22 +47,22 @@ function Donut() {
       <div className="space-y-2 text-[11px]">
         <p>
           <b className="text-[#4bc56a]">●</b>&nbsp;
-          Work&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 32hr 40m&nbsp;&nbsp; <b>60.72%</b>
+          工作&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 32 小时 40 分&nbsp;&nbsp; <b>60.72%</b>
         </p>
         <p>
-          <b className="text-[#b7d34b]">●</b>&nbsp; Design&nbsp;&nbsp;&nbsp;
-          12hr 24m&nbsp;&nbsp; <b>23.05%</b>
+          <b className="text-[#b7d34b]">●</b>&nbsp; 设计&nbsp;&nbsp;&nbsp;
+          12 小时 24 分&nbsp;&nbsp; <b>23.05%</b>
         </p>
         <p>
-          <b className="text-[#e46be5]">●</b>&nbsp; Perso...&nbsp;&nbsp;&nbsp;
-          2hr 12m&nbsp;&nbsp; <b>4.09%</b>
+          <b className="text-[#e46be5]">●</b>&nbsp; 个人…&nbsp;&nbsp;&nbsp;
+          2 小时 12 分&nbsp;&nbsp; <b>4.09%</b>
         </p>
         <p>
           <b className="text-[#5c9be8]">●</b>&nbsp;
-          Break&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 6hr 32m&nbsp;&nbsp; <b>12.14%</b>
+          休息&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 6 小时 32 分&nbsp;&nbsp; <b>12.14%</b>
         </p>
         <p className="pt-2">
-          Total <b className="ml-24">12hr 40m</b>
+          合计 <b className="ml-24">12 小时 40 分</b>
         </p>
       </div>
     </div>
@@ -76,22 +76,22 @@ export function ReportsSection() {
       className="min-h-[1017px] bg-[#111] px-5 py-[72px] text-white max-[809px]:min-h-[2272px]"
     >
       <h2 className="mx-auto max-w-[650px] text-center font-heading text-[44px] font-medium leading-[52.8px] max-[809px]:max-w-[350px]">
-        Get insights into your
+        深入了解你的
         <br className="max-[809px]:hidden" />{" "}
-        <span className="linkdo-gradient-text">productivity,</span> improve
-        everyday
+        <span className="linkdo-gradient-text">效率，</span>让每天
+        都更进一步
       </h2>
       <div className="mx-auto mt-[72px] grid w-full max-w-[1080px] grid-cols-2 gap-6 max-[809px]:grid-cols-1 max-[809px]:gap-[22px]">
         <ReportCard
           className="col-span-2 h-[753px] max-[809px]:col-span-1 max-[809px]:h-[336px]"
-          title="Reports overview"
-          description="A birds eye view of your entire behaviour and productivity"
+          title="报告概览"
+          description="鸟瞰你的整体工作习惯与效率表现"
         >
           <GradientLayer />
           <Image
             className="absolute bottom-5 left-1/2 w-[960px] max-w-none -translate-x-1/2 rounded-xl border border-white/10 max-[809px]:bottom-0 max-[809px]:left-5 max-[809px]:w-[424px] max-[809px]:translate-x-0"
             src="/images/q7y0ZjAlnM9R9dJuo20OtPSTkQ.png"
-            alt="Reports overview dashboard"
+            alt="报告概览仪表盘"
             width={1440}
             height={896}
           />
