@@ -16,22 +16,22 @@ export function HeroSection() {
       <div className="mx-auto grid w-full max-w-[1080px] grid-cols-2 gap-6 max-[809px]:grid-cols-1">
         <div className="flex min-h-[676px] flex-col justify-start max-[809px]:min-h-0">
           <h1 className="mt-12 font-heading text-[64px] font-medium leading-[64px] max-[809px]:mt-8 max-[809px]:text-[44px] max-[809px]:leading-[52.8px]">
-            A simple to-do list &amp; timer app
-            <br className="max-[809px]:hidden" /> that gives you
+            简单的待办清单与计时应用
+            <br className="max-[809px]:hidden" /> 让你拥有
             <br />
-            <span className="linkdo-gradient-text">superpowers</span>
+            <span className="linkdo-gradient-text">超强专注力</span>
           </h1>
           <div className="mt-[68px] flex items-center gap-6 max-[809px]:mt-9 max-[809px]:flex-wrap">
             <a className="linkdo-button" href="#get-linkdo">
-              Get Linkdo
+              立即获取 Linkdo
             </a>
             <a
               href="#reviews"
-              aria-label="Linkdo community reviews"
+              aria-label="Linkdo 用户评价"
               className="rounded-lg border border-white/10 bg-white/[0.03] px-4 py-2 text-xs text-[#bfbfbf]"
             >
-              <b className="block text-sm text-white">BUILT FOR FOCUS</b> Plan
-              less. Finish more.
+              <b className="block text-sm text-white">为专注而生</b> 少些规划，
+              多些完成。
             </a>
           </div>
         </div>
@@ -40,23 +40,23 @@ export function HeroSection() {
           <Image
             className="absolute left-1/2 top-1/2 w-[320px] max-w-none -translate-x-1/2 -translate-y-1/2 -rotate-[7deg] drop-shadow-[0_40px_80px_rgba(0,0,0,.65)] max-[809px]:top-[47%] max-[809px]:w-[300px]"
             src="/images/6dGrzmG6PWGvJdiPf7k6vGbAo.png"
-            alt="Linkdo task timer app"
+            alt="Linkdo 任务计时应用"
             width={518}
             height={1234}
             priority
           />
           <div className="absolute bottom-[92px] left-1/2 w-[310px] -translate-x-1/2 rounded-2xl border border-white/10 bg-[#181818]/95 p-4 shadow-2xl max-[809px]:bottom-[105px]">
             <div className="flex items-center justify-between text-xs text-[#858585]">
-              <span>Today</span>
-              <span>2/6 DONE</span>
+              <span>今天</span>
+              <span>已完成 2/6</span>
             </div>
             <div className="mt-3 rounded-xl bg-[#232323] p-3 text-sm">
-              <b>Review landing page</b>
+              <b>审核落地页</b>
               <span className="float-right text-[#b5d982]">01:00:29</span>
             </div>
           </div>
           <p className="absolute bottom-3 left-1/2 -translate-x-1/2 whitespace-nowrap text-xs text-[#858585]">
-            Simple task planning. Serious focus.
+            简单规划任务，认真保持专注。
           </p>
         </div>
       </div>

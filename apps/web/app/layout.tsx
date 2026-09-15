@@ -2,6 +2,20 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 
+const themeScript = `(() => {
+  try {
+    const saved = localStorage.getItem("linkdo-theme");
+    const theme = saved === "light" || saved === "dark"
+      ? saved
+      : matchMedia("(prefers-color-scheme: dark)").matches
+        ? "dark"
+        : "light";
+    document.documentElement.dataset.theme = theme;
+  } catch {
+    document.documentElement.dataset.theme = "dark";
+  }
+})();`;
+
 // const inter = localFont({
 //   variable: "--font-inter",
 //   display: "swap",
@@ -57,17 +71,16 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://linkdo.app"),
-  title: "Linkdo | A focused task planning app",
+  title: "Linkdo | 专注任务规划应用",
   description:
-    "Linkdo is a calm task planner and focus timer that helps you prioritize what matters and build momentum without the noise.",
+    "Linkdo 是一款简洁的任务规划与专注计时应用，帮你确定优先级，远离干扰，持续推进重要工作。",
   icons: {
     icon: "/seo/favicon.png",
     apple: "/seo/apple-touch-icon.png",
   },
   openGraph: {
-    title: "Linkdo | A focused task planning app",
-    description:
-      "Plan your day, protect your focus, and get meaningful work done.",
+    title: "Linkdo | 专注任务规划应用",
+    description: "规划一天，守护专注，完成真正重要的工作。",
     images: ["/seo/og-image.jpg"],
   },
 };
@@ -78,7 +91,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={` h-full`}>
+    <html lang="zh-CN" className="h-full" suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+      </head>
       <body className="min-h-full">{children}</body>
     </html>
   );

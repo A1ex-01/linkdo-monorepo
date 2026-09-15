@@ -3,10 +3,11 @@
 import Image from "next/image";
 import { useState } from "react";
 import { MenuIcon, PlusIcon } from "@/components/icons";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 const links = [
   ["MCP", "/mcp"],
-  ["Integrations", "#features"],
+  ["集成", "#features"],
 ] as const;
 
 export function Navbar() {
@@ -34,31 +35,35 @@ export function Navbar() {
               {label}
               {label === "MCP" && (
                 <span className="ml-2 rounded-full bg-gradient-to-r from-[#ef82ef] to-[#6f98e8] px-2 py-1 text-[10px] font-bold text-[#111]">
-                  NEW
+                  新功能
                 </span>
               )}
             </a>
           ))}
+          <ThemeToggle />
           <a
             className="linkdo-button !min-h-10 !px-5 !py-2 !text-sm"
             href="#get-linkdo"
           >
-            Get Linkdo
+            立即获取 Linkdo
           </a>
         </div>
-        <button
-          type="button"
-          aria-label="Toggle navigation"
-          aria-expanded={open}
-          onClick={() => setOpen((value) => !value)}
-          className="grid size-10 place-items-center rounded-full border border-white/10 bg-white/[0.04] min-[810px]:hidden"
-        >
-          {open ? (
-            <PlusIcon className="size-5 rotate-45" />
-          ) : (
-            <MenuIcon className="size-5" />
-          )}
-        </button>
+        <div className="flex items-center gap-2 min-[810px]:hidden">
+          <ThemeToggle />
+          <button
+            type="button"
+            aria-label="切换导航菜单"
+            aria-expanded={open}
+            onClick={() => setOpen((value) => !value)}
+            className="grid size-10 place-items-center rounded-full border border-white/10 bg-white/[0.04]"
+          >
+            {open ? (
+              <PlusIcon className="size-5 rotate-45" />
+            ) : (
+              <MenuIcon className="size-5" />
+            )}
+          </button>
+        </div>
       </nav>
       {open && (
         <div className="border-b border-white/10 bg-[#111] px-5 pb-6 pt-3 min-[810px]:hidden">
@@ -74,7 +79,7 @@ export function Navbar() {
               </a>
             ))}
             <a className="linkdo-button mt-3" href="#get-linkdo">
-              Get Linkdo
+              立即获取 Linkdo
             </a>
           </div>
         </div>

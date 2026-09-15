@@ -9,28 +9,28 @@ interface FaqItem {
 
 const faqItems: FaqItem[] = [
   {
-    question: "Is Linkdo only for Desktop? Is there a mobile app version?",
-    answer: "Linkdo is available for macOS",
+    question: "Linkdo 仅支持桌面端吗？有移动版吗？",
+    answer: "Linkdo 目前支持 macOS。",
   },
   {
-    question: "How many machines can I install Linkdo on?",
+    question: "Linkdo 可以安装在几台设备上？",
     answer:
-      "You can install Linkdo on multiple computers and sign in with the same account. Your lists and changes sync automatically between your devices.",
+      "你可以在多台电脑上安装 Linkdo 并登录同一账户。列表和更改会在设备之间自动同步。",
   },
   {
-    question: "Is Linkdo a free app?",
+    question: "Linkdo 是免费应用吗？",
     answer:
-      "Yes, Linkdo is free to use. You can create an account and start using the app immediately.",
+      "是的，Linkdo 可免费使用。创建账户后即可立即开始使用。",
   },
   {
-    question: "Can I integrate Linkdo with other apps?",
+    question: "Linkdo 可以与其他应用集成吗？",
     answer:
-      "Yes. Linkdo supports integrations including ClickUp, with more services such as Figma, Trello, Asana and Linear planned on the roadmap.",
+      "可以。Linkdo 已支持包括 ClickUp 在内的集成，Figma、Trello、Asana 和 Linear 等更多服务已列入产品路线图。",
   },
   {
-    question: "How do I get access to Linkdo?",
+    question: "如何获取 Linkdo？",
     answer:
-      "Use any Download button on this page to get the macOS. Create an account when you launch Linkdo and your free trial starts right away.",
+      "点击本页任意“下载”按钮即可获取 macOS 版本。启动 Linkdo 后创建账户，免费试用会立即开始。",
   },
 ];
 
@@ -42,10 +42,10 @@ export function FaqSection() {
       <div className="mx-auto max-w-[1080px]">
         <div className="text-center">
           <h2 className="font-heading text-[28px] font-medium leading-[33.6px]">
-            Frequently asked questions
+            常见问题
           </h2>
           <p className="mt-6 text-[16px] leading-[25.6px] text-[#c8c8c8]">
-            Don&apos;t see your answer? Get in touch via our communities.
+            没有找到答案？欢迎通过我们的社区联系我们。
           </p>
           <p className="text-[16px] leading-[25.6px] text-[#ef82ef]">
             <a
