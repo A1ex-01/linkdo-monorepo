@@ -1,5 +1,6 @@
 import { AppTitle } from '@/components/layout/app-title'
-import { adminService, type Collection } from '@/services/admin'
+import { adminService } from '@/services/admin'
+import type { ICollection } from '@linkdo/shared'
 import { createFileRoute } from '@tanstack/react-router'
 import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
@@ -11,7 +12,7 @@ import { CollectionsTable } from './_components/collections-table'
 
 function Collections() {
   // const search = route.useSearch()
-  const [data, setData] = useState<Collection[]>([])
+  const [data, setData] = useState<ICollection[]>([])
   const [total, setTotal] = useState(0)
   const [loading, setLoading] = useState(false)
   // const { isAuthenticated } = useAuthStore()

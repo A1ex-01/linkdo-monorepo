@@ -5,11 +5,8 @@ import { useState } from "react";
 import { MenuIcon, PlusIcon } from "@/components/icons";
 
 const links = [
-  ["Guides", "/help-center/home"],
   ["MCP", "/mcp"],
   ["Integrations", "#features"],
-  ["Affiliates", "/partner-program"],
-  ["Pricing", "#pricing"],
 ] as const;
 
 export function Navbar() {
@@ -18,7 +15,7 @@ export function Navbar() {
   return (
     <header
       data-site-nav
-      className="site-nav fixed inset-x-0 top-0 z-50 h-16 border-b border-white/[0.07] bg-[#111]/95 backdrop-blur-md"
+      className="site-nav fixed inset-x-0 text-foreground top-0 z-50 h-16 border-b border-white/[0.07] bg-[#111]/95 backdrop-blur-md"
     >
       <nav className="mx-auto flex h-full w-[min(1080px,calc(100%-40px))] items-center justify-between">
         <a href="#top" className="flex items-center gap-1">

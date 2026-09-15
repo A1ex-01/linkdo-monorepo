@@ -9,7 +9,7 @@ import {
 } from '@linkdo/ui/components/table'
 import { type NavigateFn, useTableUrlState } from '@/hooks/use-table-url-state'
 import { cn } from '@/lib/utils'
-import type { User } from '@/services/admin'
+import type { IAdminUser } from '@/services/admin'
 import {
   type SortingState,
   type VisibilityState,
@@ -22,7 +22,7 @@ import { useEffect, useState } from 'react'
 import { usersColumns as columns } from './users-columns'
 
 type DataTableProps = {
-  data: User[]
+  data: IAdminUser[]
   loading: boolean
   search: Record<string, unknown>
   navigate: NavigateFn

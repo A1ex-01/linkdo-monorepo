@@ -2,7 +2,6 @@
 
 import type {
   ICollection,
-  INotionPage,
   IStatusMapping,
   ITask,
   TaskStatus,
@@ -11,7 +10,6 @@ import type {
 // Re-export shared types for work page convenience
 export type {
   ICollection as Collection,
-  INotionPage,
   IStatusMapping,
   ITask as Task,
   TaskStatus,

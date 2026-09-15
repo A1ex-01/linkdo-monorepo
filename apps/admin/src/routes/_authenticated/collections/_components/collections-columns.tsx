@@ -1,5 +1,5 @@
 import { Badge } from '@linkdo/ui/components/badge'
-import type { Collection } from '@/services/admin'
+import type { ICollection } from '@linkdo/shared'
 import { type ColumnDef } from '@tanstack/react-table'
 import { Clock } from 'lucide-react'
 
@@ -23,7 +23,7 @@ function formatDate(dateStr: string): string {
   }
 }
 
-export function getCollectionsColumns(): ColumnDef<Collection>[] {
+export function getCollectionsColumns(): ColumnDef<ICollection>[] {
   return [
     {
       accessorKey: 'icon',

@@ -1,12 +1,12 @@
-import type { User } from '@/services/auth'
+import type { IUser } from '@linkdo/shared'
 import { create } from 'zustand'
 
 const ACCESS_TOKEN_KEY = 'linkdo_admin_token'
 
 interface AuthState {
   auth: {
-    user: User | null
-    setUser: (user: User | null) => void
+    user: IUser | null
+    setUser: (user: IUser | null) => void
     accessToken: string
     setAccessToken: (accessToken: string) => void
     reset: () => void

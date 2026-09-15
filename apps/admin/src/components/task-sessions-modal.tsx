@@ -4,7 +4,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@linkdo/ui/components/dialog'
-import { adminService, type TimeSession } from '@/services/admin'
+import { adminService } from '@/services/admin'
+import type { ITimeSession } from '@linkdo/shared'
 import { Clock, PlayCircle } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
@@ -45,7 +46,7 @@ export function TaskSessionsModal({
   open,
   onOpenChange,
 }: TaskSessionsModalProps) {
-  const [sessions, setSessions] = useState<TimeSession[]>([])
+  const [sessions, setSessions] = useState<ITimeSession[]>([])
   const [loading, setLoading] = useState(false)
 
   useEffect(() => {

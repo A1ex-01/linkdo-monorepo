@@ -1,6 +1,6 @@
 import { DataTableColumnHeader } from '@/components/data-table'
 import { Badge } from '@linkdo/ui/components/badge'
-import type { User } from '@/services/admin'
+import type { IAdminUser } from '@/services/admin'
 import { type ColumnDef } from '@tanstack/react-table'
 
 function formatDate(dateStr: string): string {
@@ -15,7 +15,7 @@ function formatDate(dateStr: string): string {
   }
 }
 
-export const usersColumns: ColumnDef<User>[] = [
+export const usersColumns: ColumnDef<IAdminUser>[] = [
   {
     accessorKey: 'name',
     header: ({ column }) => (

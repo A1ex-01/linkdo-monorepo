@@ -1,117 +1,23 @@
 import { request } from './client-request'
+import type {
+  ICollection,
+  ICollectionBreakdown,
+  IClickUpList,
+  INotionDatabase,
+  IReportQuery,
+  IReportSession,
+  IReportSummary,
+  ITask,
+  ITimeSession,
+  ITimelinePoint,
+  IUser,
+  TaskStatus,
+} from '@linkdo/shared'
 
-export interface User {
-  uuid: string
-  notion_user_id: string
-  clickup_connected?: boolean
-  email?: string
-  name: string
+export interface IAdminUser extends IUser {
   avatar?: string
-  avatar_url?: string
   role_id?: number
   role_name?: string
-  created_at: string
-  updated_at: string
-}
-
-export interface Task {
-  uuid: string
-  collection_uuid: string
-  notion_database_uuid?: string
-  clickup_list_uuid?: string
-  title: string
-  content?: string
-  status: string
-  initial_status?: string
-  estimated_time: number
-  actual_time: number
-  scheduled_date?: string
-  notion_page_id?: string
-  clickup_task_id?: string
-  completed_at?: string
-  sort_order?: string
-  created_at: string
-  updated_at: string
-}
-
-export interface Collection {
-  uuid: string
-  name: string
-  icon: string
-  cover?: string
-  pending_count: number
-  estimated_total: number
-  is_archived: boolean
-  notion_databases?: NotionDatabase[]
-  clickup_lists?: ClickUpList[]
-  created_at: string
-  updated_at: string
-}
-
-export interface NotionDatabase {
-  uuid: string
-  collection_uuid: string
-  notion_database_id: string
-  name: string
-  icon?: string
-  status_mapping?: string | Record<string, string>
-  notion_options?: string[]
-  created_at: string
-  updated_at: string
-}
-
-export interface ClickUpList {
-  uuid: string
-  collection_uuid: string
-  workspace_id: string
-  space_id: string
-  folder_id?: string
-  clickup_list_id: string
-  name: string
-  status_mapping?: string | Record<string, string>
-  created_at: string
-  updated_at: string
-}
-
-export interface TimeSession {
-  uuid: string
-  task_uuid: string
-  started_at: string
-  ended_at?: string
-  duration: number
-}
-
-export interface ReportSession extends TimeSession {
-  task_title: string
-  collection_uuid: string
-  collection_name: string
-}
-
-export interface ReportSummary {
-  total_work_days: number
-  completed_tasks: number
-  total_tasks: number
-  estimated_time_minutes: number
-  actual_time_minutes: number
-}
-
-export interface CollectionBreakdown {
-  collection_uuid: string
-  collection_name: string
-  collection_icon?: string
-  total: number
-  completed: number
-  in_progress: number
-  backlog: number
-  estimated_minutes: number
-  actual_minutes: number
-}
-
-export interface TimelinePoint {
-  date: string
-  started_count: number
-  completed_count: number
-  focus_minutes: number
 }
 
 export interface FileUploadResult {
@@ -145,7 +51,7 @@ export interface ListUsersParams {
 
 export interface ListTasksParams {
   user_uuid?: string
-  status?: string
+  status?: TaskStatus
   start_date?: string
   end_date?: string
   current?: number
@@ -156,12 +62,6 @@ export interface ListCollectionsParams {
   user_uuid?: string
   current?: number
   pageSize?: number
-}
-
-export interface ReportQueryParams {
-  collection_uuids?: string[]
-  start_date?: string
-  end_date?: string
 }
 
 function paginate<T>(
@@ -184,15 +84,15 @@ function todayPrefix() {
   return new Date().toISOString().slice(0, 10)
 }
 
-async function listAllTasks(): Promise<Task[]> {
-  const collections = await request<Collection[]>({
+async function listAllTasks(): Promise<ITask[]> {
+  const collections = await request<ICollection[]>({
     url: '/collections',
     method: 'get',
   })
   if (!collections.success || !collections.data) return []
   const batches = await Promise.all(
     collections.data.map((collection) =>
-      request<Task[]>({
+      request<ITask[]>({
         url: `/collections/${collection.uuid}/tasks`,
         method: 'get',
       })
@@ -202,10 +102,10 @@ async function listAllTasks(): Promise<Task[]> {
 }
 
 export const adminService = {
-  getMe: () => request<User>({ url: '/auth/me', method: 'get' }),
+  getMe: () => request<IAdminUser>({ url: '/auth/me', method: 'get' }),
 
   async listUsers(params: ListUsersParams = {}) {
-    const res = await request<User>({ url: '/auth/me', method: 'get' })
+    const res = await request<IAdminUser>({ url: '/auth/me', method: 'get' })
     const users = res.success && res.data ? [res.data] : []
     const keyword = params.keyword?.toLowerCase()
     const filtered = keyword
@@ -238,7 +138,7 @@ export const adminService = {
   },
 
   async listCollections(params: ListCollectionsParams = {}) {
-    const res = await request<Collection[]>({ url: '/collections', method: 'get' })
+    const res = await request<ICollection[]>({ url: '/collections', method: 'get' })
     return {
       success: res.success,
       data: paginate(res.data ?? [], params.current, params.pageSize),
@@ -248,8 +148,8 @@ export const adminService = {
 
   async getStats() {
     const [me, collections, tasks] = await Promise.all([
-      request<User>({ url: '/auth/me', method: 'get' }),
-      request<Collection[]>({ url: '/collections', method: 'get' }),
+      request<IAdminUser>({ url: '/auth/me', method: 'get' }),
+      request<ICollection[]>({ url: '/collections', method: 'get' }),
       listAllTasks(),
     ])
     return {
@@ -268,7 +168,7 @@ export const adminService = {
   },
 
   async getTaskSessions(taskUuid: string) {
-    const res = await request<ReportSession[]>({
+    const res = await request<IReportSession[]>({
       url: '/reports/sessions',
       method: 'get',
     })
@@ -280,10 +180,10 @@ export const adminService = {
   },
 
   listNotionDatabases: () =>
-    request<NotionDatabase[]>({ url: '/notion-databases', method: 'get' }),
+    request<INotionDatabase[]>({ url: '/notion-databases', method: 'get' }),
 
   listClickUpLists: () =>
-    request<ClickUpList[]>({ url: '/clickup-lists', method: 'get' }),
+    request<IClickUpList[]>({ url: '/clickup-lists', method: 'get' }),
 
   getNotionStatusMapping: (uuid: string) =>
     request<StatusMappingResult>({
@@ -309,29 +209,29 @@ export const adminService = {
       method: 'post',
     }),
 
-  getReportSummary: (params?: ReportQueryParams) =>
-    request<ReportSummary>({
+  getReportSummary: (params?: IReportQuery) =>
+    request<IReportSummary>({
       url: '/reports/summary',
       method: 'get',
       params,
     }),
 
-  getReportBreakdown: (params?: ReportQueryParams) =>
-    request<CollectionBreakdown[]>({
+  getReportBreakdown: (params?: IReportQuery) =>
+    request<ICollectionBreakdown[]>({
       url: '/reports/breakdown',
       method: 'get',
       params,
     }),
 
-  getReportTimeline: (params?: ReportQueryParams) =>
-    request<TimelinePoint[]>({
+  getReportTimeline: (params?: IReportQuery) =>
+    request<ITimelinePoint[]>({
       url: '/reports/timeline',
       method: 'get',
       params,
     }),
 
-  getReportSessions: (params?: ReportQueryParams) =>
-    request<ReportSession[]>({
+  getReportSessions: (params?: IReportQuery) =>
+    request<IReportSession[]>({
       url: '/reports/sessions',
       method: 'get',
       params,
@@ -340,7 +240,7 @@ export const adminService = {
   getCurrentTimer: () => request({ url: '/timer/current', method: 'get' }),
 
   startTimer: (taskUuid: string) =>
-    request<TimeSession>({
+    request<ITimeSession>({
       url: `/tasks/${taskUuid}/timer/start`,
       method: 'post',
     }),

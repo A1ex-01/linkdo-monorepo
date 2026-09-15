@@ -1,11 +1,11 @@
 import { AdminTable } from '@/components/data-table/admin-table'
 import type { NavigateFn } from '@/hooks/use-table-url-state'
-import type { Collection } from '@/services/admin'
+import type { ICollection } from '@linkdo/shared'
 import type { ColumnDef } from '@tanstack/react-table'
 
 type CollectionsTableProps = {
-  data: Collection[]
-  columns: ColumnDef<Collection>[]
+  data: ICollection[]
+  columns: ColumnDef<ICollection>[]
   loading: boolean
   search: Record<string, unknown>
   navigate: NavigateFn
