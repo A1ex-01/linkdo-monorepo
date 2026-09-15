@@ -1,4 +1,4 @@
-// frontend/src/types/work.ts
+// desktop/src/types/work.ts
 
 import type {
   ICollection,

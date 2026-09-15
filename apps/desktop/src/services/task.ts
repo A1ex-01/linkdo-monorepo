@@ -1,4 +1,4 @@
-// frontend/src/services/task.ts
+// desktop/src/services/task.ts
 
 import type { ITask, TaskStatus } from "@/types/base";
 import { request } from "./base";

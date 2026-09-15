@@ -1,4 +1,4 @@
-// frontend/src/app/reports/_components/report-collection-table.tsx
+// desktop/src/app/reports/_components/report-collection-table.tsx
 
 "use client";
 

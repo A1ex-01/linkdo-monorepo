@@ -1,4 +1,4 @@
-// frontend/src/app/work/content.tsx
+// desktop/src/app/work/content.tsx
 
 "use client";
 

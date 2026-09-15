@@ -1,4 +1,4 @@
-// frontend/src/components/window-title-bar.tsx
+// desktop/src/components/window-title-bar.tsx
 
 "use client";
 

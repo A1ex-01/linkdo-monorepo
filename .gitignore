@@ -16,8 +16,8 @@ node_modules/
 .turbo/
 
 # 构建产物
-apps/frontend/.next/
-apps/frontend/src-tauri/target/
+apps/desktop/.next/
+apps/desktop/src-tauri/target/
 apps/admin/dist/
 apps/mcp/dist/
 

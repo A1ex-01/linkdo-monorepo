@@ -1,4 +1,4 @@
-// frontend/src/stores/use-auth-store.ts
+// desktop/src/stores/use-auth-store.ts
 
 import { getNotionDatabasesByCollection } from "@/services/notion";
 import { getClickUpListsByCollection } from "@/services/clickup";

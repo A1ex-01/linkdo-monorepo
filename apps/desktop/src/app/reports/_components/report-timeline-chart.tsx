@@ -1,4 +1,4 @@
-// frontend/src/app/reports/_components/report-timeline-chart.tsx
+// desktop/src/app/reports/_components/report-timeline-chart.tsx
 
 "use client";
 

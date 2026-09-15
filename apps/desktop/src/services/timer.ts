@@ -1,4 +1,4 @@
-// frontend/src/services/timer.ts
+// desktop/src/services/timer.ts
 
 import type { ITimeSession } from "@/types/base";
 import { request } from "./base";

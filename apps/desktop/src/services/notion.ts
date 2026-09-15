@@ -1,4 +1,4 @@
-// frontend/src/services/notion.ts
+// desktop/src/services/notion.ts
 
 import type { INotionDatabase } from "@/types/base";
 import { request } from "./base";
