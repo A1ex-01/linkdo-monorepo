@@ -1,14 +1,5 @@
 import { request } from './client-request'
-
-export interface User {
-  uuid: string
-  notion_user_id: string
-  email: string
-  name: string
-  avatar_url?: string
-  created_at: string
-  updated_at: string
-}
+import type { IUser } from '@linkdo/shared'
 
 export interface VerifyCodeResponse {
   token: string
@@ -30,5 +21,5 @@ export const authService = {
       data: { email, code },
     }),
 
-  getMe: () => request<User>({ url: '/auth/me', method: 'get' }),
+  getMe: () => request<IUser>({ url: '/auth/me', method: 'get' }),
 }

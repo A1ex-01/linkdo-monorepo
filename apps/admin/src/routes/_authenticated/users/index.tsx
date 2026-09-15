@@ -14,13 +14,13 @@ import {
   TableHeader,
   TableRow,
 } from '@linkdo/ui/components/table'
-import { adminService, type User } from '@/services/admin'
+import { adminService, type IAdminUser } from '@/services/admin'
 import { createFileRoute } from '@tanstack/react-router'
 import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
 
 export function Users() {
-  const [user, setUser] = useState<User | null>(null)
+  const [user, setUser] = useState<IAdminUser | null>(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {

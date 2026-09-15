@@ -1,7 +1,7 @@
 import { Badge } from '@linkdo/ui/components/badge'
 import { Button } from '@linkdo/ui/components/button'
 import { Checkbox } from '@linkdo/ui/components/checkbox'
-import type { Task } from '@/services/admin'
+import type { ITask } from '@linkdo/shared'
 import { type ColumnDef } from '@tanstack/react-table'
 import { Clock, Eye } from 'lucide-react'
 
@@ -26,12 +26,12 @@ function formatDate(dateStr: string): string {
 }
 
 type TasksColumnsProps = {
-  onViewSessions: (task: Task) => void
+  onViewSessions: (task: ITask) => void
 }
 
 export function getTasksColumns({
   onViewSessions,
-}: TasksColumnsProps): ColumnDef<Task>[] {
+}: TasksColumnsProps): ColumnDef<ITask>[] {
   return [
     {
       id: 'select',
@@ -71,11 +71,9 @@ export function getTasksColumns({
       cell: ({ row }) => {
         const s = row.original.status
         const variant =
-          s === 'done' || s === 'completed'
+          s === 'done'
             ? 'default'
-            : s === 'in_progress' || s === 'doing'
-              ? 'secondary'
-              : 'outline'
+            : 'outline'
         return <Badge variant={variant}>{s}</Badge>
       },
     },

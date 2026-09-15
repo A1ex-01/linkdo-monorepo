@@ -7,13 +7,11 @@ import { LinkdoAiSection } from "./_components/linkdo-ai-section";
 import { Footer } from "@/components/footer";
 import { ClosingCta } from "./_components/closing-cta";
 import { FaqSection } from "./_components/faq-section";
-import { MobileShowcase } from "./_components/mobile-showcase";
 import { PricingSection } from "./_components/pricing-section";
 import { ReportsSection } from "./_components/reports-section";
 import { ReviewBadges } from "./_components/review-badges";
 import { RoadmapSection } from "./_components/roadmap-section";
 import { SessionsSection } from "./_components/sessions-section";
-import { SocialProofSection } from "./_components/social-proof-section";
 import { TestimonialsSection } from "./_components/testimonials-section";
 
 export default function Home() {
@@ -26,16 +24,13 @@ export default function Home() {
         <HowItWorksSection />
         <FeatureGridSection />
         <LinkdoAiSection />
-        <SocialProofSection />
         <ReportsSection />
         <SessionsSection />
         <PricingSection />
         <TestimonialsSection />
         <RoadmapSection />
-        <MobileShowcase />
         <ClosingCta />
         <FaqSection />
-        <ReviewBadges />
       </main>
       <Footer />
     </>

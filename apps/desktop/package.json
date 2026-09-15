@@ -18,6 +18,7 @@
     "format": "prettier --write ."
   },
   "dependencies": {
+    "@linkdo/shared": "workspace:*",
     "@linkdo/ui": "workspace:*",
     "@ai-sdk/react": "^3.0.179",
     "@fabianlars/tauri-plugin-oauth": "^2.0.0",

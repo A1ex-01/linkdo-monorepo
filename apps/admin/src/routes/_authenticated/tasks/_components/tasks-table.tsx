@@ -1,11 +1,11 @@
 import { AdminTable } from '@/components/data-table/admin-table'
 import type { NavigateFn } from '@/hooks/use-table-url-state'
-import { type Task } from '@/services/admin'
+import type { ITask } from '@linkdo/shared'
 import type { ColumnDef } from '@tanstack/react-table'
 
 type TasksTableProps = {
-  data: Task[]
-  columns: ColumnDef<Task>[]
+  data: ITask[]
+  columns: ColumnDef<ITask>[]
   loading: boolean
   search: Record<string, unknown>
   navigate: NavigateFn
