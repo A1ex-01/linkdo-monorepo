@@ -6,46 +6,46 @@
 ## 已完成 ✅
 
 ### 核心页面组件
-- ✅ `apps/frontend/src/app/page.tsx` - 根页面背景
-- ✅ `apps/frontend/src/app/home/page.tsx` - 首页（已在之前完成）
-- ✅ `apps/frontend/src/app/home/_components/collection-card.tsx` - 集合卡片
-- ✅ `apps/frontend/src/app/home/_components/create-collection-modal.tsx` - 创建集合弹窗
-- ✅ `apps/frontend/src/app/work/content.tsx` - 工作区容器
-- ✅ `apps/frontend/src/app/login/page.tsx` - 登录页（移除所有 `text-atext-*` 变量）
+- ✅ `apps/desktop/src/app/page.tsx` - 根页面背景
+- ✅ `apps/desktop/src/app/home/page.tsx` - 首页（已在之前完成）
+- ✅ `apps/desktop/src/app/home/_components/collection-card.tsx` - 集合卡片
+- ✅ `apps/desktop/src/app/home/_components/create-collection-modal.tsx` - 创建集合弹窗
+- ✅ `apps/desktop/src/app/work/content.tsx` - 工作区容器
+- ✅ `apps/desktop/src/app/login/page.tsx` - 登录页（移除所有 `text-atext-*` 变量）
 
 ### 通用组件
-- ✅ `apps/frontend/src/components/bottom-nav.tsx` - 底部导航
-- ✅ `apps/frontend/src/components/window-title-bar.tsx` - 窗口标题栏
-- ✅ `apps/frontend/src/components/account-settings-dialog.tsx` - 账户设置弹窗
-- ✅ `apps/frontend/src/components/theme-toggle.tsx` - 主题切换按钮（新增）
-- ✅ `apps/frontend/src/providers/base.tsx` - Toast 通知样式
+- ✅ `apps/desktop/src/components/bottom-nav.tsx` - 底部导航
+- ✅ `apps/desktop/src/components/window-title-bar.tsx` - 窗口标题栏
+- ✅ `apps/desktop/src/components/account-settings-dialog.tsx` - 账户设置弹窗
+- ✅ `apps/desktop/src/components/theme-toggle.tsx` - 主题切换按钮（新增）
+- ✅ `apps/desktop/src/providers/base.tsx` - Toast 通知样式
 
 ## 待处理 ⏳
 
 ### 高优先级（大量硬编码）
 1. **Reports 页面**（最复杂，约 60+ 处硬编码）
-   - `apps/frontend/src/app/reports/page.tsx` - 主页面
-   - `apps/frontend/src/app/reports/_components/report-timeline-chart.tsx` - 时间线图表
-   - `apps/frontend/src/app/reports/_components/report-summary-cards.tsx` - 汇总卡片
-   - `apps/frontend/src/app/reports/_components/report-collection-table.tsx` - 表格
+   - `apps/desktop/src/app/reports/page.tsx` - 主页面
+   - `apps/desktop/src/app/reports/_components/report-timeline-chart.tsx` - 时间线图表
+   - `apps/desktop/src/app/reports/_components/report-summary-cards.tsx` - 汇总卡片
+   - `apps/desktop/src/app/reports/_components/report-collection-table.tsx` - 表格
 
 2. **AI Chat 组件**（约 15+ 处 rgba/十六进制）
-   - `apps/frontend/src/components/ai-chat/index.tsx` - 主聊天界面
+   - `apps/desktop/src/components/ai-chat/index.tsx` - 主聊天界面
 
 3. **Work 子组件**
-   - `apps/frontend/src/app/work/_components/kanban-board.tsx`
-   - `apps/frontend/src/app/work/_components/header.tsx`
-   - `apps/frontend/src/app/work/_components/sidebar-board.tsx`
-   - `apps/frontend/src/app/work/_components/task-search.tsx`
-   - `apps/frontend/src/app/work/_components/apps-dropdown.tsx`
-   - `apps/frontend/src/app/work/_components/clickup-dropdown.tsx`
-   - `apps/frontend/src/app/work/_components/notion-dropdown.tsx`
+   - `apps/desktop/src/app/work/_components/kanban-board.tsx`
+   - `apps/desktop/src/app/work/_components/header.tsx`
+   - `apps/desktop/src/app/work/_components/sidebar-board.tsx`
+   - `apps/desktop/src/app/work/_components/task-search.tsx`
+   - `apps/desktop/src/app/work/_components/apps-dropdown.tsx`
+   - `apps/desktop/src/app/work/_components/clickup-dropdown.tsx`
+   - `apps/desktop/src/app/work/_components/notion-dropdown.tsx`
 
 ### 中优先级
 4. **其他组件**
-   - `apps/frontend/src/components/a-markdown-editor.tsx` - Markdown 编辑器
-   - `apps/frontend/src/components/agents/message-bubble.tsx` - 消息气泡
-   - `apps/frontend/src/components/motion/popover-morph.tsx` - 弹窗动画
+   - `apps/desktop/src/components/a-markdown-editor.tsx` - Markdown 编辑器
+   - `apps/desktop/src/components/agents/message-bubble.tsx` - 消息气泡
+   - `apps/desktop/src/components/motion/popover-morph.tsx` - 弹窗动画
 
 ## Shadcn 主题变量映射指南
 

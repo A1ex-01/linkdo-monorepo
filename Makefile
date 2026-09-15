@@ -1,5 +1,5 @@
 SHELL := /bin/bash
-.PHONY: dev dev-frontend dev-admin dev-mcp dev-backend dev-agent install migrate-up migrate-down stop
+.PHONY: dev dev-desktop dev-admin dev-mcp dev-backend dev-agent install migrate-up migrate-down stop
 
 # 安装所有 JS/TS 依赖
 install:
@@ -14,11 +14,11 @@ migrate-down:
 
 # 启动所有服务（并行）
 dev:
-	make -j4 dev-frontend dev-backend dev-agent dev-mcp
+	make -j4 dev-desktop dev-backend dev-agent dev-mcp
 
 # JS/TS 应用
-dev-frontend:
-	pnpm --filter @linkdo/frontend dev
+dev-desktop:
+	pnpm --filter @linkdo/desktop dev
 
 dev-admin:
 	pnpm --filter @linkdo/admin dev
@@ -34,8 +34,8 @@ dev-agent:
 	cd services/agent && uv run python -m app.main
 
 # 构建
-build-frontend:
-	pnpm --filter @linkdo/frontend build
+build-desktop:
+	pnpm --filter @linkdo/desktop build
 
 build-admin:
 	pnpm --filter @linkdo/admin build

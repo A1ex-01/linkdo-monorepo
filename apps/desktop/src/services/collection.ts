@@ -1,4 +1,4 @@
-// frontend/src/services/collection.ts
+// desktop/src/services/collection.ts
 
 import type { ICollection } from "@/types/base";
 import { request } from "./base";

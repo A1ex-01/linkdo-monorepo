@@ -5,7 +5,7 @@ Since Geist fonts are not available on Google Fonts, you have two options:
 ## Option 1: Download Geist Fonts (Recommended for Vercel theme)
 
 1. Download Geist fonts from https://vercel.com/font
-2. Place the following files in `apps/frontend/src/fonts/`:
+2. Place the following files in `apps/desktop/src/fonts/`:
    - `Geist-Regular.woff2`
    - `Geist-Medium.woff2`
    - `Geist-SemiBold.woff2`

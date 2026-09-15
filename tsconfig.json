@@ -14,7 +14,7 @@
   },
   "references": [
     {
-      "path": "./apps/frontend"
+      "path": "./apps/desktop"
     },
     {
       "path": "./apps/admin"

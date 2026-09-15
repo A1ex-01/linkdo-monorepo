@@ -11,7 +11,7 @@ manager, and uses the [App Router](https://nextjs.org/docs/app) model for Next.j
 
 ## Template Features
 
-- TypeScript frontend using [Next.js 15](https://nextjs.org/) React framework
+- TypeScript desktop UI using [Next.js 15](https://nextjs.org/) React framework
 - [TailwindCSS 4](https://tailwindcss.com/) as a utility-first atomic CSS framework
   - The example page in this template app has been updated to use only TailwindCSS
   - While not included by default, consider using
@@ -42,20 +42,20 @@ After cloning for the first time, change your app identifier inside
 }
 ```
 
-To develop and run the frontend in a Tauri window:
+To develop and run the desktop app in a Tauri window:
 
 ```shell
 pnpm tauri dev
 ```
 
-This will load the Next.js frontend directly in a Tauri webview window, in addition to
+This will load the Next.js desktop UI directly in a Tauri webview window, in addition to
 starting a development server on `localhost:3000`.
 Press <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>I</kbd> in a Chromium based WebView (e.g. on
 Windows) to open the web developer console from the Tauri window.
 
 ### Building for release
 
-To export the Next.js frontend via SSG and build the Tauri application for release:
+To export the Next.js desktop UI via SSG and build the Tauri application for release:
 
 ```shell
 pnpm tauri build
@@ -63,7 +63,7 @@ pnpm tauri build
 
 ### Source structure
 
-Next.js frontend source files are located in `src/` and Tauri Rust application source
+Next.js desktop UI source files are located in `src/` and Tauri Rust application source
 files are located in `src-tauri/`. Please consult the Next.js and Tauri documentation
 respectively for questions pertaining to either technology.
 
@@ -71,9 +71,9 @@ respectively for questions pertaining to either technology.
 
 ### Static Site Generation / Pre-rendering
 
-Next.js is a great React frontend framework which supports server-side rendering (SSR)
+Next.js is a great React framework which supports server-side rendering (SSR)
 as well as static site generation (SSG or pre-rendering). For the purposes of creating a
-Tauri frontend, only SSG can be used since SSR requires an active Node.js server.
+Tauri desktop apps can only use SSG because SSR requires an active Node.js server.
 
 Please read into the Next.js documentation for [Static Exports](https://nextjs.org/docs/app/building-your-application/deploying/static-exports)
 for an explanation of supported / unsupported features and caveats.
@@ -83,7 +83,7 @@ for an explanation of supported / unsupported features and caveats.
 The [`next/image` component](https://nextjs.org/docs/basic-features/image-optimization)
 is an enhancement over the regular `<img>` HTML element with server-side optimizations
 to dynamically scale the image quality. This is only supported when deploying the
-frontend onto Vercel directly, and must be disabled to properly export the frontend
+desktop UI onto Vercel directly, and must be disabled to properly export the desktop UI
 statically. As such, the
 [`unoptimized` property](https://nextjs.org/docs/api-reference/next/image#unoptimized)
 is set to true for the `next/image` component in the `next.config.js` configuration.

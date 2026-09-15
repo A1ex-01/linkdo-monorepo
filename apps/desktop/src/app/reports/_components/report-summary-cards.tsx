@@ -1,4 +1,4 @@
-// frontend/src/app/reports/_components/report-summary-cards.tsx
+// desktop/src/app/reports/_components/report-summary-cards.tsx
 
 "use client";
 

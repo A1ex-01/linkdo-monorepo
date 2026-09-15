@@ -1,4 +1,4 @@
-// frontend/src/stores/use-auth-store.ts
+// desktop/src/stores/use-auth-store.ts
 
 import { TOKEN_KEY } from "@/config";
 import { clearToken } from "@/services/auth-session";

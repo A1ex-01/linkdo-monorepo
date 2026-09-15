@@ -1,4 +1,4 @@
-// frontend/src/app/work/data-provider.tsx
+// desktop/src/app/work/data-provider.tsx
 
 "use client";
 import { useFocusModeTransition } from "@/hooks/use-focus-mode-transition";

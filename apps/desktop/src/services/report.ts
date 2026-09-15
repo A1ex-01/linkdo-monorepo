@@ -1,4 +1,4 @@
-// frontend/src/services/report.ts
+// desktop/src/services/report.ts
 
 import type {
   ICollectionBreakdown,
