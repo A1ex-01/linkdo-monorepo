@@ -22,12 +22,7 @@ export function Navbar() {
     >
       <nav className="mx-auto flex h-full w-[min(1080px,calc(100%-40px))] items-center justify-between">
         <a href="#top" className="flex items-center gap-1">
-          <Image
-            src="/images/1F5ctkgqCFyafR7DXxkeImmLSIE.png"
-            alt=""
-            width={26}
-            height={26}
-          />
+          <Image src="/linkdo-dark.png" alt="" width={26} height={26} />
           <span className="font-[family-name:var(--font-clash-display)] text-[26px] font-medium leading-none">
             Linkdo
           </span>
