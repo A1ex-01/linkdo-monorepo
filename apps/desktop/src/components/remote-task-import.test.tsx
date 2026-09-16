@@ -65,23 +65,49 @@ vi.mock("@linkdo/ui/components/scroll-area", () => ({
     <div>{children}</div>
   ),
 }));
+vi.mock("@linkdo/ui/components/select", () => ({
+  Select: ({ children }: { children: React.ReactNode }) => (
+    <div>{children}</div>
+  ),
+  SelectContent: ({ children }: { children: React.ReactNode }) => (
+    <div>{children}</div>
+  ),
+  SelectGroup: ({ children }: { children: React.ReactNode }) => (
+    <div>{children}</div>
+  ),
+  SelectItem: ({ children }: { children: React.ReactNode }) => (
+    <div>{children}</div>
+  ),
+  SelectTrigger: ({
+    children,
+    ...props
+  }: React.ButtonHTMLAttributes<HTMLButtonElement>) => (
+    <button role="combobox" {...props}>
+      {children}
+    </button>
+  ),
+  SelectValue: ({ placeholder }: { placeholder?: string }) => (
+    <span>{placeholder}</span>
+  ),
+}));
 
 describe("RemoteTaskImport", () => {
   it("loads a source's unfinished items and imports only the checked items into its target column", async () => {
     const onImported = vi.fn();
     render(
       <RemoteTaskImport
+        open
         collectionUuid="collection-uuid"
-        status="backlog"
         target={{ platform: "notion", uuid: "db-1", label: "Roadmap" }}
-        position={{ prevRank: "c", nextRank: "z" }}
+        onOpenChange={vi.fn()}
         onImported={onImported}
       />,
     );
 
-    fireEvent.click(screen.getByRole("button", { name: /import tasks/i }));
-
     expect(await screen.findByText("Plan launch")).toBeTruthy();
+    expect(
+      screen.getByRole("combobox", { name: "Target position" }),
+    ).toBeTruthy();
     fireEvent.click(screen.getByRole("checkbox", { name: "Plan launch" }));
     expect(
       screen.getByRole("button", { name: "Add Selected Cards (1)" }),
@@ -96,8 +122,8 @@ describe("RemoteTaskImport", () => {
         source: "notion",
         notion_database_uuid: "db-1",
         status: "backlog",
-        prev_rank: "c",
-        next_rank: "z",
+        prev_rank: "",
+        next_rank: "",
         items: [{ remote_id: "page-1", title: "Plan launch" }],
       }),
     );

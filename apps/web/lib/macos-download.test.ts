@@ -1,6 +1,10 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { getMacOSDownloadUrl, isMacOS } from "./macos-download.ts";
+import {
+  getDownloadClickEndpoint,
+  getMacOSDownloadUrl,
+  isMacOS,
+} from "./macos-download.ts";
 
 test("identifies macOS browsers", () => {
   assert.equal(
@@ -26,4 +30,11 @@ test("accepts only secure macOS installer URLs", () => {
   );
   assert.equal(getMacOSDownloadUrl("http://downloads.linkdo.app/Linkdo.dmg"), null);
   assert.equal(getMacOSDownloadUrl("not a URL"), null);
+});
+
+test("uses the public API endpoint when download reporting is not configured", () => {
+  assert.equal(
+    getDownloadClickEndpoint(undefined),
+    "https://api.a1ex.online/api/download-clicks",
+  );
 });

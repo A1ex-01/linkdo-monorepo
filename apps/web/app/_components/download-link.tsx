@@ -2,7 +2,11 @@
 
 import type { AnchorHTMLAttributes, ReactNode } from "react";
 import { useState } from "react";
-import { MACOS_DOWNLOAD_PATH, isMacOS } from "@/lib/macos-download";
+import {
+  getDownloadClickEndpoint,
+  MACOS_DOWNLOAD_PATH,
+  isMacOS,
+} from "@/lib/macos-download";
 
 type DownloadLinkProps = Omit<AnchorHTMLAttributes<HTMLAnchorElement>, "href"> & {
   children: ReactNode;
@@ -27,16 +31,15 @@ export function DownloadLink({ children, onClick, ...props }: DownloadLinkProps)
           const platform = isMacOS(navigator.userAgent)
             ? "macos"
             : "unsupported";
-          const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL?.replace(/\/+$/, "");
-
-          if (apiBaseUrl) {
-            void fetch(`${apiBaseUrl}/api/download-clicks`, {
+          void fetch(
+            getDownloadClickEndpoint(process.env.NEXT_PUBLIC_API_BASE_URL),
+            {
               method: "POST",
               headers: { "content-type": "application/json" },
               body: JSON.stringify({ platform, source: window.location.pathname }),
               keepalive: true,
-            }).catch(() => undefined);
-          }
+            },
+          ).catch(() => undefined);
 
           if (platform === "macos") {
             return;

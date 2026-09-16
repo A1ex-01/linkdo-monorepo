@@ -4,7 +4,7 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 ### macOS application download
 
-Set `LINKDO_MACOS_DOWNLOAD_URL` to the HTTPS URL of the signed `.dmg` installer and `NEXT_PUBLIC_API_BASE_URL` to the backend's public URL in the web deployment environment. Every download CTA directs macOS visitors through `/download/macos` and asynchronously records the click through `POST /api/download-clicks`; visitors on other operating systems are told that Linkdo currently supports macOS only.
+Set `LINKDO_MACOS_DOWNLOAD_URL` to the HTTPS URL of the signed `.dmg` installer. `NEXT_PUBLIC_API_BASE_URL` may override the reporting backend; when omitted, download tracking uses `https://api.a1ex.online`. Every download CTA directs macOS visitors through `/download/macos` and asynchronously records the click through `POST /api/download-clicks`; visitors on other operating systems are told that Linkdo currently supports macOS only.
 
 First, run the development server:
 
