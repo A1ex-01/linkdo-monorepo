@@ -2,10 +2,11 @@
 
 import { useData } from "@/app/work/data-provider";
 import { AddTask } from "@/components/add-task";
+import { RemoteTaskImport } from "@/components/remote-task-import";
 import TaskCardItem from "@/components/task-card-item";
-import { Button } from "@linkdo/ui/components/button";
-import { Progress } from "@linkdo/ui/components/progress";
+import { buildTaskLinkTargets } from "@/lib/link-targets";
 import { cn } from "@/lib/utils";
+import { useCommonStore } from "@/stores/common";
 import type { TaskStatus } from "@/types/base";
 import { toGroupedTasks } from "@/utils/base";
 import {
@@ -17,6 +18,8 @@ import {
   type DroppableProvided,
   type DropResult,
 } from "@hello-pangea/dnd";
+import { Button } from "@linkdo/ui/components/button";
+import { Progress } from "@linkdo/ui/components/progress";
 import { IconCircleCheck, IconPlus } from "@tabler/icons-react";
 import { useCallback, useState } from "react";
 
@@ -52,9 +55,21 @@ const DropZone = ({
 };
 
 export function KanbanBoard({}: KanbanBoardProps) {
-  const { tasks, enterSidebar, handleStartFocus, moveTaskOptimistic } =
-    useData();
+  const {
+    collection,
+    tasks,
+    getTasks,
+    enterSidebar,
+    handleStartFocus,
+    moveTaskOptimistic,
+  } = useData();
+  const { currCollectionNotionDbs, currCollectionClickUpLists } =
+    useCommonStore();
   const groupedTasks = toGroupedTasks(tasks);
+  const remoteTargets = buildTaskLinkTargets(
+    currCollectionNotionDbs,
+    currCollectionClickUpLists,
+  );
 
   const [activeId, setActiveId] = useState<string | null>(null);
   const [overIndex, setOverIndex] = useState<number | null>(null);
@@ -165,8 +180,24 @@ export function KanbanBoard({}: KanbanBoardProps) {
                       >
                         <div className="flex w-full shrink-0 items-center justify-between">
                           <div className="text-xl font-medium">{col.label}</div>
-                          <div className="text-muted-foreground text-3xl">
-                            <IconPlus className="size-5" />
+                          <div className="flex items-center gap-1">
+                            {collection &&
+                              remoteTargets.map((target) => (
+                                <RemoteTaskImport
+                                  key={`${col.value}-${target.value}`}
+                                  collectionUuid={collection.uuid}
+                                  status={col.value}
+                                  target={target}
+                                  position={{
+                                    prevRank:
+                                      colTasks[colTasks.length - 1]
+                                        ?.sort_order ?? "",
+                                    nextRank: "",
+                                  }}
+                                  onImported={() => void getTasks()}
+                                />
+                              ))}
+                            <IconPlus className="text-muted-foreground size-5" />
                           </div>
                         </div>
                         {showProgress && (

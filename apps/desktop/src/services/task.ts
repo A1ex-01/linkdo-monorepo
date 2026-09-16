@@ -21,6 +21,45 @@ export interface UpdateTaskDTO {
   scheduled_date?: string | null;
 }
 
+export interface RemoteTaskCandidate {
+  remote_id: string;
+  title: string;
+  remote_status: string;
+  url?: string;
+}
+
+export interface ImportRemoteTasksDTO {
+  source: "notion" | "clickup";
+  notion_database_uuid?: string;
+  clickup_list_uuid?: string;
+  status: TaskStatus;
+  prev_rank: string;
+  next_rank: string;
+  items: Array<{ remote_id: string; title: string }>;
+}
+
+export function getRemoteImportCandidates(
+  source: "notion" | "clickup",
+  targetUuid: string,
+) {
+  const resource = source === "notion" ? "notion-databases" : "clickup-lists";
+  return request<RemoteTaskCandidate[]>({
+    url: `/api/${resource}/${targetUuid}/import-candidates`,
+    method: "get",
+  });
+}
+
+export function importRemoteTasks(
+  collectionUuid: string,
+  data: ImportRemoteTasksDTO,
+) {
+  return request<ITask[]>({
+    url: `/api/collections/${collectionUuid}/tasks/import`,
+    method: "post",
+    data,
+  });
+}
+
 export function createTask(collectionUuid: string, data: CreateTaskDTO) {
   return request<ITask>({
     url: `/api/collections/${collectionUuid}/tasks`,
