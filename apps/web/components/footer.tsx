@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { DownloadLink } from "@/app/_components/download-link";
 
 const explore = ["博客"];
 const support = ["更新日志", "产品路线图"];
@@ -47,9 +48,9 @@ export function Footer() {
               Linkdo
             </span>
           </a>
-          <a href="#get-linkdo" className="linkdo-button h-12 min-w-32">
-            下载
-          </a>
+          <DownloadLink className="linkdo-button h-12 min-w-32">
+            下载 macOS 版
+          </DownloadLink>
         </div>
 
         <div className="mt-[76px] grid grid-cols-[168px_120px_1fr_280px] gap-12 max-[809px]:mt-[72px] max-[809px]:grid-cols-2 max-[809px]:gap-x-8 max-[809px]:gap-y-16">

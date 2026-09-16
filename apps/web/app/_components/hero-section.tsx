@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { DownloadLink } from "./download-link";
 
 const avatars = [
   "zqg4xaUR7i8TqSev0BA79kfRwlk.png",
@@ -22,9 +23,9 @@ export function HeroSection() {
             <span className="linkdo-gradient-text">超强专注力</span>
           </h1>
           <div className="mt-[68px] flex items-center gap-6 max-[809px]:mt-9 max-[809px]:flex-wrap">
-            <a className="linkdo-button" href="#get-linkdo">
+            <DownloadLink className="linkdo-button">
               立即获取 Linkdo
-            </a>
+            </DownloadLink>
             <a
               href="#reviews"
               aria-label="Linkdo 用户评价"
