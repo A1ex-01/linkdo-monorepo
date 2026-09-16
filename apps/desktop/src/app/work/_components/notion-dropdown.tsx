@@ -1,4 +1,20 @@
 import { AIconNotion } from "@/components/icons/base";
+import {
+  RemoteTaskImport,
+  RemoteTaskImportButton,
+} from "@/components/remote-task-import";
+import { cn } from "@/lib/utils";
+import {
+  createNotionDatabase,
+  fetchStatusOptions,
+  getStatusMapping,
+  removeNotionDatabase,
+  searchNotionDatabases,
+  updateStatusMapping,
+} from "@/services/notion";
+import { useCommonStore } from "@/stores/common";
+import { useUserStore } from "@/stores/user";
+import { INotionDatabase } from "@/types/base";
 import { Button } from "@linkdo/ui/components/button";
 import { Checkbox } from "@linkdo/ui/components/checkbox";
 import {
@@ -21,18 +37,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@linkdo/ui/components/select";
-import { cn } from "@/lib/utils";
-import {
-  createNotionDatabase,
-  fetchStatusOptions,
-  getStatusMapping,
-  removeNotionDatabase,
-  searchNotionDatabases,
-  updateStatusMapping,
-} from "@/services/notion";
-import { useCommonStore } from "@/stores/common";
-import { useUserStore } from "@/stores/user";
-import { INotionDatabase } from "@/types/base";
 import {
   IconBrandNotion,
   IconChevronRight,
@@ -54,9 +58,11 @@ interface IProps {
 }
 export function NotionDropdown({ className }: IProps) {
   const { user, fetchUser } = useUserStore();
+  const { collection, getTasks } = useData();
   const { currCollectionNotionDbs, isFetchingCurrCollectionNotionDbs } =
     useCommonStore();
   const [showDetailItem, setShowDetailItem] = useState<INotionDatabase>();
+  const [importingDatabase, setImportingDatabase] = useState<INotionDatabase>();
   const [statusMapping, setStatusMapping] = useState<string[] | undefined>();
   const [currDbStatusMapping, setCurrDbStatusMapping] = useState<
     Record<"mapping", Record<string, string>> | undefined
@@ -85,182 +91,208 @@ export function NotionDropdown({ className }: IProps) {
   }, [showDetailItem?.uuid]);
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button
-          variant={"secondary"}
-          size={"icon"}
-          className="size-8 shrink-0 border-none bg-transparent"
-        >
-          <AIconNotion alt="Notion" className="size-6" />
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent
-        align="end"
-        className="border-border bg-popover text-popover-foreground w-[380px] overflow-hidden rounded-xl border p-3 shadow-2xl"
-        onCloseAutoFocus={(e) => e.preventDefault()}
-        onInteractOutside={(e) => {
-          if (e.target instanceof HTMLElement) {
-            if (e.target.closest("[data-radix-select-content]")) {
-              e.preventDefault();
-            }
-          }
-        }}
-      >
-        {/* User Info */}
-        <div className="flex items-center gap-3 px-1 py-1">
-          <div className="border-border bg-muted flex size-9 items-center justify-center rounded-lg border shadow-sm">
-            <AIconNotion alt="" className="size-5" />
-          </div>
-          <div className="flex min-w-0 flex-1 flex-col gap-0.5">
-            <span className="text-popover-foreground text-[13px] font-semibold">
-              Notion{" "}
-              <span className="text-muted-foreground/70 ml-1 text-[10px] font-medium">
-                Beta
-              </span>
-            </span>
-            <span className="text-muted-foreground truncate text-[12px]">
-              {user?.notion_user_id
-                ? `Account · ${user.name}`
-                : "Connect a Notion account"}
-            </span>
-          </div>
-          <button
-            type="button"
-            onClick={async () => {
-              await launchDesktopLinkOAuth("notion", fetchUser);
-            }}
-            className="text-muted-foreground hover:bg-accent hover:text-accent-foreground flex shrink-0 items-center gap-1.5 rounded-md px-2 py-1 text-[12px] font-medium transition-colors"
+    <>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button
+            variant={"secondary"}
+            size={"icon"}
+            className="size-8 shrink-0 border-none bg-transparent"
           >
-            <IconLink className="size-3" />
-            {user?.notion_user_id ? "ReLink" : "Connect"}
-          </button>
-        </div>
-
-        <DropdownMenuSeparator className="my-3" />
-
-        {/* Databases Section */}
-        <div className="text-popover-foreground flex items-center gap-1.5 px-1 pb-2 text-[12px] font-semibold">
-          <IconDatabase className="text-muted-foreground size-3.5" />
-          Databases
-          <div className="ml-auto">
-            <UpdateDatabasesButton />
-          </div>
-        </div>
-
-        {isFetchingCurrCollectionNotionDbs ? (
-          <div className="flex items-center justify-center py-5">
-            <IconLoader2 className="text-muted-foreground size-4 animate-spin" />
-          </div>
-        ) : currCollectionNotionDbs.length > 0 ? (
-          currCollectionNotionDbs.map((db) => (
-            <div
-              key={db.uuid}
-              className="hover:bg-accent/50 flex cursor-pointer flex-col gap-2 rounded-lg px-2 py-2.5 transition-colors"
-            >
-              <div className="flex w-full items-center gap-2">
-                <div className="bg-muted text-muted-foreground flex size-7 items-center justify-center rounded-md">
-                  <IconBrandNotion className="size-3.5" />
-                </div>
-                <span className="text-popover-foreground truncate text-[13px] font-medium">
-                  {db.name}
+            <AIconNotion alt="Notion" className="size-6" />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent
+          align="end"
+          className="border-border bg-popover text-popover-foreground w-[380px] overflow-hidden rounded-xl border p-3 shadow-2xl"
+          onCloseAutoFocus={(e) => e.preventDefault()}
+          onInteractOutside={(e) => {
+            if (e.target instanceof HTMLElement) {
+              if (e.target.closest("[data-radix-select-content]")) {
+                e.preventDefault();
+              }
+            }
+          }}
+        >
+          {/* User Info */}
+          <div className="flex items-center gap-3 px-1 py-1">
+            <div className="border-border bg-muted flex size-9 items-center justify-center rounded-lg border shadow-sm">
+              <AIconNotion alt="" className="size-5" />
+            </div>
+            <div className="flex min-w-0 flex-1 flex-col gap-0.5">
+              <span className="text-popover-foreground text-[13px] font-semibold">
+                Notion{" "}
+                <span className="text-muted-foreground/70 ml-1 text-[10px] font-medium">
+                  Beta
                 </span>
-                <div
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    open(
-                      `https://www.notion.so/${db.notion_database_id?.replaceAll("-", "")}`,
-                    );
-                  }}
-                  className="text-muted-foreground hover:bg-accent hover:text-accent-foreground rounded p-1 transition-colors"
-                >
-                  <IconExternalLink className="text-muted-foreground size-4" />
-                </div>
-                <div
-                  onClick={(e) => {
-                    if (showDetailItem?.uuid === db?.uuid) {
-                      setShowDetailItem(undefined);
-                    } else {
-                      setShowDetailItem(db);
-                    }
-                    e.stopPropagation();
-                  }}
-                  className={cn(
-                    "text-muted-foreground hover:bg-accent hover:text-accent-foreground ml-auto flex size-6 items-center justify-center rounded-md transition-all",
-                    showDetailItem?.uuid === db.uuid ? "rotate-90" : "",
-                  )}
-                >
-                  <IconChevronRight />
-                </div>
-              </div>
-              {showDetailItem?.uuid === db.uuid && (
-                <div
-                  className="border-border bg-muted/50 mt-1 flex w-full flex-col gap-3 rounded-lg border p-3 text-sm"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                  }}
-                >
-                  <div className="text-popover-foreground flex items-center gap-1.5 text-[12px] font-semibold">
-                    Status mapping
-                    <IconInfoCircle className="text-muted-foreground/70 size-3.5" />
+              </span>
+              <span className="text-muted-foreground truncate text-[12px]">
+                {user?.notion_user_id
+                  ? `Account · ${user.name}`
+                  : "Connect a Notion account"}
+              </span>
+            </div>
+            <button
+              type="button"
+              onClick={async () => {
+                await launchDesktopLinkOAuth("notion", fetchUser);
+              }}
+              className="text-muted-foreground hover:bg-accent hover:text-accent-foreground flex shrink-0 items-center gap-1.5 rounded-md px-2 py-1 text-[12px] font-medium transition-colors"
+            >
+              <IconLink className="size-3" />
+              {user?.notion_user_id ? "ReLink" : "Connect"}
+            </button>
+          </div>
+
+          <DropdownMenuSeparator className="my-3" />
+
+          {/* Databases Section */}
+          <div className="text-popover-foreground flex items-center gap-1.5 px-1 pb-2 text-[12px] font-semibold">
+            <IconDatabase className="text-muted-foreground size-3.5" />
+            Databases
+            <div className="ml-auto">
+              <UpdateDatabasesButton />
+            </div>
+          </div>
+
+          {isFetchingCurrCollectionNotionDbs ? (
+            <div className="flex items-center justify-center py-5">
+              <IconLoader2 className="text-muted-foreground size-4 animate-spin" />
+            </div>
+          ) : currCollectionNotionDbs.length > 0 ? (
+            currCollectionNotionDbs.map((db) => (
+              <div
+                key={db.uuid}
+                className="hover:bg-accent/50 flex cursor-pointer flex-col gap-2 rounded-lg px-2 py-2.5 transition-colors"
+              >
+                <div className="flex w-full items-center gap-2">
+                  <div className="bg-muted text-muted-foreground flex size-7 items-center justify-center rounded-md">
+                    <IconBrandNotion className="size-3.5" />
                   </div>
-                  <div className="flex w-full flex-col gap-2">
-                    {[
-                      { label: "Backlog", value: "backlog" },
-                      { label: "This Week", value: "this_week" },
-                      { label: "Today", value: "today" },
-                      { label: "Done", value: "done" },
-                    ].map((item) => (
-                      <div
-                        className="flex w-full items-center gap-3"
-                        key={item.value}
-                      >
-                        <div className="text-muted-foreground w-[82px] shrink-0 text-[12px] font-medium">
-                          {item.label}
-                        </div>
-                        <StatusOptionSelector
-                          setCurrDbStatusMapping={setCurrDbStatusMapping}
-                          item={item}
-                          currDbStatusMapping={currDbStatusMapping}
-                          statusMapping={statusMapping}
-                        />
-                      </div>
-                    ))}
-                  </div>
-                  <Button
-                    variant={"default"}
-                    size={"lg"}
-                    className="mt-1 h-9 w-full rounded-lg border-0 text-[12px] font-semibold shadow-none"
-                    onClick={async () => {
-                      // 更新状态
-                      const res = await updateStatusMapping(
-                        showDetailItem.uuid || "",
-                        currDbStatusMapping?.mapping ?? {},
+                  <span className="text-popover-foreground truncate text-[13px] font-medium">
+                    {db.name}
+                  </span>
+                  <div
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      open(
+                        `https://www.notion.so/${db.notion_database_id?.replaceAll("-", "")}`,
                       );
-                      if (res.success) {
-                        toast.success("Status mapping updated successfully");
+                    }}
+                    className="text-muted-foreground hover:bg-accent hover:text-accent-foreground rounded p-1 transition-colors"
+                  >
+                    <IconExternalLink className="text-muted-foreground size-4" />
+                  </div>
+                  {collection && (
+                    <RemoteTaskImportButton
+                      targetLabel={db.name || db.title || "Untitled database"}
+                      onOpen={() => setImportingDatabase(db)}
+                    />
+                  )}
+                  <div
+                    onClick={(e) => {
+                      if (showDetailItem?.uuid === db?.uuid) {
+                        setShowDetailItem(undefined);
                       } else {
-                        toast.error("Failed to update status mapping");
+                        setShowDetailItem(db);
                       }
-                      getCurrDbStatusMapping(showDetailItem.uuid || "");
+                      e.stopPropagation();
+                    }}
+                    className={cn(
+                      "text-muted-foreground hover:bg-accent hover:text-accent-foreground ml-auto flex size-6 items-center justify-center rounded-md transition-all",
+                      showDetailItem?.uuid === db.uuid ? "rotate-90" : "",
+                    )}
+                  >
+                    <IconChevronRight />
+                  </div>
+                </div>
+                {showDetailItem?.uuid === db.uuid && (
+                  <div
+                    className="border-border bg-muted/50 mt-1 flex w-full flex-col gap-3 rounded-lg border p-3 text-sm"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
                     }}
                   >
-                    Update
-                  </Button>
-                </div>
-              )}
-            </div>
-          ))
-        ) : (
-          <DropdownMenuItem disabled className="py-2">
-            <span className="text-muted-foreground text-xs">
-              No synced databases
-            </span>
-          </DropdownMenuItem>
-        )}
-      </DropdownMenuContent>
-    </DropdownMenu>
+                    <div className="text-popover-foreground flex items-center gap-1.5 text-[12px] font-semibold">
+                      Status mapping
+                      <IconInfoCircle className="text-muted-foreground/70 size-3.5" />
+                    </div>
+                    <div className="flex w-full flex-col gap-2">
+                      {[
+                        { label: "Backlog", value: "backlog" },
+                        { label: "This Week", value: "this_week" },
+                        { label: "Today", value: "today" },
+                        { label: "Done", value: "done" },
+                      ].map((item) => (
+                        <div
+                          className="flex w-full items-center gap-3"
+                          key={item.value}
+                        >
+                          <div className="text-muted-foreground w-[82px] shrink-0 text-[12px] font-medium">
+                            {item.label}
+                          </div>
+                          <StatusOptionSelector
+                            setCurrDbStatusMapping={setCurrDbStatusMapping}
+                            item={item}
+                            currDbStatusMapping={currDbStatusMapping}
+                            statusMapping={statusMapping}
+                          />
+                        </div>
+                      ))}
+                    </div>
+                    <Button
+                      variant={"default"}
+                      size={"lg"}
+                      className="mt-1 h-9 w-full rounded-lg border-0 text-[12px] font-semibold shadow-none"
+                      onClick={async () => {
+                        // 更新状态
+                        const res = await updateStatusMapping(
+                          showDetailItem.uuid || "",
+                          currDbStatusMapping?.mapping ?? {},
+                        );
+                        if (res.success) {
+                          toast.success("Status mapping updated successfully");
+                        } else {
+                          toast.error("Failed to update status mapping");
+                        }
+                        getCurrDbStatusMapping(showDetailItem.uuid || "");
+                      }}
+                    >
+                      Update
+                    </Button>
+                  </div>
+                )}
+              </div>
+            ))
+          ) : (
+            <DropdownMenuItem disabled className="py-2">
+              <span className="text-muted-foreground text-xs">
+                No synced databases
+              </span>
+            </DropdownMenuItem>
+          )}
+        </DropdownMenuContent>
+      </DropdownMenu>
+      {collection && importingDatabase && (
+        <RemoteTaskImport
+          open
+          collectionUuid={collection.uuid}
+          target={{
+            platform: "notion",
+            uuid: importingDatabase.uuid,
+            label:
+              importingDatabase.name ||
+              importingDatabase.title ||
+              "Untitled database",
+          }}
+          onOpenChange={(open) => {
+            if (!open) setImportingDatabase(undefined);
+          }}
+          onImported={() => void getTasks()}
+        />
+      )}
+    </>
   );
 }
 

@@ -16,3 +16,10 @@ export function getMacOSDownloadUrl(value: string | undefined) {
     return null;
   }
 }
+
+export function getDownloadClickEndpoint(apiBaseUrl: string | undefined) {
+  const baseUrl =
+    apiBaseUrl?.trim().replace(/\/+$/, "") ||
+    process.env.NEXT_PUBLIC_API_BASE_URL;
+  return `${baseUrl}/api/download-clicks`;
+}
