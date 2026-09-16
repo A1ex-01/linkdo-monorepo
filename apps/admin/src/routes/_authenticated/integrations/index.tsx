@@ -10,11 +10,8 @@ import {
   TableRow,
 } from '@linkdo/ui/components/table'
 import { Textarea } from '@linkdo/ui/components/textarea'
-import {
-  adminService,
-  type ClickUpList,
-  type NotionDatabase,
-} from '@/services/admin'
+import { adminService } from '@/services/admin'
+import type { IClickUpList, INotionDatabase } from '@linkdo/shared'
 import { createFileRoute } from '@tanstack/react-router'
 import { ExternalLink, RefreshCw } from 'lucide-react'
 import { useState } from 'react'
@@ -25,8 +22,8 @@ function asJSON(value: unknown) {
 }
 
 function IntegrationsPage() {
-  const [notionDatabases, setNotionDatabases] = useState<NotionDatabase[]>([])
-  const [clickupLists, setClickupLists] = useState<ClickUpList[]>([])
+  const [notionDatabases, setNotionDatabases] = useState<INotionDatabase[]>([])
+  const [clickupLists, setClickupLists] = useState<IClickUpList[]>([])
   const [notionQuery, setNotionQuery] = useState('')
   const [clickupPath, setClickupPath] = useState('team')
   const [result, setResult] = useState('No response yet.')
@@ -177,7 +174,7 @@ function IntegrationsPage() {
 type IntegrationTableProps = {
   kind: 'notion' | 'clickup'
   loading: boolean
-  rows: Array<NotionDatabase | ClickUpList>
+  rows: Array<INotionDatabase | IClickUpList>
   onMapping: (kind: 'notion' | 'clickup', uuid: string) => void
   onOptions: (kind: 'notion' | 'clickup', uuid: string) => void
 }

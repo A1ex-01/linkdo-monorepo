@@ -3,26 +3,26 @@
 ## ✅ 已完成的工作
 
 ### 1. 核心页面（100% 完成）
-- ✅ `apps/frontend/src/app/home/page.tsx` - 首页主页面
-- ✅ `apps/frontend/src/app/home/_components/collection-card.tsx` - 集合卡片
-- ✅ `apps/frontend/src/app/home/_components/create-collection-modal.tsx` - 创建集合弹窗
-- ✅ `apps/frontend/src/app/home/_components/sidebar.tsx` - 首页侧边栏
-- ✅ `apps/frontend/src/app/work/content.tsx` - 工作区容器
-- ✅ `apps/frontend/src/app/login/page.tsx` - 登录页（移除所有 10 处 `text-atext-*`）
+- ✅ `apps/desktop/src/app/home/page.tsx` - 首页主页面
+- ✅ `apps/desktop/src/app/home/_components/collection-card.tsx` - 集合卡片
+- ✅ `apps/desktop/src/app/home/_components/create-collection-modal.tsx` - 创建集合弹窗
+- ✅ `apps/desktop/src/app/home/_components/sidebar.tsx` - 首页侧边栏
+- ✅ `apps/desktop/src/app/work/content.tsx` - 工作区容器
+- ✅ `apps/desktop/src/app/login/page.tsx` - 登录页（移除所有 10 处 `text-atext-*`）
 
 ### 2. 通用组件（100% 完成）
-- ✅ `apps/frontend/src/components/theme-toggle.tsx` - 主题切换按钮（新增）
-- ✅ `apps/frontend/src/components/bottom-nav.tsx` - 底部导航
-- ✅ `apps/frontend/src/components/window-title-bar.tsx` - 窗口标题栏
-- ✅ `apps/frontend/src/components/account-settings-dialog.tsx` - 账户设置弹窗
-- ✅ `apps/frontend/src/providers/base.tsx` - Toast 通知样式
-- ✅ `apps/frontend/src/app/layout.tsx` - 根布局（主题切换脚本）
+- ✅ `apps/desktop/src/components/theme-toggle.tsx` - 主题切换按钮（新增）
+- ✅ `apps/desktop/src/components/bottom-nav.tsx` - 底部导航
+- ✅ `apps/desktop/src/components/window-title-bar.tsx` - 窗口标题栏
+- ✅ `apps/desktop/src/components/account-settings-dialog.tsx` - 账户设置弹窗
+- ✅ `apps/desktop/src/providers/base.tsx` - Toast 通知样式
+- ✅ `apps/desktop/src/app/layout.tsx` - 根布局（主题切换脚本）
 
 ### 3. Reports 组件（部分完成）
-- ✅ `apps/frontend/src/app/reports/_components/report-collection-table.tsx` - 移除 14 处自定义变量
+- ✅ `apps/desktop/src/app/reports/_components/report-collection-table.tsx` - 移除 14 处自定义变量
 
 ### 4. 主题系统
-- ✅ `apps/frontend/src/styles/globals.css` - 删除所有自定义 `--color-atext-*` 和 `--color-fun-*` 变量
+- ✅ `apps/desktop/src/styles/globals.css` - 删除所有自定义 `--color-atext-*` 和 `--color-fun-*` 变量
 - ✅ 实现 light/dark 主题切换，支持 localStorage 持久化
 - ✅ 防 FOUC（闪烁）脚本
 
@@ -31,7 +31,7 @@
 ### 高优先级（约 30+ 处硬编码）
 
 #### Reports 页面主文件
-**文件**: `apps/frontend/src/app/reports/page.tsx`
+**文件**: `apps/desktop/src/app/reports/page.tsx`
 
 需要替换的硬编码颜色：
 ```tsx
@@ -69,7 +69,7 @@ hover:text-white → hover:text-foreground
 - 用户头像区域 → 用 `Avatar` 组件
 
 #### Reports 图表组件
-**文件**: `apps/frontend/src/app/reports/_components/report-timeline-chart.tsx`
+**文件**: `apps/desktop/src/app/reports/_components/report-timeline-chart.tsx`
 
 recharts 图表颜色需要用 CSS 变量：
 ```tsx
@@ -116,7 +116,7 @@ background: "hsl(var(--card))"
 ```
 
 #### Reports 汇总卡片
-**文件**: `apps/frontend/src/app/reports/_components/report-summary-cards.tsx`
+**文件**: `apps/desktop/src/app/reports/_components/report-summary-cards.tsx`
 
 ```tsx
 // 替换
@@ -143,7 +143,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 ### 中优先级（约 8 处）
 
 #### AI Chat 组件
-**文件**: `apps/frontend/src/components/ai-chat/index.tsx`
+**文件**: `apps/desktop/src/components/ai-chat/index.tsx`
 
 需要扫描并替换：
 - 所有 `rgba()` 颜色
@@ -213,7 +213,7 @@ grep -rn "#[0-9a-fA-F]\{6\}" src/app/reports/ --include="*.tsx"
 ### 4. 验证命令
 ```bash
 # 类型检查（确保没有 TS 错误）
-cd apps/frontend && npx tsc --noEmit
+cd apps/desktop && npx tsc --noEmit
 
 # Lint 检查
 pnpm run lint

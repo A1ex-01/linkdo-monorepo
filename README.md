@@ -11,7 +11,7 @@
 ```
 .
 ├── apps/               # JS/TS 应用（pnpm workspace 管理）
-│   ├── frontend/       # Tauri + Next.js 桌面端
+│   ├── desktop/        # Tauri + Next.js 桌面端
 │   ├── admin/          # Ant Design Pro 管理后台
 │   └── mcp/            # Node.js MCP Server
 ├── services/           # 后端服务（各自独立的包管理器）
@@ -46,7 +46,7 @@ pnpm install
 make dev
 
 # 单独启动
-make dev-frontend    # Tauri 桌面端
+make dev-desktop     # Tauri 桌面端
 make dev-admin       # 管理后台
 make dev-mcp         # MCP Server
 make dev-backend     # Go 服务
@@ -62,7 +62,7 @@ make dev-agent       # Python Agent
 │           macOS Desktop App               │
 │           (Tauri 2 Runtime)               │
 │  ┌────────────────────────────────────┐  │
-│  │   React 19 + Next.js 15 Frontend  │  │
+│  │   React 19 + Next.js 15 Desktop UI │  │
 │  │   (窗口状态管理 / 计时器 / 看板)    │  │
 │  └────────────────────────────────────┘  │
 └──────────────────┬───────────────────────┘
@@ -98,14 +98,14 @@ make dev-agent       # Python Agent
 
 ## 各子模块详情
 
-### Frontend — `apps/frontend/`
+### Desktop — `apps/desktop/`
 
 macOS 桌面端应用，Tauri 2 + React 19 构建。
 
 ```bash
-make dev-frontend
+make dev-desktop
 # 或
-pnpm --filter @linkdo/frontend dev
+pnpm --filter @linkdo/desktop dev
 ```
 
 **主要依赖**: Next.js 15, Tailwind CSS, Zustand, ahooks, Shadcn UI, Radix UI, React Hook Form + Zod, dayjs, Framer Motion, @tabler/icons-react, Vercel AI SDK

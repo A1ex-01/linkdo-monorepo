@@ -1,4 +1,4 @@
 export * from './api'
 export * from './task'
 export * from './user'
-export * from './collection'
+export * from './linkdo'

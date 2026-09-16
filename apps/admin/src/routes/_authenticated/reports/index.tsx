@@ -9,13 +9,13 @@ import {
   TableHeader,
   TableRow,
 } from '@linkdo/ui/components/table'
-import {
-  adminService,
-  type CollectionBreakdown,
-  type ReportSession,
-  type ReportSummary,
-  type TimelinePoint,
-} from '@/services/admin'
+import { adminService } from '@/services/admin'
+import type {
+  ICollectionBreakdown,
+  IReportSession,
+  IReportSummary,
+  ITimelinePoint,
+} from '@linkdo/shared'
 import { createFileRoute } from '@tanstack/react-router'
 import { RefreshCw } from 'lucide-react'
 import { useState } from 'react'
@@ -33,10 +33,10 @@ function ReportsPage() {
   const [startDate, setStartDate] = useState('')
   const [endDate, setEndDate] = useState('')
   const [collectionUuids, setCollectionUuids] = useState('')
-  const [summary, setSummary] = useState<ReportSummary | null>(null)
-  const [breakdown, setBreakdown] = useState<CollectionBreakdown[]>([])
-  const [timeline, setTimeline] = useState<TimelinePoint[]>([])
-  const [sessions, setSessions] = useState<ReportSession[]>([])
+  const [summary, setSummary] = useState<IReportSummary | null>(null)
+  const [breakdown, setBreakdown] = useState<ICollectionBreakdown[]>([])
+  const [timeline, setTimeline] = useState<ITimelinePoint[]>([])
+  const [sessions, setSessions] = useState<IReportSession[]>([])
   const [loading, setLoading] = useState(false)
 
   function params() {

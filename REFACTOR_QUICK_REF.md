@@ -10,7 +10,7 @@
 
 ### 已完成的文件
 ```
-apps/frontend/src/
+apps/desktop/src/
 ├── app/
 │   ├── layout.tsx ✅ (主题脚本)
 │   ├── page.tsx ✅
@@ -42,21 +42,21 @@ apps/frontend/src/
 ### 优先级 1：Reports 页面（30 处硬编码）
 ```bash
 # 主文件
-apps/frontend/src/app/reports/page.tsx
+apps/desktop/src/app/reports/page.tsx
 # 需要替换背景、文字、边框颜色，建议改用 Tabs 和 Button 组件
 
 # 图表组件
-apps/frontend/src/app/reports/_components/report-timeline-chart.tsx
+apps/desktop/src/app/reports/_components/report-timeline-chart.tsx
 # recharts 颜色用 CSS 变量：hsl(var(--primary))
 
 # 汇总卡片
-apps/frontend/src/app/reports/_components/report-summary-cards.tsx
+apps/desktop/src/app/reports/_components/report-summary-cards.tsx
 # 改用 shadcn Card 组件
 ```
 
 ### 优先级 2：AI Chat（8 处）
 ```bash
-apps/frontend/src/components/ai-chat/index.tsx
+apps/desktop/src/components/ai-chat/index.tsx
 # 替换 rgba() 和十六进制颜色
 ```
 
@@ -64,7 +64,7 @@ apps/frontend/src/components/ai-chat/index.tsx
 
 ```bash
 # 1. 查看剩余硬编码位置
-cd apps/frontend
+cd apps/desktop
 grep -rn "#[0-9a-fA-F]\{6\}" src/app/reports/ --include="*.tsx"
 
 # 2. 测试主题切换

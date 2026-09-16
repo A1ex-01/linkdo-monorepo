@@ -1,6 +1,7 @@
 import { AppTitle } from '@/components/layout/app-title'
 import { TaskSessionsModal } from '@/components/task-sessions-modal'
-import { adminService, type Task } from '@/services/admin'
+import { adminService } from '@/services/admin'
+import type { ITask } from '@linkdo/shared'
 import { createFileRoute } from '@tanstack/react-router'
 import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
@@ -10,11 +11,11 @@ import { TasksTable } from './_components/tasks-table'
 import { TasksToolbar } from './_components/tasks-toolbar'
 
 function Tasks() {
-  const [data, setData] = useState<Task[]>([])
+  const [data, setData] = useState<ITask[]>([])
   const [total, setTotal] = useState(0)
   const [loading, setLoading] = useState(false)
 
-  const [sessionsTask, setSessionsTask] = useState<Task | null>(null)
+  const [sessionsTask, setSessionsTask] = useState<ITask | null>(null)
   const [sessionsOpen, setSessionsOpen] = useState(false)
 
   useEffect(() => {
@@ -34,7 +35,7 @@ function Tasks() {
       .finally(() => setLoading(false))
   }, [])
 
-  function handleViewSessions(task: Task) {
+  function handleViewSessions(task: ITask) {
     setSessionsTask(task)
     setSessionsOpen(true)
   }

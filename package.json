@@ -7,9 +7,10 @@
     "build": "turbo build",
     "lint": "turbo lint",
     "typecheck": "turbo typecheck",
-    "dev:frontend": "pnpm --filter @linkdo/frontend dev",
+    "dev:desktop": "pnpm --filter @linkdo/desktop dev",
     "dev:admin": "pnpm --filter @linkdo/admin dev",
-    "build:frontend": "pnpm --filter @linkdo/frontend build",
+    "dev:web": "pnpm --filter @linkdo/web dev",
+    "build:desktop": "pnpm --filter @linkdo/desktop build",
     "build:admin": "pnpm --filter @linkdo/admin build"
   },
   "engines": {

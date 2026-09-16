@@ -1,12 +1,13 @@
 import { cn } from '@/lib/utils'
-import { adminService, type ReportSummary } from '@/services/admin'
+import { adminService } from '@/services/admin'
+import type { IReportSummary } from '@linkdo/shared'
 import { createFileRoute } from '@tanstack/react-router'
 import { CheckCircle, LayoutList, ListChecks, Users } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
 
 export function Dashboard() {
-  const [stats, setStats] = useState<ReportSummary | null>(null)
+  const [stats, setStats] = useState<IReportSummary | null>(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
