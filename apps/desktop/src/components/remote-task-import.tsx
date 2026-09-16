@@ -18,30 +18,63 @@ import {
   DialogTitle,
 } from "@linkdo/ui/components/dialog";
 import { ScrollArea } from "@linkdo/ui/components/scroll-area";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@linkdo/ui/components/select";
 import { ExternalLinkIcon, ImportIcon, LoaderCircleIcon } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import toast from "react-hot-toast";
 
 interface RemoteTaskImportProps {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
   collectionUuid: string;
-  status: TaskStatus;
   target: Pick<TaskLinkTargetOption, "platform" | "uuid" | "label">;
-  position: { prevRank: string; nextRank: string };
   onImported: () => void;
 }
 
+interface RemoteTaskImportButtonProps {
+  targetLabel: string;
+  onOpen: () => void;
+}
+
+export function RemoteTaskImportButton({
+  targetLabel,
+  onOpen,
+}: RemoteTaskImportButtonProps) {
+  return (
+    <Button
+      type="button"
+      variant="ghost"
+      size="icon-sm"
+      aria-label={`Import tasks from ${targetLabel}`}
+      onClick={(event) => {
+        event.stopPropagation();
+        onOpen();
+      }}
+    >
+      <ImportIcon />
+    </Button>
+  );
+}
+
 export function RemoteTaskImport({
+  open,
+  onOpenChange,
   collectionUuid,
-  status,
   target,
-  position,
   onImported,
 }: RemoteTaskImportProps) {
-  const [open, setOpen] = useState(false);
   const [items, setItems] = useState<RemoteTaskCandidate[]>([]);
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [isLoading, setIsLoading] = useState(false);
   const [isImporting, setIsImporting] = useState(false);
+  const [targetStatus, setTargetStatus] = useState<TaskStatus>("backlog");
 
   useEffect(() => {
     if (!open) return;
@@ -91,9 +124,9 @@ export function RemoteTaskImport({
       ...(target.platform === "notion"
         ? { notion_database_uuid: target.uuid }
         : { clickup_list_uuid: target.uuid }),
-      status,
-      prev_rank: position.prevRank,
-      next_rank: position.nextRank,
+      status: targetStatus,
+      prev_rank: "",
+      next_rank: "",
       items: selectedItems.map(({ remote_id, title }) => ({
         remote_id,
         title,
@@ -104,7 +137,7 @@ export function RemoteTaskImport({
       toast.error(response.message ?? "Failed to import tasks");
       return;
     }
-    setOpen(false);
+    onOpenChange(false);
     onImported();
     toast.success(
       `${selectedItems.length} task${selectedItems.length === 1 ? "" : "s"} added`,
@@ -113,16 +146,7 @@ export function RemoteTaskImport({
 
   return (
     <>
-      <Button
-        type="button"
-        variant="ghost"
-        size="icon-sm"
-        aria-label={`Import tasks from ${target.label}`}
-        onClick={() => setOpen(true)}
-      >
-        <ImportIcon />
-      </Button>
-      <Dialog open={open} onOpenChange={setOpen}>
+      <Dialog open={open} onOpenChange={onOpenChange}>
         <DialogContent
           className="max-w-lg gap-0 p-0"
           showCloseButton={!isImporting}
@@ -134,6 +158,24 @@ export function RemoteTaskImport({
               {target.label}
             </DialogDescription>
           </DialogHeader>
+          <div className="border-b px-5 py-3">
+            <Select
+              value={targetStatus}
+              onValueChange={(value) => setTargetStatus(value as TaskStatus)}
+            >
+              <SelectTrigger aria-label="Target position" className="w-full">
+                <SelectValue placeholder="Target position" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectItem value="backlog">Backlog</SelectItem>
+                  <SelectItem value="this_week">This Week</SelectItem>
+                  <SelectItem value="today">Today</SelectItem>
+                  <SelectItem value="done">Done</SelectItem>
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+          </div>
           <ScrollArea className="h-80 px-5 py-4">
             {isLoading ? (
               <div className="text-muted-foreground flex h-full items-center justify-center">

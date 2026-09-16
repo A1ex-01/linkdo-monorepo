@@ -1,10 +1,20 @@
 export const MACOS_DOWNLOAD_PATH = "/download/macos";
+export const WINDOWS_DOWNLOAD_PATH = "/download/windows";
+const DEFAULT_API_BASE_URL = "https://api.a1ex.online";
 
 export function isMacOS(userAgent: string) {
   return /Macintosh|Mac OS X/.test(userAgent);
 }
 
 export function getMacOSDownloadUrl(value: string | undefined) {
+  return getSecureDownloadUrl(value);
+}
+
+export function getWindowsDownloadUrl(value: string | undefined) {
+  return getSecureDownloadUrl(value);
+}
+
+function getSecureDownloadUrl(value: string | undefined) {
   if (!value) {
     return null;
   }
@@ -15,4 +25,12 @@ export function getMacOSDownloadUrl(value: string | undefined) {
   } catch {
     return null;
   }
+}
+
+export function getDownloadClickEndpoint(apiBaseUrl: string | undefined) {
+  const baseUrl =
+    apiBaseUrl?.trim().replace(/\/+$/, "") ||
+    process.env.NEXT_PUBLIC_API_BASE_URL?.trim().replace(/\/+$/, "") ||
+    DEFAULT_API_BASE_URL;
+  return `${baseUrl}/api/download-clicks`;
 }
