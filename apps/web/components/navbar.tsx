@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useState } from "react";
 import { MenuIcon, PlusIcon } from "@/components/icons";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { DownloadLink } from "@/app/_components/download-link";
 
 const links = [
   ["MCP", "/mcp"],
@@ -41,12 +42,11 @@ export function Navbar() {
             </a>
           ))}
           <ThemeToggle />
-          <a
+          <DownloadLink
             className="linkdo-button !min-h-10 !px-5 !py-2 !text-sm"
-            href="#get-linkdo"
           >
             立即获取 Linkdo
-          </a>
+          </DownloadLink>
         </div>
         <div className="flex items-center gap-2 min-[810px]:hidden">
           <ThemeToggle />
@@ -78,9 +78,9 @@ export function Navbar() {
                 {label}
               </a>
             ))}
-            <a className="linkdo-button mt-3" href="#get-linkdo">
+            <DownloadLink className="linkdo-button mt-3">
               立即获取 Linkdo
-            </a>
+            </DownloadLink>
           </div>
         </div>
       )}

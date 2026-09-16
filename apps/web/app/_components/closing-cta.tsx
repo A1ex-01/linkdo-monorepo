@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { DownloadLink } from "./download-link";
 
 export function ClosingCta() {
   return (
@@ -12,7 +13,9 @@ export function ClosingCta() {
           告别干扰，<br />聚焦重要事项，<br />然后<span className="linkdo-gradient-text">把事情做成。</span>
         </h2>
         <p className="mt-7 text-[14px] text-[#858585]">由高效工作者精心打造</p>
-        <a className="linkdo-button mt-8 h-12 min-w-32" href="#get-linkdo">下载</a>
+        <DownloadLink className="linkdo-button mt-8 h-12 min-w-32">
+          下载 macOS 版
+        </DownloadLink>
       </div>
     </section>
   );

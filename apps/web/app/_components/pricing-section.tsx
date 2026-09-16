@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { CheckIcon } from "@/components/icons";
+import { DownloadLink } from "./download-link";
 
 const coreFeatures = ["所有 Linkdo 功能", "不限数量的列表与任务"];
 
@@ -45,9 +46,9 @@ export function PricingSection() {
         <p className="mt-10 max-w-[650px] text-center text-[18px] leading-[25.2px] text-[#d0d0d0] max-[809px]:mt-7 max-[809px]:text-[16px] max-[809px]:leading-[24px]">
           下载并安装 Linkdo，即可开始 7 天免费试用。准备好后，你可以在应用内购买下方任意方案。
         </p>
-        <a className="linkdo-button mt-12 h-12 min-w-32" href="#get-linkdo">
-          下载
-        </a>
+        <DownloadLink className="linkdo-button mt-12 h-12 min-w-32">
+          下载 macOS 版
+        </DownloadLink>
 
         <div className="mt-[112px] grid w-full max-w-[900px] grid-cols-2 items-start gap-6 max-[809px]:mt-[120px] max-[809px]:grid-cols-1 max-[809px]:gap-5">
           <article className="relative flex h-[220px] flex-col overflow-hidden rounded-[20px] border border-white/[.08] bg-[#171717] p-6 max-[809px]:h-[278px]">
