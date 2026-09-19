@@ -1,8 +1,6 @@
 import { AIconNotion } from "@/components/icons/base";
-import {
-  RemoteTaskImport,
-  RemoteTaskImportButton,
-} from "@/components/remote-task-import";
+import { RemoteTaskImport } from "@/components/remote-task-import";
+import { hasCompleteStatusMapping } from "@/lib/status-mapping";
 import { cn } from "@/lib/utils";
 import {
   createNotionDatabase,
@@ -56,17 +54,24 @@ import { launchDesktopLinkOAuth } from "./link-oauth";
 interface IProps {
   className: string;
 }
+
+type DetailTab = "cards" | "settings";
+
 export function NotionDropdown({ className }: IProps) {
   const { user, fetchUser } = useUserStore();
   const { collection, getTasks } = useData();
   const { currCollectionNotionDbs, isFetchingCurrCollectionNotionDbs } =
     useCommonStore();
   const [showDetailItem, setShowDetailItem] = useState<INotionDatabase>();
-  const [importingDatabase, setImportingDatabase] = useState<INotionDatabase>();
+  const [detailTab, setDetailTab] = useState<DetailTab>("cards");
   const [statusMapping, setStatusMapping] = useState<string[] | undefined>();
   const [currDbStatusMapping, setCurrDbStatusMapping] = useState<
     Record<"mapping", Record<string, string>> | undefined
   >();
+  const [savedDbStatusMapping, setSavedDbStatusMapping] = useState<
+    Record<"mapping", Record<string, string>> | undefined
+  >();
+  const [isStatusMappingLoading, setIsStatusMappingLoading] = useState(false);
 
   const getCurrItemStatusMapping = async (database_id: string) => {
     const res = await fetchStatusOptions(database_id);
@@ -75,20 +80,53 @@ export function NotionDropdown({ className }: IProps) {
     }
   };
   const getCurrDbStatusMapping = async (database_id: string) => {
-    const res = await getStatusMapping(database_id);
-    if (res.success) {
-      setCurrDbStatusMapping(
-        res.data as unknown as Record<"mapping", Record<string, string>>,
-      );
+    setIsStatusMappingLoading(true);
+    try {
+      const res = await getStatusMapping(database_id);
+      if (res.success) {
+        const mapping = res.data as unknown as Record<
+          "mapping",
+          Record<string, string>
+        >;
+        setCurrDbStatusMapping(mapping);
+        setSavedDbStatusMapping(mapping);
+      }
+    } finally {
+      setIsStatusMappingLoading(false);
     }
   };
 
   useEffect(() => {
     if (showDetailItem?.uuid) {
-      getCurrItemStatusMapping(showDetailItem?.uuid);
       getCurrDbStatusMapping(showDetailItem?.uuid);
     }
   }, [showDetailItem?.uuid]);
+
+  useEffect(() => {
+    if (showDetailItem?.uuid && detailTab === "settings") {
+      getCurrItemStatusMapping(showDetailItem.uuid);
+    }
+  }, [detailTab, showDetailItem?.uuid]);
+
+  const isStatusMappingComplete = hasCompleteStatusMapping(
+    savedDbStatusMapping?.mapping,
+  );
+
+  useEffect(() => {
+    if (
+      showDetailItem?.uuid &&
+      !isStatusMappingLoading &&
+      !isStatusMappingComplete &&
+      detailTab === "cards"
+    ) {
+      setDetailTab("settings");
+    }
+  }, [
+    detailTab,
+    isStatusMappingComplete,
+    isStatusMappingLoading,
+    showDetailItem?.uuid,
+  ]);
 
   return (
     <>
@@ -183,18 +221,18 @@ export function NotionDropdown({ className }: IProps) {
                   >
                     <IconExternalLink className="text-muted-foreground size-4" />
                   </div>
-                  {collection && (
-                    <RemoteTaskImportButton
-                      targetLabel={db.name || db.title || "Untitled database"}
-                      onOpen={() => setImportingDatabase(db)}
-                    />
-                  )}
-                  <div
+                  <button
+                    type="button"
                     onClick={(e) => {
                       if (showDetailItem?.uuid === db?.uuid) {
                         setShowDetailItem(undefined);
                       } else {
+                        setCurrDbStatusMapping(undefined);
+                        setSavedDbStatusMapping(undefined);
+                        setStatusMapping(undefined);
+                        setIsStatusMappingLoading(true);
                         setShowDetailItem(db);
+                        setDetailTab("cards");
                       }
                       e.stopPropagation();
                     }}
@@ -203,64 +241,123 @@ export function NotionDropdown({ className }: IProps) {
                       showDetailItem?.uuid === db.uuid ? "rotate-90" : "",
                     )}
                   >
-                    <IconChevronRight />
-                  </div>
+                    <IconChevronRight className="size-4" />
+                  </button>
                 </div>
                 {showDetailItem?.uuid === db.uuid && (
                   <div
-                    className="border-border bg-muted/50 mt-1 flex w-full flex-col gap-3 rounded-lg border p-3 text-sm"
+                    className="border-border bg-muted/50 mt-1 flex w-full flex-col gap-4 rounded-lg border p-3 text-sm"
                     onClick={(e) => {
-                      e.preventDefault();
                       e.stopPropagation();
                     }}
                   >
-                    <div className="text-popover-foreground flex items-center gap-1.5 text-[12px] font-semibold">
-                      Status mapping
-                      <IconInfoCircle className="text-muted-foreground/70 size-3.5" />
-                    </div>
-                    <div className="flex w-full flex-col gap-2">
-                      {[
-                        { label: "Backlog", value: "backlog" },
-                        { label: "This Week", value: "this_week" },
-                        { label: "Today", value: "today" },
-                        { label: "Done", value: "done" },
-                      ].map((item) => (
-                        <div
-                          className="flex w-full items-center gap-3"
-                          key={item.value}
+                    <div
+                      aria-label={`${db.name || "Database"} detail tabs`}
+                      className="border-border grid grid-cols-2 rounded-lg border p-1"
+                      role="tablist"
+                    >
+                      {(["cards", "settings"] as DetailTab[]).map((tab) => (
+                        <button
+                          aria-selected={detailTab === tab}
+                          className={cn(
+                            "text-muted-foreground rounded-md px-3 py-2 text-[12px] font-semibold capitalize transition-colors",
+                            detailTab === tab &&
+                              "bg-card text-foreground shadow-sm",
+                          )}
+                          key={tab}
+                          onClick={() => {
+                            if (
+                              tab === "cards" &&
+                              !isStatusMappingLoading &&
+                              !isStatusMappingComplete
+                            ) {
+                              setDetailTab("settings");
+                              return;
+                            }
+                            setDetailTab(tab);
+                          }}
+                          role="tab"
+                          type="button"
                         >
-                          <div className="text-muted-foreground w-[82px] shrink-0 text-[12px] font-medium">
-                            {item.label}
-                          </div>
-                          <StatusOptionSelector
-                            setCurrDbStatusMapping={setCurrDbStatusMapping}
-                            item={item}
-                            currDbStatusMapping={currDbStatusMapping}
-                            statusMapping={statusMapping}
-                          />
-                        </div>
+                          {tab}
+                        </button>
                       ))}
                     </div>
-                    <Button
-                      variant={"default"}
-                      size={"lg"}
-                      className="mt-1 h-9 w-full rounded-lg border-0 text-[12px] font-semibold shadow-none"
-                      onClick={async () => {
-                        // 更新状态
-                        const res = await updateStatusMapping(
-                          showDetailItem.uuid || "",
-                          currDbStatusMapping?.mapping ?? {},
-                        );
-                        if (res.success) {
-                          toast.success("Status mapping updated successfully");
-                        } else {
-                          toast.error("Failed to update status mapping");
-                        }
-                        getCurrDbStatusMapping(showDetailItem.uuid || "");
-                      }}
-                    >
-                      Update
-                    </Button>
+
+                    {detailTab === "cards" ? (
+                      isStatusMappingLoading ? (
+                        <div className="text-muted-foreground flex items-center justify-center gap-2 py-8 text-sm">
+                          <IconLoader2 className="size-4 animate-spin" />
+                          Checking status mapping…
+                        </div>
+                      ) : collection ? (
+                        <RemoteTaskImport
+                          collectionUuid={collection.uuid}
+                          target={{
+                            platform: "notion",
+                            uuid: db.uuid,
+                            label: db.name || db.title || "Untitled database",
+                          }}
+                          onConfigureStatusMapping={() =>
+                            setDetailTab("settings")
+                          }
+                          onImported={() => void getTasks()}
+                          statusMappingComplete={isStatusMappingComplete}
+                        />
+                      ) : null
+                    ) : (
+                      <>
+                        <div className="text-popover-foreground flex items-center gap-1.5 text-[12px] font-semibold">
+                          Status mapping
+                          <IconInfoCircle className="text-muted-foreground/70 size-3.5" />
+                        </div>
+                        <div className="flex w-full flex-col gap-2">
+                          {[
+                            { label: "Backlog", value: "backlog" },
+                            { label: "This Week", value: "this_week" },
+                            { label: "Today", value: "today" },
+                            { label: "Done", value: "done" },
+                          ].map((item) => (
+                            <div
+                              className="flex w-full items-center gap-3"
+                              key={item.value}
+                            >
+                              <div className="text-muted-foreground w-[82px] shrink-0 text-[12px] font-medium">
+                                {item.label}
+                              </div>
+                              <StatusOptionSelector
+                                setCurrDbStatusMapping={setCurrDbStatusMapping}
+                                item={item}
+                                currDbStatusMapping={currDbStatusMapping}
+                                statusMapping={statusMapping}
+                              />
+                            </div>
+                          ))}
+                        </div>
+                        <Button
+                          variant={"default"}
+                          size={"lg"}
+                          className="mt-1 h-9 w-full rounded-lg border-0 text-[12px] font-semibold shadow-none"
+                          onClick={async () => {
+                            const res = await updateStatusMapping(
+                              showDetailItem.uuid || "",
+                              currDbStatusMapping?.mapping ?? {},
+                            );
+                            if (res.success) {
+                              setSavedDbStatusMapping(currDbStatusMapping);
+                              toast.success(
+                                "Status mapping updated successfully",
+                              );
+                            } else {
+                              toast.error("Failed to update status mapping");
+                            }
+                            getCurrDbStatusMapping(showDetailItem.uuid || "");
+                          }}
+                        >
+                          Update
+                        </Button>
+                      </>
+                    )}
                   </div>
                 )}
               </div>
@@ -274,24 +371,6 @@ export function NotionDropdown({ className }: IProps) {
           )}
         </DropdownMenuContent>
       </DropdownMenu>
-      {collection && importingDatabase && (
-        <RemoteTaskImport
-          open
-          collectionUuid={collection.uuid}
-          target={{
-            platform: "notion",
-            uuid: importingDatabase.uuid,
-            label:
-              importingDatabase.name ||
-              importingDatabase.title ||
-              "Untitled database",
-          }}
-          onOpenChange={(open) => {
-            if (!open) setImportingDatabase(undefined);
-          }}
-          onImported={() => void getTasks()}
-        />
-      )}
     </>
   );
 }

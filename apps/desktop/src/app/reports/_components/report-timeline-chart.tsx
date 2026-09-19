@@ -2,6 +2,8 @@
 
 "use client";
 
+import { toTimelineChartData } from "@/lib/report-view";
+import type { ITimelinePoint } from "@/types/base";
 import {
   Bar,
   BarChart,
@@ -10,8 +12,6 @@ import {
   Tooltip,
   XAxis,
 } from "recharts";
-import { toTimelineChartData } from "@/lib/report-view";
-import type { ITimelinePoint } from "@/types/base";
 
 interface ReportTimelineChartProps {
   data: ITimelinePoint[] | undefined;
@@ -24,11 +24,11 @@ export function ReportTimelineChart({ data }: ReportTimelineChartProps) {
 
   if (chartData.length === 0) {
     return (
-      <div className="flex h-[320px] flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-[#2a2a2a] bg-[#1d1d1d] p-6 text-center">
-        <div className="text-sm text-[#77777c]">
+      <div className="border-border bg-muted flex h-[320px] flex-col items-center justify-center gap-2 rounded-xl border border-dashed p-6 text-center">
+        <div className="text-muted-foreground text-sm">
           No activity in this window yet.
         </div>
-        <div className="text-xs text-[#5f5f64]">
+        <div className="text-muted-foreground text-xs">
           Pick a wider date range or add tasks to see a chart.
         </div>
       </div>
@@ -36,7 +36,7 @@ export function ReportTimelineChart({ data }: ReportTimelineChartProps) {
   }
 
   return (
-    <div className="flex h-[596px] flex-col rounded-lg border border-[#29292c] bg-[#171717] px-7 pt-8 pb-6">
+    <div className="border-border bg-card flex h-[596px] flex-col rounded-lg border px-7 pt-8 pb-6">
       <div className="min-h-0 flex-1">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart
@@ -47,27 +47,31 @@ export function ReportTimelineChart({ data }: ReportTimelineChartProps) {
           >
             <XAxis
               dataKey="label"
-              stroke="#d8d8db"
-              tick={{ fill: "#d8d8db", fontSize: 15, fontWeight: 500 }}
+              stroke="var(--border)"
+              tick={{
+                fill: "var(--muted-foreground)",
+                fontSize: 15,
+                fontWeight: 500,
+              }}
               tickLine={false}
-              axisLine={{ stroke: "#c9c9cc", strokeWidth: 2 }}
+              axisLine={{ stroke: "var(--border)", strokeWidth: 2 }}
             />
             <Tooltip
-              cursor={{ fill: "rgba(255,255,255,0.04)" }}
+              cursor={{ fill: "var(--muted)" }}
               contentStyle={{
-                background: "#181818",
-                border: "1px solid #2a2a2a",
+                background: "var(--popover)",
+                border: "1px solid var(--border)",
                 borderRadius: 8,
                 fontSize: 13,
-                color: "#fff",
+                color: "var(--popover-foreground)",
               }}
-              labelStyle={{ color: "#a3a3a3" }}
+              labelStyle={{ color: "var(--muted-foreground)" }}
             />
             <Legend
               align="left"
               verticalAlign="bottom"
               wrapperStyle={{
-                color: "#85858a",
+                color: "var(--muted-foreground)",
                 fontSize: 14,
                 fontWeight: 700,
                 paddingTop: 18,
@@ -77,21 +81,21 @@ export function ReportTimelineChart({ data }: ReportTimelineChartProps) {
             <Bar
               dataKey="tasks"
               name="TASKS"
-              fill="#6550e8"
+              fill="var(--chart-2)"
               radius={[3, 3, 0, 0]}
               maxBarSize={68}
             />
             <Bar
               dataKey="newTasks"
               name="NEW TASKS"
-              fill="#91d9cf"
+              fill="var(--chart-1)"
               radius={[3, 3, 0, 0]}
               maxBarSize={68}
             />
             <Bar
               dataKey="total"
               name="TOTAL"
-              fill="#dfb979"
+              fill="var(--chart-5)"
               radius={[3, 3, 0, 0]}
               maxBarSize={68}
             />

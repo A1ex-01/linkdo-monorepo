@@ -32,9 +32,6 @@ export interface ImportRemoteTasksDTO {
   source: "notion" | "clickup";
   notion_database_uuid?: string;
   clickup_list_uuid?: string;
-  status: TaskStatus;
-  prev_rank: string;
-  next_rank: string;
   items: Array<{ remote_id: string; title: string }>;
 }
 
