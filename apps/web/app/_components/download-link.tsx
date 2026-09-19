@@ -7,6 +7,7 @@ import {
   MACOS_DOWNLOAD_PATH,
   WINDOWS_DOWNLOAD_PATH,
 } from "@/lib/macos-download";
+import { ArrowRightIcon } from "@/components/icons";
 
 type DownloadLinkProps = Omit<
   AnchorHTMLAttributes<HTMLAnchorElement>,
@@ -108,7 +109,7 @@ function DownloadOption({
         </span>
       </span>
       <span aria-hidden="true" className="text-[#858585]">
-        ↓
+        <ArrowRightIcon className="size-4 rotate-90" />
       </span>
     </a>
   );
