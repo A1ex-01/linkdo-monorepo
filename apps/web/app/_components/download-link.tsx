@@ -8,23 +8,27 @@ import {
   WINDOWS_DOWNLOAD_PATH,
 } from "@/lib/macos-download";
 
-type DownloadLinkProps = Omit<AnchorHTMLAttributes<HTMLAnchorElement>, "href"> & {
+type DownloadLinkProps = Omit<
+  AnchorHTMLAttributes<HTMLAnchorElement>,
+  "href"
+> & {
   children: ReactNode;
 };
 
-export function DownloadLink({ children, onClick, ...props }: DownloadLinkProps) {
+export function DownloadLink({
+  children,
+  onClick,
+  ...props
+}: DownloadLinkProps) {
   const [open, setOpen] = useState(false);
 
   const reportDownloadClick = (platform: "macos" | "windows") => {
-    void fetch(
-      getDownloadClickEndpoint(process.env.NEXT_PUBLIC_API_BASE_URL),
-      {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify({ platform, source: window.location.pathname }),
-        keepalive: true,
-      },
-    ).catch(() => undefined);
+    void fetch(getDownloadClickEndpoint(process.env.NEXT_PUBLIC_API_BASE_URL), {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ platform, source: window.location.pathname }),
+      keepalive: true,
+    }).catch(() => undefined);
   };
 
   return (
@@ -46,9 +50,6 @@ export function DownloadLink({ children, onClick, ...props }: DownloadLinkProps)
         }}
       >
         {children}
-        <span aria-hidden="true" className="ml-2 text-sm">
-          ↓
-        </span>
       </a>
       {open && (
         <div
