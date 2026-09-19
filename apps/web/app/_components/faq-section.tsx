@@ -10,7 +10,7 @@ interface FaqItem {
 const faqItems: FaqItem[] = [
   {
     question: "Linkdo 仅支持桌面端吗？有移动版吗？",
-    answer: "Linkdo 目前支持 macOS。",
+    answer: "Linkdo 目前支持桌面端。",
   },
   {
     question: "Linkdo 可以安装在几台设备上？",
@@ -19,8 +19,7 @@ const faqItems: FaqItem[] = [
   },
   {
     question: "Linkdo 是免费应用吗？",
-    answer:
-      "是的，Linkdo 可免费使用。创建账户后即可立即开始使用。",
+    answer: "是的，Linkdo 可免费使用。创建账户后即可立即开始使用。",
   },
   {
     question: "Linkdo 可以与其他应用集成吗？",
@@ -30,7 +29,7 @@ const faqItems: FaqItem[] = [
   {
     question: "如何获取 Linkdo？",
     answer:
-      "点击本页任意“下载”按钮即可获取 macOS 版本。启动 Linkdo 后创建账户，免费试用会立即开始。",
+      "点击本页任意“下载”按钮即可获取 Linkdo。启动 Linkdo 后创建账户，免费试用会立即开始。",
   },
 ];
 
@@ -40,30 +39,6 @@ export function FaqSection() {
   return (
     <section className="px-5 py-[72px]">
       <div className="mx-auto max-w-[1080px]">
-        <div className="text-center">
-          <h2 className="font-heading text-[28px] font-medium leading-[33.6px]">
-            常见问题
-          </h2>
-          <p className="mt-6 text-[16px] leading-[25.6px] text-[#c8c8c8]">
-            没有找到答案？欢迎通过我们的社区联系我们。
-          </p>
-          <p className="text-[16px] leading-[25.6px] text-[#ef82ef]">
-            <a
-              href="https://discord.com"
-              className="transition hover:text-white"
-            >
-              Discord
-            </a>{" "}
-            /{" "}
-            <a
-              href="https://www.facebook.com/groups/3563033377301367"
-              className="transition hover:text-white"
-            >
-              Facebook
-            </a>
-          </p>
-        </div>
-
         <div className="mt-12 space-y-2.5">
           {faqItems.map((item, index) => {
             const isOpen = openIndex === index;
