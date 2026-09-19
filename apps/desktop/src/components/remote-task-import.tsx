@@ -6,81 +6,49 @@ import {
   importRemoteTasks,
   type RemoteTaskCandidate,
 } from "@/services/task";
-import type { TaskStatus } from "@/types/base";
 import { Button } from "@linkdo/ui/components/button";
 import { Checkbox } from "@linkdo/ui/components/checkbox";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@linkdo/ui/components/dialog";
+import { Input } from "@linkdo/ui/components/input";
 import { ScrollArea } from "@linkdo/ui/components/scroll-area";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@linkdo/ui/components/select";
-import { ExternalLinkIcon, ImportIcon, LoaderCircleIcon } from "lucide-react";
+import { ExternalLinkIcon, LoaderCircleIcon, SearchIcon } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import toast from "react-hot-toast";
 
 interface RemoteTaskImportProps {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
   collectionUuid: string;
   target: Pick<TaskLinkTargetOption, "platform" | "uuid" | "label">;
   onImported: () => void;
-}
-
-interface RemoteTaskImportButtonProps {
-  targetLabel: string;
-  onOpen: () => void;
-}
-
-export function RemoteTaskImportButton({
-  targetLabel,
-  onOpen,
-}: RemoteTaskImportButtonProps) {
-  return (
-    <Button
-      type="button"
-      variant="ghost"
-      size="icon-sm"
-      aria-label={`Import tasks from ${targetLabel}`}
-      onClick={(event) => {
-        event.stopPropagation();
-        onOpen();
-      }}
-    >
-      <ImportIcon />
-    </Button>
-  );
+  statusMappingComplete?: boolean;
+  onConfigureStatusMapping?: () => void;
 }
 
 export function RemoteTaskImport({
-  open,
-  onOpenChange,
   collectionUuid,
   target,
   onImported,
+  statusMappingComplete = true,
+  onConfigureStatusMapping,
 }: RemoteTaskImportProps) {
   const [items, setItems] = useState<RemoteTaskCandidate[]>([]);
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [isLoading, setIsLoading] = useState(false);
   const [isImporting, setIsImporting] = useState(false);
-  const [targetStatus, setTargetStatus] = useState<TaskStatus>("backlog");
+  const [search, setSearch] = useState("");
 
   useEffect(() => {
-    if (!open) return;
     let active = true;
+    if (!statusMappingComplete) {
+      setItems([]);
+      setSelected(new Set());
+      setSearch("");
+      setIsLoading(false);
+      return () => {
+        active = false;
+      };
+    }
     setIsLoading(true);
     setSelected(new Set());
+    setSearch("");
     getRemoteImportCandidates(target.platform, target.uuid)
       .then((response) => {
         if (!active) return;
@@ -100,12 +68,26 @@ export function RemoteTaskImport({
     return () => {
       active = false;
     };
-  }, [open, target.platform, target.uuid]);
+  }, [statusMappingComplete, target.platform, target.uuid]);
 
   const selectedItems = useMemo(
     () => items.filter((item) => selected.has(item.remote_id)),
     [items, selected],
   );
+
+  const cardsByStatus = useMemo(() => {
+    const groups = new Map<string, RemoteTaskCandidate[]>();
+    const query = search.trim().toLocaleLowerCase();
+
+    for (const item of items) {
+      if (query && !item.title.toLocaleLowerCase().includes(query)) continue;
+      const group = groups.get(item.remote_status) ?? [];
+      group.push(item);
+      groups.set(item.remote_status, group);
+    }
+
+    return [...groups.entries()];
+  }, [items, search]);
 
   const toggleItem = (remoteId: string, checked: boolean) => {
     setSelected((current) => {
@@ -124,9 +106,6 @@ export function RemoteTaskImport({
       ...(target.platform === "notion"
         ? { notion_database_uuid: target.uuid }
         : { clickup_list_uuid: target.uuid }),
-      status: targetStatus,
-      prev_rank: "",
-      next_rank: "",
       items: selectedItems.map(({ remote_id, title }) => ({
         remote_id,
         title,
@@ -137,53 +116,53 @@ export function RemoteTaskImport({
       toast.error(response.message ?? "Failed to import tasks");
       return;
     }
-    onOpenChange(false);
     onImported();
     toast.success(
       `${selectedItems.length} task${selectedItems.length === 1 ? "" : "s"} added`,
     );
   };
 
+  if (!statusMappingComplete) {
+    return (
+      <section
+        aria-label={`Cards from ${target.label}`}
+        className="flex flex-col items-start gap-3 py-2"
+      >
+        <p className="text-muted-foreground text-sm">
+          Set every status mapping before importing cards.
+        </p>
+        <Button onClick={onConfigureStatusMapping} type="button" variant="secondary">
+          Configure status mapping
+        </Button>
+      </section>
+    );
+  }
+
   return (
-    <>
-      <Dialog open={open} onOpenChange={onOpenChange}>
-        <DialogContent
-          className="max-w-lg gap-0 p-0"
-          showCloseButton={!isImporting}
-        >
-          <DialogHeader className="border-b px-5 py-4 pr-12">
-            <DialogTitle>Import unfinished tasks</DialogTitle>
-            <DialogDescription>
-              {target.platform === "notion" ? "Notion" : "ClickUp"} /{" "}
-              {target.label}
-            </DialogDescription>
-          </DialogHeader>
-          <div className="border-b px-5 py-3">
-            <Select
-              value={targetStatus}
-              onValueChange={(value) => setTargetStatus(value as TaskStatus)}
-            >
-              <SelectTrigger aria-label="Target position" className="w-full">
-                <SelectValue placeholder="Target position" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  <SelectItem value="backlog">Backlog</SelectItem>
-                  <SelectItem value="this_week">This Week</SelectItem>
-                  <SelectItem value="today">Today</SelectItem>
-                  <SelectItem value="done">Done</SelectItem>
-                </SelectGroup>
-              </SelectContent>
-            </Select>
+    <section aria-label={`Cards from ${target.label}`} className="space-y-3">
+      <div className="relative">
+        <SearchIcon className="text-muted-foreground pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2" />
+        <Input
+          aria-label="Search cards"
+          className="pl-9"
+          onChange={(event) => setSearch(event.target.value)}
+          placeholder="Search cards"
+          value={search}
+        />
+      </div>
+      <ScrollArea className="h-64">
+        {isLoading ? (
+          <div className="text-muted-foreground flex h-full items-center justify-center gap-2">
+            <LoaderCircleIcon className="size-4 animate-spin" /> Loading cards…
           </div>
-          <ScrollArea className="h-80 px-5 py-4">
-            {isLoading ? (
-              <div className="text-muted-foreground flex h-full items-center justify-center">
-                <LoaderCircleIcon className="animate-spin" /> Loading tasks…
-              </div>
-            ) : items.length ? (
-              <div className="flex flex-col gap-2">
-                {items.map((item) => (
+        ) : cardsByStatus.length ? (
+          <div className="flex flex-col gap-4">
+            {cardsByStatus.map(([status, cards]) => (
+              <div className="space-y-2" key={status}>
+                <h3 className="text-muted-foreground px-1 text-xs font-semibold">
+                  {status}
+                </h3>
+                {cards.map((item) => (
                   <label
                     key={item.remote_id}
                     className="bg-muted/50 hover:bg-muted flex cursor-pointer items-center gap-3 rounded-lg px-3 py-3"
@@ -206,35 +185,30 @@ export function RemoteTaskImport({
                         aria-label={`Open ${item.title} in ${target.platform === "notion" ? "Notion" : "ClickUp"}`}
                         onClick={(event) => event.stopPropagation()}
                       >
-                        <ExternalLinkIcon />
+                        <ExternalLinkIcon className="text-muted-foreground hover:text-foreground size-4" />
                       </a>
                     )}
                   </label>
                 ))}
               </div>
-            ) : (
-              <p className="text-muted-foreground py-16 text-center">
-                No unfinished tasks to import.
-              </p>
-            )}
-          </ScrollArea>
-          <DialogFooter className="m-0 sm:justify-stretch">
-            <Button
-              className="w-full"
-              disabled={!selectedItems.length || isImporting}
-              onClick={handleImport}
-            >
-              {isImporting && (
-                <LoaderCircleIcon
-                  className="animate-spin"
-                  data-icon="inline-start"
-                />
-              )}
-              Add Selected Cards ({selectedItems.length})
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-    </>
+            ))}
+          </div>
+        ) : (
+          <p className="text-muted-foreground py-12 text-center text-sm">
+            No matching unfinished cards.
+          </p>
+        )}
+      </ScrollArea>
+      <Button
+        className="w-full"
+        disabled={!selectedItems.length || isImporting}
+        onClick={handleImport}
+      >
+        {isImporting && (
+          <LoaderCircleIcon className="animate-spin" data-icon="inline-start" />
+        )}
+        Add Selected Cards ({selectedItems.length})
+      </Button>
+    </section>
   );
 }

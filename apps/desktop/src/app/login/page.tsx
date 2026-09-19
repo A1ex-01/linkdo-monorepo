@@ -6,7 +6,6 @@ import { authService } from "@/services/auth";
 import { setToken } from "@/services/auth-session";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
-  IconBrandNotion,
   IconChartPie,
   IconClock,
   IconList,
@@ -195,7 +194,7 @@ export default function LoginPage() {
             {/* 登录卡片 */}
             <div className="w-[380px] text-center">
               <h2 className="text-foreground m-0 mb-2 text-[24px] font-bold">
-                登录到 <span className="text-blue-400">Blitzit</span>
+                登录到 <span className="text-blue-400">Linkdo</span>
               </h2>
               <p className="text-muted-foreground mt-0 mb-8 text-[14px]">
                 {step === "email"
@@ -241,22 +240,22 @@ export default function LoginPage() {
                   </form>
 
                   {/* Notion 按钮 */}
-                  <button
+                  {/* <button
                     type="button"
                     className="bg-muted text-foreground border-border hover:bg-accent mt-3 flex w-full cursor-pointer items-center justify-center gap-3 rounded-md border py-3.5 text-[14px] font-semibold transition-colors duration-200"
                   >
                     <IconBrandNotion />
                     使用 Notion 继续
-                  </button>
+                  </button> */}
 
                   {/* 分隔线 */}
-                  <div className="my-6 flex items-center">
+                  {/* <div className="my-6 flex items-center">
                     <div className="bg-border h-[1px] flex-1"></div>
                     <span className="text-muted-foreground px-4 text-[13px]">
                       或
                     </span>
                     <div className="bg-border h-[1px] flex-1"></div>
-                  </div>
+                  </div> */}
                 </>
               ) : (
                 <>
@@ -345,7 +344,7 @@ export default function LoginPage() {
               </div>
 
               {/* 了解更多 */}
-              <div className="text-muted-foreground mt-8 flex items-center justify-center gap-1 text-[13px]">
+              {/* <div className="text-muted-foreground mt-8 flex items-center justify-center gap-1 text-[13px]">
                 没有 Notion 账号？
                 <a
                   href="#"
@@ -366,11 +365,11 @@ export default function LoginPage() {
                     ></path>
                   </svg>
                 </a>
-              </div>
+              </div> */}
             </div>
 
             {/* 底部协议区 */}
-            <div className="text-muted-foreground absolute bottom-6 w-full text-center text-[12px]">
+            {/* <div className="text-muted-foreground absolute bottom-6 w-full text-center text-[12px]">
               继续即表示你同意
               <a
                 href="#"
@@ -385,7 +384,7 @@ export default function LoginPage() {
               >
                 隐私政策
               </a>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

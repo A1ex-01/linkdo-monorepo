@@ -2,40 +2,10 @@
 
 "use client";
 
-import {
-  IconArrowRight,
-  IconCalendar,
-  IconChevronDown,
-  IconChevronLeft,
-  IconDots,
-  IconDownload,
-  IconGridDots,
-  IconPlus,
-  IconSearch,
-  IconSettings,
-} from "@tabler/icons-react";
-import { useRequest } from "ahooks";
-import { format } from "date-fns";
-import { useRouter } from "next/navigation";
-import { useMemo, useState } from "react";
 import { ReportSummaryCards } from "@/app/reports/_components/report-summary-cards";
 import { ReportTimelineChart } from "@/app/reports/_components/report-timeline-chart";
 import BottomNav from "@/components/bottom-nav";
 import { AIconClickup, AIconNotion } from "@/components/icons/base";
-import { Button } from "@linkdo/ui/components/button";
-import { Calendar } from "@linkdo/ui/components/calendar";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@linkdo/ui/components/popover";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@linkdo/ui/components/select";
 import { WindowTitleBar } from "@/components/window-title-bar";
 import {
   formatReportDate,
@@ -59,6 +29,36 @@ import type {
   IReportSummary,
   ITimelinePoint,
 } from "@/types/base";
+import { Button } from "@linkdo/ui/components/button";
+import { Calendar } from "@linkdo/ui/components/calendar";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@linkdo/ui/components/popover";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@linkdo/ui/components/select";
+import {
+  IconArrowRight,
+  IconCalendar,
+  IconChevronDown,
+  IconChevronLeft,
+  IconDots,
+  IconDownload,
+  IconGridDots,
+  IconPlus,
+  IconSearch,
+  IconSettings,
+} from "@tabler/icons-react";
+import { useRequest } from "ahooks";
+import { format } from "date-fns";
+import { useRouter } from "next/navigation";
+import { useMemo, useState } from "react";
 
 type DatePreset = "7d" | "30d" | "90d" | "custom";
 type ReportTab = "overview" | "sessions";
@@ -150,7 +150,7 @@ export default function ReportsPage() {
   const sessionGroups = groupReportSessionsByDate(sessions);
 
   return (
-    <div className="flex h-screen flex-col overflow-hidden bg-[#0f0f0f] text-white">
+    <div className="bg-background text-foreground flex h-screen flex-col overflow-hidden">
       <WindowTitleBar />
       <main className="min-h-0 flex-1 overflow-y-auto px-8 pt-8 pb-24">
         <div className="mb-8 flex items-start justify-between gap-6">
@@ -158,16 +158,16 @@ export default function ReportsPage() {
             <button
               type="button"
               onClick={() => router.push("/home")}
-              className="flex items-center gap-1 bg-transparent text-sm font-bold text-[#6f6f72] transition-colors hover:text-white"
+              className="text-muted-foreground hover:text-foreground flex items-center gap-1 bg-transparent text-sm font-bold transition-colors"
             >
               <IconChevronLeft className="size-4" />
               BACK
             </button>
-            <h1 className="text-[28px] font-bold tracking-normal text-[#f4f4f5]">
+            <h1 className="text-foreground text-[28px] font-bold tracking-normal">
               Reports
             </h1>
           </div>
-          <HeaderTools />
+          {/* <HeaderTools /> */}
         </div>
 
         <div className="mb-8 flex items-start justify-between gap-6">
@@ -180,7 +180,7 @@ export default function ReportsPage() {
             />
           </div>
           <div className="flex flex-col items-end gap-5">
-            <ActionBar tab={tab} />
+            {/* <ActionBar tab={tab} /> */}
             <DateRangeControl
               preset={datePreset}
               start={customStart}
@@ -217,11 +217,11 @@ export default function ReportsPage() {
 
 function HeaderTools() {
   return (
-    <div className="flex items-center gap-5 rounded-lg bg-[#171717] px-5 py-4 text-[#9a9a9d]">
+    <div className="bg-card text-muted-foreground flex items-center gap-5 rounded-lg px-5 py-4">
       <IconSearch className="size-6" stroke={2} />
       <IconGridDots className="size-6" stroke={2} />
       <IconSettings className="size-6" stroke={2} />
-      <div className="flex size-9 items-center justify-center rounded-full bg-[#303033] text-sm font-semibold text-[#dedee1]">
+      <div className="bg-muted text-foreground flex size-9 items-center justify-center rounded-full text-sm font-semibold">
         a
       </div>
       <IconChevronDown className="size-5" stroke={2} />
@@ -237,20 +237,20 @@ function SegmentedTabs({
   onChange: (value: ReportTab) => void;
 }) {
   return (
-    <div className="flex h-14 w-[386px] items-center rounded-2xl border border-[#262629] bg-[#121212] p-1">
+    <div className="border-border bg-card flex h-14 w-[386px] items-center rounded-2xl border p-1">
       {(["overview", "sessions"] as ReportTab[]).map((tab) => (
         <button
           key={tab}
           type="button"
           onClick={() => onChange(tab)}
           className={cn(
-            "flex h-11 flex-1 items-center justify-center gap-2 rounded-xl bg-transparent text-lg font-semibold text-[#f1f1f3] transition-colors",
-            value === tab && "bg-[#28282b]",
+            "text-foreground flex h-11 flex-1 items-center justify-center gap-2 rounded-xl bg-transparent text-lg font-semibold transition-colors",
+            value === tab && "bg-muted",
           )}
         >
           {tab === "overview" ? "Overview" : "Sessions"}
           {tab === "sessions" ? (
-            <span className="rounded-full bg-[#3a3a3c] px-3 py-1 text-[12px] font-bold text-[#cfcfd1]">
+            <span className="bg-muted-foreground/15 text-muted-foreground rounded-full px-3 py-1 text-[12px] font-bold">
               Beta
             </span>
           ) : null}
@@ -265,7 +265,7 @@ function ActionBar({ tab }: { tab: ReportTab }) {
     return (
       <Button
         variant="outline"
-        className="h-12 rounded-full border-[#8a4fd7] bg-transparent px-6 text-base font-bold text-[#a2a2a8] hover:bg-[#1a151f] hover:text-white"
+        className="border-primary/70 text-muted-foreground hover:bg-accent hover:text-foreground h-12 rounded-full bg-transparent px-6 text-base font-bold"
       >
         <IconDownload className="size-5" />
         Export PDF
@@ -275,13 +275,13 @@ function ActionBar({ tab }: { tab: ReportTab }) {
 
   return (
     <div className="flex items-center gap-5">
-      <Button className="h-12 rounded-full bg-[#242426] px-6 text-base font-bold text-white hover:bg-[#303033]">
+      <Button className="bg-primary text-primary-foreground hover:bg-primary/90 h-12 rounded-full px-6 text-base font-bold">
         <IconPlus className="size-5" />
         Add Session
       </Button>
       <Button
         variant="outline"
-        className="h-12 rounded-full border-[#8a4fd7] bg-transparent px-6 text-base font-bold text-white hover:bg-[#1a151f]"
+        className="border-primary/70 text-foreground hover:bg-accent h-12 rounded-full bg-transparent px-6 text-base font-bold"
       >
         <IconDownload className="size-5" />
         Export .csv
@@ -343,17 +343,17 @@ function SessionsTab({
       </div>
       <div className="space-y-8">
         {groups.length === 0 ? (
-          <div className="flex h-56 items-center justify-center rounded-lg border border-dashed border-[#2b2b2d] bg-[#171717] text-sm text-[#7d7d82]">
+          <div className="border-border bg-card text-muted-foreground flex h-56 items-center justify-center rounded-lg border border-dashed text-sm">
             No sessions in this window.
           </div>
         ) : (
           groups.map((group) => (
             <section key={group.date} className="space-y-4">
               <div className="flex items-center gap-5">
-                <span className="text-base font-semibold text-[#78787d]">
+                <span className="text-muted-foreground text-base font-semibold">
                   {group.date}
                 </span>
-                <div className="h-px flex-1 bg-[#242426]" />
+                <div className="bg-border h-px flex-1" />
               </div>
               <div className="space-y-3">
                 {group.sessions.map((session, index) => (
@@ -375,9 +375,9 @@ function SessionsTab({
 
 function MetricCard({ title, value }: { title: string; value: string }) {
   return (
-    <div className="h-[124px] rounded-lg border border-[#29292c] bg-[#171717] px-6 py-5">
-      <div className="text-lg font-semibold text-[#67676c]">{title}</div>
-      <div className="mt-4 text-[32px] leading-none font-bold text-[#f4f4f5]">
+    <div className="border-border bg-card h-[124px] rounded-lg border px-6 py-5">
+      <div className="text-muted-foreground text-lg font-semibold">{title}</div>
+      <div className="text-foreground mt-4 text-[32px] leading-none font-bold">
         {value}
       </div>
     </div>
@@ -396,15 +396,15 @@ function SessionRow({
   return (
     <div
       className={cn(
-        "grid min-h-[74px] grid-cols-[minmax(320px,1fr)_120px_120px_130px_44px_110px_36px] items-center gap-5 rounded-lg bg-[#171717] px-6 text-[15px] text-[#78787d]",
-        index > 0 && "border border-[#29292c]",
+        "bg-card text-muted-foreground grid min-h-[74px] grid-cols-[minmax(320px,1fr)_120px_120px_130px_44px_110px_36px] items-center gap-5 rounded-lg px-6 text-[15px]",
+        index > 0 && "border-border border",
       )}
     >
       <div className="flex min-w-0 items-center gap-6">
-        <span className="truncate text-lg font-bold text-[#f3f3f4]">
+        <span className="text-foreground truncate text-lg font-bold">
           {session.task_title}
         </span>
-        <span className="text-[#57575b]">•</span>
+        <span className="text-muted-foreground">•</span>
         <CollectionChip
           name={selectedCollection?.name ?? session.collection_name}
           icon={selectedCollection?.icon ?? session.collection_icon}
@@ -418,13 +418,13 @@ function SessionRow({
         {formatReportDateShort(session.started_at)}
       </span>
       <span>{formatReportTime(session.started_at)}</span>
-      <IconArrowRight className="size-5 justify-self-center text-[#87878b]" />
+      <IconArrowRight className="text-muted-foreground size-5 justify-self-center" />
       <span>{formatReportTime(session.ended_at)}</span>
       <div className="flex items-center justify-end gap-8">
-        <span className="text-lg font-bold text-[#f3f3f4]">
+        <span className="text-foreground text-lg font-bold">
           {formatReportMinutes(Math.round((session.duration ?? 0) / 60))}
         </span>
-        <IconDots className="size-5 text-[#ededee]" />
+        <IconDots className="text-foreground size-5" />
       </div>
     </div>
   );
@@ -434,8 +434,8 @@ function CollectionChip({ name, icon }: { name: string; icon?: string }) {
   const normalizedIcon = icon?.trim();
 
   return (
-    <span className="flex min-w-0 items-center gap-2 rounded-md bg-[#272729] px-3 py-1 text-base font-semibold text-[#d8d8db]">
-      <span className="flex size-5 shrink-0 items-center justify-center overflow-hidden rounded bg-[#4f79e8] text-xs font-bold text-white">
+    <span className="bg-muted text-foreground flex min-w-0 items-center gap-2 rounded-md px-3 py-1 text-base font-semibold">
+      <span className="bg-chart-2 text-primary-foreground flex size-5 shrink-0 items-center justify-center overflow-hidden rounded text-xs font-bold">
         {normalizedIcon ? normalizedIcon.slice(0, 1) : name.slice(0, 1)}
       </span>
       <span className="truncate">{name}</span>
@@ -459,7 +459,7 @@ function CollectionFilter({
       value={value}
       onValueChange={(next) => onChange(next === "all" ? [] : [next])}
     >
-      <SelectTrigger className="h-16 w-[340px] border-0 bg-[#171717] px-7 text-lg font-semibold text-[#f0f0f2]">
+      <SelectTrigger className="bg-card text-foreground h-16 w-[340px] border-0 px-7 text-lg font-semibold">
         <SelectValue placeholder="All Lists" />
       </SelectTrigger>
       <SelectContent>
@@ -482,9 +482,9 @@ function CollectionFilter({
 function SourceIcons() {
   return (
     <span className="flex items-center -space-x-2">
-      <AIconClickup className="size-5 border border-white/10" />
-      <AIconNotion className="size-5 border border-white/10" />
-      <span className="flex size-5 items-center justify-center rounded-sm bg-[#5d82ea] text-[11px] font-bold text-white">
+      <AIconClickup className="border-border size-5 border" />
+      <AIconNotion className="border-border size-5 border" />
+      <span className="bg-chart-2 text-primary-foreground flex size-5 items-center justify-center rounded-sm text-[11px] font-bold">
         日
       </span>
     </span>
@@ -516,7 +516,7 @@ function DateRangeControl({
         value={preset}
         onValueChange={(value) => onPresetChange(value as DatePreset)}
       >
-        <SelectTrigger className="h-14 w-40 border-0 bg-[#171717] text-base text-[#d8d8db]">
+        <SelectTrigger className="bg-card text-foreground h-14 w-40 border-0 text-base">
           <SelectValue />
         </SelectTrigger>
         <SelectContent>
@@ -532,8 +532,8 @@ function DateRangeControl({
           <DatePopover value={end} onChange={onEndChange} />
         </>
       ) : null}
-      <div className="flex h-16 min-w-[420px] items-center gap-5 rounded-lg bg-[#171717] px-6 text-lg font-medium text-[#f0f0f2]">
-        <IconCalendar className="size-6 text-[#8a8a8f]" />
+      <div className="bg-card text-foreground flex h-16 min-w-[420px] items-center gap-5 rounded-lg px-6 text-lg font-medium">
+        <IconCalendar className="text-muted-foreground size-6" />
         <span>
           {rangeStart ? formatReportDate(rangeStart) : "Start"} -{" "}
           {rangeEnd ? formatReportDate(rangeEnd) : "End"}
@@ -556,7 +556,7 @@ function DatePopover({
       <PopoverTrigger asChild>
         <button
           type="button"
-          className="h-14 rounded-lg bg-[#171717] px-4 text-sm text-[#d8d8db]"
+          className="bg-card text-foreground h-14 rounded-lg px-4 text-sm"
         >
           {value ? format(value, "MMM dd") : "Pick date"}
         </button>
@@ -580,7 +580,7 @@ function SkeletonBlock({ className }: { className?: string }) {
   return (
     <div
       className={cn(
-        "animate-pulse rounded-lg border border-[#29292c] bg-[#171717]",
+        "border-border bg-card animate-pulse rounded-lg border",
         className,
       )}
     />

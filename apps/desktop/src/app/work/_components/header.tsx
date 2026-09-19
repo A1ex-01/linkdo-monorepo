@@ -5,12 +5,16 @@
 import { AppsDropdown } from "@/app/work/_components/apps-dropdown";
 import { ClickUpDropdown } from "@/app/work/_components/clickup-dropdown";
 import { NotionDropdown } from "@/app/work/_components/notion-dropdown";
-import { TaskSearch } from "@/app/work/_components/task-search";
 import { useData } from "@/app/work/data-provider";
 import { AccountSettingsDialog } from "@/components/account-settings-dialog";
 import { CollectionCover } from "@/components/collection-cover";
 import { SystemSettingsDialog } from "@/components/system-settings-dialog";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { TOKEN_KEY } from "@/config";
+import { logout } from "@/services/base";
+import { resolveFilePath } from "@/services/file";
+import { useUserStore } from "@/stores/user";
+import { formatEstimated } from "@/utils/base";
 import {
   Avatar,
   AvatarBadge,
@@ -25,11 +29,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@linkdo/ui/components/dropdown-menu";
-import { TOKEN_KEY } from "@/config";
-import { logout } from "@/services/base";
-import { resolveFilePath } from "@/services/file";
-import { useUserStore } from "@/stores/user";
-import { formatEstimated } from "@/utils/base";
 import {
   IconChevronDown,
   IconChevronLeft,
@@ -142,7 +141,7 @@ export function WorkHeader() {
         <div className="bg-muted flex items-center gap-4 rounded-lg py-1 pr-2 pl-4">
           <ThemeToggle />
 
-          <TaskSearch />
+          {/* <TaskSearch /> */}
           <AppsDropdown />
 
           <IconSettings
