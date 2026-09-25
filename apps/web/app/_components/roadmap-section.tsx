@@ -23,12 +23,13 @@ const roadmap: RoadmapCard[] = [
     kind: "theme",
     badge: "已完成",
   },
-  {
-    title: "休息时光",
-    description: "在休息期间获取焕发活力的灵感",
-    badge: "已完成 15%",
-    image: "/images/RkLf9p9z7B04lZvKZBoYc0Gcjg.png",
-  },
+  // {
+  //   title: "休息时光",
+  //   description: "在休息期间获取焕发活力的灵感",
+  //   badge: "已完成 15%",
+  //   image:
+  //     "http://static.a1ex.online/linkdo/images/RkLf9p9z7B04lZvKZBoYc0Gcjg.png",
+  // },
   {
     title: "AI 创建任务",
     description: "告诉我们你的计划，其余交给 AI",
@@ -60,7 +61,7 @@ function RoadmapArtwork({ card }: { card: RoadmapCard }) {
           className="h-full w-[182px] rounded-xl object-cover object-top opacity-55"
         />
         <Image
-          src="/images/S4LE9Wv2WWiatSe6xzYP5xfqViQ.png"
+          src="http://static.a1ex.online/linkdo/images/S4LE9Wv2WWiatSe6xzYP5xfqViQ.png"
           alt=""
           width={384}
           height={476}
@@ -119,7 +120,7 @@ function RoadmapArtwork({ card }: { card: RoadmapCard }) {
   if (card.kind === "mobile") {
     return (
       <Image
-        src="/images/mDTuItFnKWeNRM28TFR1lW0S69g.png"
+        src="http://static.a1ex.online/linkdo/images/mDTuItFnKWeNRM28TFR1lW0S69g.png"
         alt=""
         width={1500}
         height={1500}

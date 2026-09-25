@@ -11,37 +11,37 @@ const steps = [
     label: "第 1 步：任务分类",
     title: "从集合开始整理工作",
     text: "创建不同集合，让项目、日常和专注任务各归其位。",
-    video: "/videos/how-it-works/step-01.mp4",
+    video: "http://static.a1ex.online/linkdo/videos/how-it-works/step-01.mp4",
   },
   // {
   //   label: "第 2 步：规划每周 / 每天",
   //   title: "把任务排进真正可执行的节奏",
   //   text: "在看板中拖动任务，安排今天与本周的优先顺序。",
-  //   video: "/videos/how-it-works/step-02.mp4",
+  //   video: "http://static.a1ex.online/linkdo/videos/how-it-works/step-02.mp4",
   // },
   {
     label: "第 2 步：链接集成服务",
     title: "把 Notion/Clickup 任务同步到 Linkdo统一管理",
     text: "关联数据库、创建任务，同步执行，并一键协作。让你专注于当前任务，而不是切换工具。",
-    video: "/videos/how-it-works/step-02.mp4",
+    video: "http://static.a1ex.online/linkdo/videos/how-it-works/step-02.mp4",
   },
   {
     label: "第 3 步：进入专注模式",
     title: "进入沉浸的胶囊专注模式",
     text: "从看板到侧边栏，再进入沉浸的胶囊专注模式。沉浸式专注，让你专注于当前任务，而不是切换工具。",
-    video: "/videos/how-it-works/step-03.mp4",
+    video: "http://static.a1ex.online/linkdo/videos/how-it-works/step-03.mp4",
   },
   {
     label: "第 4 步：完成任务",
     title: "完成任务，回顾确认今天的进展",
     text: "完成任务，回顾确认今天的进展。",
-    video: "/videos/how-it-works/step-04.mp4",
+    video: "http://static.a1ex.online/linkdo/videos/how-it-works/step-04.mp4",
   },
   {
     label: "第 5 步：主题切换",
     title: "按你的工作环境自定义主题",
     text: "在系统设置中切换外观和主题风格。",
-    video: "/videos/how-it-works/step-06.mp4",
+    video: "http://static.a1ex.online/linkdo/videos/how-it-works/step-06.mp4",
   },
 ];
 
