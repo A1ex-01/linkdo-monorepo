@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import {
   getDownloadClickEndpoint,
+  getDownloadTargetUrl,
   getMacOSDownloadUrl,
   getWindowsDownloadUrl,
   isMacOS,
@@ -39,6 +40,23 @@ test("accepts only secure Windows installer URLs", () => {
     "https://downloads.linkdo.app/Linkdo-setup.exe",
   );
   assert.equal(getWindowsDownloadUrl("http://downloads.linkdo.app/Linkdo-setup.exe"), null);
+});
+
+test("selects the matching secure installer URL for each platform", () => {
+  const urls = {
+    macos: "https://static.a1ex.online/linkdo/installer/Linkdo.dmg",
+    windows: "https://static.a1ex.online/linkdo/installer/Linkdo-setup.exe",
+  };
+
+  assert.equal(
+    getDownloadTargetUrl("macos", urls),
+    "https://static.a1ex.online/linkdo/installer/Linkdo.dmg",
+  );
+  assert.equal(
+    getDownloadTargetUrl("windows", urls),
+    "https://static.a1ex.online/linkdo/installer/Linkdo-setup.exe",
+  );
+  assert.equal(getDownloadTargetUrl("macos", { ...urls, macos: "http://insecure" }), null);
 });
 
 test("uses the public API endpoint when download reporting is not configured", () => {

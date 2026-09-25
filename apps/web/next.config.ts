@@ -1,12 +1,13 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  output: "export",
   transpilePackages: ["@linkdo/ui"],
   images: {
+    unoptimized: true,
     remotePatterns: [
       {
-        protocol: "http",
+        protocol: "https",
         hostname: "static.a1ex.online",
       },
     ],

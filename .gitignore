@@ -67,6 +67,7 @@ backups
 .env.server
 deploy/.env.admin.production
 deploy/.env.backend.production
+deploy/.env.web.production
 deploy/.env.image
 
 

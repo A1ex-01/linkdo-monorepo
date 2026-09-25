@@ -21,6 +21,19 @@ x-backend: &backend
       max-file: "3"
 
 services:
+  web:
+    image: ${REGISTRY_HOST}/${CCR_NAMESPACE}/linkdo-web:${IMAGE_TAG}
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:${WEB_HTTP_PORT}:80"
+    networks:
+      - public
+    logging:
+      driver: local
+      options:
+        max-size: 10m
+        max-file: "3"
+
   admin:
     image: ${REGISTRY_HOST}/${CCR_NAMESPACE}/linkdo-admin:${IMAGE_TAG}
     restart: unless-stopped

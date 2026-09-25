@@ -1,6 +1,6 @@
-export const MACOS_DOWNLOAD_PATH = "/download/macos";
-export const WINDOWS_DOWNLOAD_PATH = "/download/windows";
 const DEFAULT_API_BASE_URL = "https://api.a1ex.online";
+
+export type DownloadPlatform = "macos" | "windows";
 
 export function isMacOS(userAgent: string) {
   return /Macintosh|Mac OS X/.test(userAgent);
@@ -12,6 +12,15 @@ export function getMacOSDownloadUrl(value: string | undefined) {
 
 export function getWindowsDownloadUrl(value: string | undefined) {
   return getSecureDownloadUrl(value);
+}
+
+export function getDownloadTargetUrl(
+  platform: DownloadPlatform,
+  urls: { macos: string | undefined; windows: string | undefined },
+) {
+  return platform === "macos"
+    ? getMacOSDownloadUrl(urls.macos)
+    : getWindowsDownloadUrl(urls.windows);
 }
 
 function getSecureDownloadUrl(value: string | undefined) {
