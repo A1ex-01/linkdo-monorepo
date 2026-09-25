@@ -43,7 +43,7 @@ export function getGreetingMessage(): string {
   const hour = new Date().getHours();
   if (hour < 12) return "Let's crush your morning!";
   if (hour < 17) return "Let's have a productive afternoon!";
-  return "Nice! Blitzing through your evening!";
+  return "Nice! Linkdoing through your evening!";
 }
 
 export function formatEstimated(minutes: number): string | undefined {

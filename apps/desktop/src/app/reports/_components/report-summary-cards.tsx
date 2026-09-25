@@ -37,11 +37,11 @@ function SummaryCard({ title, value }: { title: string; value: string }) {
   return (
     <div
       className={cn(
-        "flex h-[124px] flex-col justify-center rounded-lg border border-[#29292c] bg-[#171717] px-6 py-5",
+        "border-border bg-card flex h-[124px] flex-col justify-center rounded-lg border px-6 py-5",
       )}
     >
-      <div className="text-lg font-semibold text-[#67676c]">{title}</div>
-      <div className="mt-4 text-[32px] leading-none font-bold tracking-normal text-[#f4f4f5]">
+      <div className="text-muted-foreground text-lg font-semibold">{title}</div>
+      <div className="text-foreground mt-4 text-[32px] leading-none font-bold tracking-normal">
         {value}
       </div>
     </div>

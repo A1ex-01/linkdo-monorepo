@@ -21,10 +21,12 @@ export function CapsuleBoard({}: CapsuleBoardProps) {
     <div className="flex h-full w-[343px] flex-col">
       <CapsuleItem
         item={currTask}
-        onAction={(action) => {
+        onAction={async (action) => {
           if (action === "maximize") {
-            exitCapsule();
-            setViewMode("sidebar");
+            const exited = await exitCapsule();
+            if (exited) {
+              setViewMode("sidebar");
+            }
           }
         }}
       />

@@ -8,7 +8,9 @@ required_files=(
   "$deploy_dir/compose.yaml"
   "$deploy_dir/Dockerfile.admin"
   "$deploy_dir/Dockerfile.backend"
+  "$deploy_dir/Dockerfile.web"
   "$deploy_dir/nginx/default.conf"
+  "$deploy_dir/nginx/web.conf"
   "$deploy_dir/scripts/deploy.sh"
   "$deploy_dir/scripts/push-images.sh"
   "$deploy_dir/scripts/backup-mysql.sh"
@@ -20,6 +22,7 @@ for file in "${required_files[@]}"; do
 done
 
 grep -q '^  admin:' "$deploy_dir/compose.yaml"
+grep -q '^  web:' "$deploy_dir/compose.yaml"
 grep -q '^  gateway:' "$deploy_dir/compose.yaml"
 grep -q '^  worker-email:' "$deploy_dir/compose.yaml"
 grep -q '^  mysql:' "$deploy_dir/compose.yaml"
@@ -28,6 +31,8 @@ grep -q '^  rabbitmq:' "$deploy_dir/compose.yaml"
 grep -q 'env_file: .env.admin.production' "$deploy_dir/compose.yaml"
 grep -q 'env_file: .env.backend.production' "$deploy_dir/compose.yaml"
 grep -q -- '- "${HTTP_PORT}:80"' "$deploy_dir/compose.yaml"
+grep -Fq 'linkdo-web:${IMAGE_TAG}' "$deploy_dir/compose.yaml"
+grep -Fq -- '- "127.0.0.1:${WEB_HTTP_PORT}:80"' "$deploy_dir/compose.yaml"
 grep -q -- '- "${GATEWAY_PORT}:8080"' "$deploy_dir/compose.yaml"
 awk '/^  worker-email:/{in_worker=1; next} in_worker && /^  [A-Za-z]/{exit} in_worker{print}' "$deploy_dir/compose.yaml" \
   | grep -q -- '- public'
@@ -68,9 +73,15 @@ fi
 
 grep -q 'admin_env_file=.*\.env.admin.production' "$deploy_dir/scripts/deploy.sh"
 grep -q 'backend_env_file=.*\.env.backend.production' "$deploy_dir/scripts/deploy.sh"
+grep -q 'web_env_file=.*\.env.web.production' "$deploy_dir/scripts/deploy.sh"
 grep -q 'image_env_file=.*\.env.image' "$deploy_dir/scripts/deploy.sh"
 grep -q 'admin_env_file=.*\.env.admin.production' "$deploy_dir/scripts/push-images.sh"
+grep -q 'web_env_file=.*\.env.web.production' "$deploy_dir/scripts/push-images.sh"
 grep -q 'image_env_file=.*\.env.image' "$deploy_dir/scripts/push-images.sh"
+grep -q 'web_env_file=.*\.env.web.production' "$deploy_dir/scripts/backup-mysql.sh"
+grep -q 'output: "export"' "$root_dir/apps/web/next.config.ts"
+[[ ! -e "$root_dir/apps/web/app/download/macos/route.ts" ]]
+[[ ! -e "$root_dir/apps/web/app/download/windows/route.ts" ]]
 if rg -q 'ADMIN_ENV_FILE|ADMIN_PRODUCTION_ENV_FILE|BACKEND_PRODUCTION_ENV_FILE|\.env\.production|\.env\.example' \
   "$deploy_dir/scripts"; then
   echo "deploy scripts must not load project .env files or legacy templates" >&2

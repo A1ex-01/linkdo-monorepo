@@ -7,10 +7,15 @@ set -euo pipefail
 repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 deploy_dir="$repo_root/deploy"
 admin_env_file="$deploy_dir/.env.admin.production"
+web_env_file="$deploy_dir/.env.web.production"
 image_env_file="$deploy_dir/.env.image"
 
 if [[ ! -f "$admin_env_file" ]]; then
   echo "Missing $admin_env_file. Copy the Admin .env.product file here." >&2
+  exit 1
+fi
+if [[ ! -f "$web_env_file" ]]; then
+  echo "Missing $web_env_file. Add Web public build configuration and WEB_HTTP_PORT." >&2
   exit 1
 fi
 if [[ ! -f "$image_env_file" ]]; then
@@ -19,11 +24,13 @@ if [[ ! -f "$image_env_file" ]]; then
 fi
 
 # The deployment directory is the only source of release configuration. Admin
-# VITE_* values are build-time public configuration. The image file is the
-# only source for CCR registry, namespace, and release tag.
+# VITE_* and Web NEXT_PUBLIC_* values are build-time public configuration. The
+# image file is the only source for CCR registry, namespace, and release tag.
 set -a
 # shellcheck disable=SC1090
 source "$admin_env_file"
+# shellcheck disable=SC1090
+source "$web_env_file"
 # shellcheck disable=SC1090
 source "$image_env_file"
 set +a
@@ -66,10 +73,18 @@ build_and_push() {
 
 backend_image="$registry_host/$namespace/linkdo-backend"
 admin_image="$registry_host/$namespace/linkdo-admin"
+web_image="$registry_host/$namespace/linkdo-web"
 
 build_and_push "$backend_image" "$repo_root/deploy/Dockerfile.backend" "$repo_root/services/backend"
 build_and_push "$admin_image" "$repo_root/deploy/Dockerfile.admin" "$repo_root" \
   --build-arg "VITE_CLERK_PUBLISHABLE_KEY=${VITE_CLERK_PUBLISHABLE_KEY:-}" \
   --build-arg "VITE_PUBLIC_AGENT_URL=${VITE_PUBLIC_AGENT_URL:-}"
+build_and_push "$web_image" "$repo_root/deploy/Dockerfile.web" "$repo_root" \
+  --build-arg "NEXT_PUBLIC_MACOS_DOWNLOAD_URL=${NEXT_PUBLIC_MACOS_DOWNLOAD_URL:-}" \
+  --build-arg "NEXT_PUBLIC_WINDOWS_DOWNLOAD_URL=${NEXT_PUBLIC_WINDOWS_DOWNLOAD_URL:-}" \
+  --build-arg "NEXT_PUBLIC_API_BASE_URL=${NEXT_PUBLIC_API_BASE_URL:-}"
 
-printf 'Pushed %s:%s\nPushed %s:%s\n' "$backend_image" "$tag" "$admin_image" "$tag"
+printf 'Pushed %s:%s\nPushed %s:%s\nPushed %s:%s\n' \
+  "$backend_image" "$tag" \
+  "$admin_image" "$tag" \
+  "$web_image" "$tag"

@@ -17,16 +17,14 @@ function SoonBadge() {
 function AssistantCard() {
   return (
     <article className="linkdo-card noise relative min-h-[882px] p-5 md:min-h-[882px]">
-      <h3 className="relative z-10 text-lg font-bold">
-        把想法变成计划！
-      </h3>
+      <h3 className="relative z-10 text-lg font-bold">把想法变成计划！</h3>
       <p className="relative z-10 mt-1 max-w-[320px] text-sm leading-6 text-[#858585]">
         Linkdo AI 会把你脑海中的想法整理成任务、笔记、子任务和日程。
       </p>
       <div className="absolute inset-x-8 bottom-8 top-[130px] overflow-hidden rounded-[24px] border border-[#d96ee6] bg-[#171717]">
         <Image
           className="absolute -bottom-20 left-1/2 w-[580px] max-w-none -translate-x-1/2 opacity-55"
-          src="/images/XGrZiuZ78TIqjAdDetbAOVSfQQ.png"
+          src="https://static.a1ex.online/linkdo/images/XGrZiuZ78TIqjAdDetbAOVSfQQ.png"
           alt=""
           width={906}
           height={648}
@@ -51,7 +49,7 @@ function AssistantCard() {
         </div>
         <Image
           className="absolute -bottom-3 -right-3 size-[74px]"
-          src="/images/z8fxe3EBvisaVsY8ekUwIYeY.png"
+          src="https://static.a1ex.online/linkdo/images/z8fxe3EBvisaVsY8ekUwIYeY.png"
           alt="Linkdo AI"
           width={512}
           height={512}
@@ -72,7 +70,7 @@ function VoiceCard() {
       </div>
       <Image
         className="absolute left-1/2 top-1/2 w-[372px] -translate-x-1/2 -translate-y-1/2"
-        src="/images/yBUdr1WdCqmE37TI8HHsGhq7SZc.png"
+        src="https://static.a1ex.online/linkdo/images/yBUdr1WdCqmE37TI8HHsGhq7SZc.png"
         alt="Linkdo AI 记录会议笔记"
         width={744}
         height={224}
@@ -86,13 +84,14 @@ function ContextCard() {
     <article className="linkdo-card noise relative min-h-[566px] p-5">
       <div className="relative z-10 flex items-start justify-between gap-4">
         <p className="max-w-[360px] text-sm leading-6 text-[#858585]">
-          Linkdo AI 能理解标题、笔记和历史记录中的上下文，在关键时刻呈现重要信息。
+          Linkdo AI
+          能理解标题、笔记和历史记录中的上下文，在关键时刻呈现重要信息。
         </p>
         <SoonBadge />
       </div>
       <Image
         className="absolute bottom-[-70px] left-[-25px] w-[650px] max-w-none opacity-70"
-        src="/images/sd1l1foDOqBlOYHlAfs5rrUVN4o.png"
+        src="https://static.a1ex.online/linkdo/images/sd1l1foDOqBlOYHlAfs5rrUVN4o.png"
         alt=""
         width={2042}
         height={1984}

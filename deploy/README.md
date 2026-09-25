@@ -1,20 +1,21 @@
-# Linkdo 部署：三个职责明确的环境文件
+# Linkdo 部署：四个职责明确的环境文件
 
-部署使用三个环境文件，均放在 deploy 目录：
+部署使用四个环境文件，均放在 deploy 目录：
 
 | deploy 文件 | 复制来源 | 负责内容 |
 | --- | --- | --- |
 | .env.admin.production | apps/admin/.env.product | Admin 的公开 Vite 构建变量，以及 HTTP_PORT。 |
 | .env.backend.production | services/backend/.env.product | Backend 运行变量、MySQL/Redis/RabbitMQ、OSS、OAuth。 |
+| .env.web.production | 手动维护 | Web 的 WEB_HTTP_PORT 与 NEXT_PUBLIC_ 公开构建变量。 |
 | .env.image | 在 deploy 目录手动维护 | CCR 仓库地址、命名空间与本次发布的镜像 tag。 |
 
 复制方向永远是“项目目录 → deploy 目录”。不要从 deploy 目录反向覆盖项目配置。
 
 不会再使用 deploy/.env、deploy/.env.example、项目根 .env 或项目根 .env.production。
 
-## 1. 两类环境的边界
+## 1. 构建环境与运行环境的边界
 
-Admin 的 VITE_ 变量是构建时配置。执行推送脚本时，它们会编译进 Admin 镜像的浏览器静态文件；服务器启动容器后无法修改它们。
+Admin 的 VITE_ 变量和 Web 的 NEXT_PUBLIC_ 变量都是构建时配置。执行推送脚本时，它们会编译进浏览器静态文件；服务器启动容器后无法修改它们。
 
 Backend 文件是运行时配置。Docker Compose 会直接将 .env.backend.production 注入 Backend、MySQL、Redis、RabbitMQ 等服务，不再在 compose.yaml 中重新拼装 MYSQL_DSN、REDIS_ADDR、AMQP_URL 或密码。
 
@@ -55,9 +56,20 @@ HTTP_PORT=5173
 
 VITE_ 变量一定是浏览器可见内容，不能放任何私钥。
 
+Web 生产文件至少应含：
+
+~~~dotenv
+WEB_HTTP_PORT=6001
+NEXT_PUBLIC_MACOS_DOWNLOAD_URL=https://static.a1ex.online/linkdo/installer/Linkdo_0.1.5_aarch64.dmg
+NEXT_PUBLIC_WINDOWS_DOWNLOAD_URL=https://static.a1ex.online/linkdo/installer/Linkdo_0.1.5_x64-setup.exe
+NEXT_PUBLIC_API_BASE_URL=https://api.a1ex.online
+~~~
+
+Web 镜像由 Nginx 托管 Next.js 的静态导出目录，不包含 Node.js 运行时。三个 NEXT_PUBLIC_ 值对浏览器可见，不能放私钥；更改后必须重新构建并推送镜像。
+
 ## 2. 本机：构建并推送 CCR
 
-准备好 deploy/.env.admin.production、deploy/.env.backend.production 和 deploy/.env.image 后，先登录 CCR：
+准备好 deploy/.env.admin.production、deploy/.env.backend.production、deploy/.env.web.production 和 deploy/.env.image 后，先登录 CCR：
 
 ~~~bash
 docker login ccr.ccs.tencentyun.com
@@ -69,9 +81,9 @@ docker login ccr.ccs.tencentyun.com
 bash deploy/scripts/push-images.sh v2026.09.09
 ~~~
 
-该脚本读取 Admin 文件和 .env.image：Admin 文件向镜像构建传递公开 Vite 变量；.env.image 提供 CCR 地址、命名空间与镜像 tag。它在本机构建 linux/amd64 的 Admin 与 Backend 镜像并推送到 CCR。
+该脚本读取 Admin、Web 和 .env.image 文件：Admin 文件向镜像构建传递公开 Vite 变量，Web 文件传递公开 NEXT_PUBLIC_ 变量，.env.image 提供 CCR 地址、命名空间与镜像 tag。它在本机构建 linux/amd64 的 Admin、Web 与 Backend 镜像并推送到 CCR。
 
-## 3. 服务器：只接收部署包和三个环境文件
+## 3. 服务器：只接收部署包和四个环境文件
 
 服务器不需要 clone 项目源码。部署包只包含：
 
@@ -81,6 +93,7 @@ scripts/
 README.md
 .env.admin.production
 .env.backend.production
+.env.web.production
 .env.image
 ~~~
 
@@ -95,17 +108,17 @@ bash scripts/deploy.sh
 
 deploy.sh 会按顺序：
 
-1. 检查三个 deploy 环境文件都存在。
-2. 同时加载 Backend、Admin 和 image 文件给 Docker Compose。
-3. 从 CCR 拉取 Backend 与 Admin 的 IMAGE_TAG。
-4. 启动 MySQL、Redis、RabbitMQ，再启动全部 Backend 服务与 Admin；Base Service 在连接 MySQL 后自动迁移 schema。
+1. 检查四个 deploy 环境文件都存在。
+2. 同时加载 Backend、Admin、Web 和 image 文件给 Docker Compose。
+3. 从 CCR 拉取 Backend、Admin 与 Web 的 IMAGE_TAG。
+4. 启动 MySQL、Redis、RabbitMQ，再启动全部 Backend 服务、Admin 与 Web；Base Service 在连接 MySQL 后自动迁移 schema。
 5. 删除不属于当前 Compose 配置的旧容器。
 
 服务器不会构建镜像。
 
 ## 4. Compose 如何加载文件
 
-Compose 使用 .env.image 解析镜像仓库与 tag；Backend 文件提供服务和基础设施变量；Admin 文件提供 Admin 端口，并作为 Admin 容器环境文件。
+Compose 使用 .env.image 解析镜像仓库与 tag；Backend 文件提供服务和基础设施变量；Admin 文件提供 Admin 端口，并作为 Admin 容器环境文件；Web 文件提供 Web 的 localhost 端口与镜像构建使用的公开变量。
 
 Backend、MySQL、Redis、RabbitMQ 都直接使用同一份 .env.backend.production。变量名必须与目标服务的要求一致，例如 MySQL 使用 MYSQL_ROOT_PASSWORD，RabbitMQ 使用 RABBITMQ_DEFAULT_USER 与 RABBITMQ_DEFAULT_PASS。
 
@@ -129,18 +142,30 @@ http://服务器公网IP:5173/
 
 Admin 自身会将 /api/ 请求转发给 Gateway；浏览器不需要单独配置 API 地址。
 
-## 6. 日常操作
+## 6. 访问 Web
+
+Web 容器只将静态站点发布到 `127.0.0.1:${WEB_HTTP_PORT}`，例如：
+
+~~~text
+http://127.0.0.1:6001/
+~~~
+
+在服务器的宿主机 Nginx（或 Caddy）配置 TLS，并将 `https://linkdo.a1ex.online` 反向代理到 `http://127.0.0.1:6001`。容器内部只提供 HTTP；证书和域名配置由宿主机代理负责。
+
+Web 的下载菜单直接前往 `static.a1ex.online` 的 HTTPS 安装包地址，并在浏览器中异步向 `https://api.a1ex.online/api/download-clicks` 发送统计请求。统计请求失败不会影响下载。
+
+## 7. 日常操作
 
 查看状态：
 
 ~~~bash
-docker compose --env-file .env.backend.production --env-file .env.admin.production --env-file .env.image -f compose.yaml ps
+docker compose --env-file .env.backend.production --env-file .env.admin.production --env-file .env.web.production --env-file .env.image -f compose.yaml ps
 ~~~
 
 查看 Gateway 日志：
 
 ~~~bash
-docker compose --env-file .env.backend.production --env-file .env.admin.production --env-file .env.image -f compose.yaml logs -f gateway
+docker compose --env-file .env.backend.production --env-file .env.admin.production --env-file .env.web.production --env-file .env.image -f compose.yaml logs -f gateway
 ~~~
 
 发布新版本时，在 .env.image 中更新 IMAGE_TAG，再执行：
@@ -160,7 +185,7 @@ bash scripts/backup-mysql.sh
 停止容器但保留数据库数据：
 
 ~~~bash
-docker compose --env-file .env.backend.production --env-file .env.admin.production --env-file .env.image -f compose.yaml down
+docker compose --env-file .env.backend.production --env-file .env.admin.production --env-file .env.web.production --env-file .env.image -f compose.yaml down
 ~~~
 
 不要执行 docker compose down -v，除非明确要删除全部持久化数据。

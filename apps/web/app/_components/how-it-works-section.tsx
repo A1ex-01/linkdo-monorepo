@@ -8,40 +8,41 @@ gsap.registerPlugin(ScrollTrigger);
 
 const steps = [
   {
-    label: "第 1 步：规划每周 / 每天",
-    title: "规划一个切实可行的日程",
-    text: "把合适的任务安排到今天，确定顺序，并预估所需时间。",
+    label: "第 1 步：任务分类",
+    title: "从集合开始整理工作",
+    text: "创建不同集合，让项目、日常和专注任务各归其位。",
+    video: "https://static.a1ex.online/linkdo/videos/how-it-works/step-01.mp4",
+  },
+  // {
+  //   label: "第 2 步：规划每周 / 每天",
+  //   title: "把任务排进真正可执行的节奏",
+  //   text: "在看板中拖动任务，安排今天与本周的优先顺序。",
+  //   video: "https://static.a1ex.online/linkdo/videos/how-it-works/step-02.mp4",
+  // },
+  {
+    label: "第 2 步：链接集成服务",
+    title: "把 Notion/Clickup 任务同步到 Linkdo统一管理",
+    text: "关联数据库、创建任务，同步执行，并一键协作。让你专注于当前任务，而不是切换工具。",
+    video: "https://static.a1ex.online/linkdo/videos/how-it-works/step-02.mp4",
   },
   {
-    label: "第 2 步：进入专注模式",
-    title: "只留下眼前的任务",
-    text: "心流模式会保留当前任务与计时器，让干扰自动淡出视野。",
+    label: "第 3 步：进入专注模式",
+    title: "进入沉浸的胶囊专注模式",
+    text: "从看板到侧边栏，再进入沉浸的胶囊专注模式。沉浸式专注，让你专注于当前任务，而不是切换工具。",
+    video: "https://static.a1ex.online/linkdo/videos/how-it-works/step-03.mp4",
   },
   {
-    label: "第 3 步：建立节奏",
-    title: "让每次小胜利带你进入心流",
-    text: "记录时间，完成任务，然后直接投入下一个有意义的行动。",
+    label: "第 4 步：完成任务",
+    title: "完成任务，回顾确认今天的进展",
+    text: "完成任务，回顾确认今天的进展。",
+    video: "https://static.a1ex.online/linkdo/videos/how-it-works/step-04.mp4",
   },
   {
-    label: "第 4 步：完成当天工作，好好放松",
-    title: "清楚知道重要工作已经完成",
-    text: "用一次令人满足的回顾收尾，下班时不再带着纷乱的思绪。",
+    label: "第 5 步：主题切换",
+    title: "按你的工作环境自定义主题",
+    text: "在系统设置中切换外观和主题风格。",
+    video: "https://static.a1ex.online/linkdo/videos/how-it-works/step-06.mp4",
   },
-];
-
-const companies = [
-  "Amazon",
-  "Heygen",
-  "Salesforce",
-  "Framer",
-  "Miro",
-  "Stanford",
-  "Google",
-  "Shopify",
-  "AirBnB",
-  "Columbia",
-  "Meta",
-  "Semrush",
 ];
 
 export function HowItWorksSection() {
@@ -122,8 +123,9 @@ export function HowItWorksSection() {
         </div>
         <div className="relative mt-6 h-[min(58svh,650px)] min-h-[500px] overflow-hidden rounded-[24px] border border-white/10 bg-[#161616] max-[809px]:h-[520px] max-[809px]:min-h-0">
           <video
-            className="absolute inset-0 size-full object-cover opacity-55"
-            src="/videos/BRdBhmS99N6kMuQfQUtw1jPMdM.mp4"
+            key={steps[active].video}
+            className="absolute inset-0 size-full object-contain opacity-55"
+            src={steps[active].video}
             autoPlay
             muted
             loop

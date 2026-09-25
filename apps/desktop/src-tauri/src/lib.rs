@@ -10,7 +10,6 @@ pub struct ScreenFrame {
   pub height: f64,
 }
 
-#[cfg(target_os = "macos")]
 #[command]
 fn get_screen_frame(window: Window) -> Result<ScreenFrame, String> {
   let m = window
@@ -21,18 +20,22 @@ fn get_screen_frame(window: Window) -> Result<ScreenFrame, String> {
   let scale = m.scale_factor();
   let work_area = m.work_area();
 
-  Ok(ScreenFrame {
-    x: work_area.position.x as f64 / scale,
-    y: work_area.position.y as f64 / scale,
-    width: work_area.size.width as f64 / scale,
-    height: work_area.size.height as f64 / scale,
-  })
+  Ok(logical_screen_frame(
+    work_area.position.x,
+    work_area.position.y,
+    work_area.size.width,
+    work_area.size.height,
+    scale,
+  ))
 }
 
-#[cfg(not(target_os = "macos"))]
-#[command]
-fn get_screen_frame() -> Result<ScreenFrame, String> {
-  Err("get_screen_frame is only supported on macOS".to_string())
+fn logical_screen_frame(x: i32, y: i32, width: u32, height: u32, scale: f64) -> ScreenFrame {
+  ScreenFrame {
+    x: x as f64 / scale,
+    y: y as f64 / scale,
+    width: width as f64 / scale,
+    height: height as f64 / scale,
+  }
 }
 
 #[command]
@@ -42,6 +45,22 @@ async fn start_server(window: Window) -> Result<u16, String> {
   })
   .map_err(|err| err.to_string())
 }
+
+#[cfg(test)]
+mod tests {
+  use super::logical_screen_frame;
+
+  #[test]
+  fn converts_physical_work_area_to_logical_coordinates() {
+    let frame = logical_screen_frame(300, 150, 2880, 1800, 1.5);
+
+    assert_eq!(frame.x, 200.0);
+    assert_eq!(frame.y, 100.0);
+    assert_eq!(frame.width, 1920.0);
+    assert_eq!(frame.height, 1200.0);
+  }
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
   tauri::Builder::default()

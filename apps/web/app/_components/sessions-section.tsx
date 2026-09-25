@@ -23,7 +23,7 @@ export function SessionsSection() {
         <div className="relative mt-[118px] h-[586px] overflow-hidden rounded-2xl max-[809px]:mt-[96px] max-[809px]:h-[240px]">
           <Image
             className="absolute left-1/2 top-0 w-[864px] max-w-none -translate-x-1/2 rounded-2xl border border-white/10 max-[809px]:w-[339px]"
-            src="/images/BQSOUaXrrvhV7u6bjV6ycvb8no.png"
+            src="https://static.a1ex.online/linkdo/images/BQSOUaXrrvhV7u6bjV6ycvb8no.png"
             alt="Linkdo 会话追踪仪表盘"
             width={1440}
             height={1109}

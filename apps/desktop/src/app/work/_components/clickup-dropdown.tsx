@@ -1,10 +1,9 @@
 "use client";
 
 import { AIconClickup } from "@/components/icons/base";
-import {
-  RemoteTaskImport,
-  RemoteTaskImportButton,
-} from "@/components/remote-task-import";
+import { RemoteTaskImport } from "@/components/remote-task-import";
+import { hasCompleteStatusMapping } from "@/lib/status-mapping";
+import { cn } from "@/lib/utils";
 import {
   ClickUpFolder,
   ClickUpRemoteList,
@@ -58,31 +57,67 @@ import toast from "react-hot-toast";
 import { useData } from "../data-provider";
 import { launchDesktopLinkOAuth } from "./link-oauth";
 
+type DetailTab = "cards" | "settings";
+
 export function ClickUpDropdown() {
   const { fetchUser } = useUserStore();
   const { collection, getTasks } = useData();
   const { currCollectionClickUpLists, isFetchingCurrCollectionClickUpLists } =
     useCommonStore();
   const [showDetailItem, setShowDetailItem] = useState<IClickUpList>();
-  const [importingList, setImportingList] = useState<IClickUpList>();
+  const [detailTab, setDetailTab] = useState<DetailTab>("cards");
   const [statusOptions, setStatusOptions] = useState<string[]>();
   const [currStatusMapping, setCurrStatusMapping] = useState<
     Record<"mapping", Record<string, string>> | undefined
   >();
+  const [savedStatusMapping, setSavedStatusMapping] = useState<
+    Record<"mapping", Record<string, string>> | undefined
+  >();
+  const [isStatusMappingLoading, setIsStatusMappingLoading] = useState(false);
 
   useEffect(() => {
     if (!showDetailItem?.uuid) return;
-    fetchClickUpStatusOptions(showDetailItem.uuid).then((res) => {
-      if (res.success) setStatusOptions(res.data);
-    });
-    getClickUpStatusMapping(showDetailItem.uuid).then((res) => {
-      if (res.success) {
-        setCurrStatusMapping(
-          res.data as unknown as Record<"mapping", Record<string, string>>,
-        );
-      }
-    });
+    setIsStatusMappingLoading(true);
+    getClickUpStatusMapping(showDetailItem.uuid)
+      .then((res) => {
+        if (!res.success) return;
+        const mapping = res.data as unknown as Record<
+          "mapping",
+          Record<string, string>
+        >;
+        setCurrStatusMapping(mapping);
+        setSavedStatusMapping(mapping);
+      })
+      .finally(() => setIsStatusMappingLoading(false));
   }, [showDetailItem?.uuid]);
+
+  useEffect(() => {
+    if (showDetailItem?.uuid && detailTab === "settings") {
+      fetchClickUpStatusOptions(showDetailItem.uuid).then((res) => {
+        if (res.success) setStatusOptions(res.data);
+      });
+    }
+  }, [detailTab, showDetailItem?.uuid]);
+
+  const isStatusMappingComplete = hasCompleteStatusMapping(
+    savedStatusMapping?.mapping,
+  );
+
+  useEffect(() => {
+    if (
+      showDetailItem?.uuid &&
+      !isStatusMappingLoading &&
+      !isStatusMappingComplete &&
+      detailTab === "cards"
+    ) {
+      setDetailTab("settings");
+    }
+  }, [
+    detailTab,
+    isStatusMappingComplete,
+    isStatusMappingLoading,
+    showDetailItem?.uuid,
+  ]);
 
   const connect = async () => {
     await launchDesktopLinkOAuth("clickup", fetchUser);
@@ -155,18 +190,17 @@ export function ClickUpDropdown() {
                 className="hover:bg-accent/50 flex flex-col gap-2 rounded-lg px-2 py-2.5 transition-colors"
               >
                 <div className="flex items-center gap-2.5">
-                  <div className="bg-muted text-muted-foreground flex size-7 items-center justify-center rounded-md">
-                    <IconChecklist className="size-3.5" />
+                  <div className="bg-muted text-muted-foreground flex size-7 shrink-0 items-center justify-center rounded-md text-[11px] font-bold">
+                    L
                   </div>
-                  <span className="text-popover-foreground truncate text-[13px] font-medium">
-                    {list.name}
-                  </span>
-                  {collection && (
-                    <RemoteTaskImportButton
-                      targetLabel={list.name || "Untitled list"}
-                      onOpen={() => setImportingList(list)}
-                    />
-                  )}
+                  <div className="min-w-0 flex-1">
+                    <div className="text-muted-foreground text-[10px] font-medium tracking-wide uppercase">
+                      ClickUp list
+                    </div>
+                    <span className="text-popover-foreground block truncate text-[13px] font-medium">
+                      {list.name}
+                    </span>
+                  </div>
                   <button
                     type="button"
                     onClick={(e) => {
@@ -174,6 +208,13 @@ export function ClickUpDropdown() {
                       setShowDetailItem(
                         showDetailItem?.uuid === list.uuid ? undefined : list,
                       );
+                      if (showDetailItem?.uuid !== list.uuid) {
+                        setCurrStatusMapping(undefined);
+                        setSavedStatusMapping(undefined);
+                        setStatusOptions(undefined);
+                        setIsStatusMappingLoading(true);
+                        setDetailTab("cards");
+                      }
                     }}
                     className="text-muted-foreground hover:bg-accent hover:text-accent-foreground ml-auto flex size-6 cursor-pointer items-center justify-center rounded-md transition-all"
                   >
@@ -187,52 +228,113 @@ export function ClickUpDropdown() {
 
                 {showDetailItem?.uuid === list.uuid ? (
                   <div
-                    className="border-border bg-muted/50 mt-1 flex flex-col gap-3 rounded-lg border p-3 text-sm"
+                    className="border-border bg-muted/50 mt-1 flex flex-col gap-4 rounded-lg border p-3 text-sm"
                     onClick={(e) => {
-                      e.preventDefault();
                       e.stopPropagation();
                     }}
                   >
-                    <div className="text-popover-foreground flex items-center gap-1.5 text-[12px] font-semibold">
-                      Status mapping
-                      <IconInfoCircle className="text-muted-foreground/70 size-3.5" />
-                    </div>
-                    {[
-                      { label: "Backlog", value: "backlog" },
-                      { label: "This Week", value: "this_week" },
-                      { label: "Today", value: "today" },
-                      { label: "Done", value: "done" },
-                    ].map((item) => (
-                      <div className="flex items-center gap-3" key={item.value}>
-                        <div className="text-muted-foreground w-[82px] shrink-0 text-[12px] font-medium">
-                          {item.label}
-                        </div>
-                        <ClickUpStatusSelector
-                          item={item}
-                          currStatusMapping={currStatusMapping}
-                          setCurrStatusMapping={setCurrStatusMapping}
-                          statusOptions={statusOptions}
-                        />
-                      </div>
-                    ))}
-                    <Button
-                      variant="default"
-                      size="lg"
-                      className="mt-1 h-9 w-full rounded-lg border-0 text-[12px] font-semibold shadow-none"
-                      onClick={async () => {
-                        const res = await updateClickUpStatusMapping(
-                          list.uuid,
-                          currStatusMapping?.mapping ?? {},
-                        );
-                        if (res.success) {
-                          toast.success("ClickUp status mapping updated");
-                        } else {
-                          toast.error("Failed to update ClickUp mapping");
-                        }
-                      }}
+                    <div
+                      aria-label={`${list.name || "List"} detail tabs`}
+                      className="border-border grid grid-cols-2 rounded-lg border p-1"
+                      role="tablist"
                     >
-                      Update
-                    </Button>
+                      {(["cards", "settings"] as DetailTab[]).map((tab) => (
+                        <button
+                          aria-selected={detailTab === tab}
+                          className={cn(
+                            "text-muted-foreground rounded-md px-3 py-2 text-[12px] font-semibold capitalize transition-colors",
+                            detailTab === tab &&
+                              "bg-card text-foreground shadow-sm",
+                          )}
+                          key={tab}
+                          onClick={() => {
+                            if (
+                              tab === "cards" &&
+                              !isStatusMappingLoading &&
+                              !isStatusMappingComplete
+                            ) {
+                              setDetailTab("settings");
+                              return;
+                            }
+                            setDetailTab(tab);
+                          }}
+                          role="tab"
+                          type="button"
+                        >
+                          {tab}
+                        </button>
+                      ))}
+                    </div>
+
+                    {detailTab === "cards" ? (
+                      isStatusMappingLoading ? (
+                        <div className="text-muted-foreground flex items-center justify-center gap-2 py-8 text-sm">
+                          <IconLoader2 className="size-4 animate-spin" />
+                          Checking status mapping…
+                        </div>
+                      ) : collection ? (
+                        <RemoteTaskImport
+                          collectionUuid={collection.uuid}
+                          target={{
+                            platform: "clickup",
+                            uuid: list.uuid,
+                            label: list.name || "Untitled list",
+                          }}
+                          onConfigureStatusMapping={() =>
+                            setDetailTab("settings")
+                          }
+                          onImported={() => void getTasks()}
+                          statusMappingComplete={isStatusMappingComplete}
+                        />
+                      ) : null
+                    ) : (
+                      <>
+                        <div className="text-popover-foreground flex items-center gap-1.5 text-[12px] font-semibold">
+                          Status mapping
+                          <IconInfoCircle className="text-muted-foreground/70 size-3.5" />
+                        </div>
+                        {[
+                          { label: "Backlog", value: "backlog" },
+                          { label: "This Week", value: "this_week" },
+                          { label: "Today", value: "today" },
+                          { label: "Done", value: "done" },
+                        ].map((item) => (
+                          <div
+                            className="flex items-center gap-3"
+                            key={item.value}
+                          >
+                            <div className="text-muted-foreground w-[82px] shrink-0 text-[12px] font-medium">
+                              {item.label}
+                            </div>
+                            <ClickUpStatusSelector
+                              item={item}
+                              currStatusMapping={currStatusMapping}
+                              setCurrStatusMapping={setCurrStatusMapping}
+                              statusOptions={statusOptions}
+                            />
+                          </div>
+                        ))}
+                        <Button
+                          variant="default"
+                          size="lg"
+                          className="mt-1 h-9 w-full rounded-lg border-0 text-[12px] font-semibold shadow-none"
+                          onClick={async () => {
+                            const res = await updateClickUpStatusMapping(
+                              list.uuid,
+                              currStatusMapping?.mapping ?? {},
+                            );
+                            if (res.success) {
+                              setSavedStatusMapping(currStatusMapping);
+                              toast.success("ClickUp status mapping updated");
+                            } else {
+                              toast.error("Failed to update ClickUp mapping");
+                            }
+                          }}
+                        >
+                          Update
+                        </Button>
+                      </>
+                    )}
                   </div>
                 ) : null}
               </div>
@@ -246,21 +348,6 @@ export function ClickUpDropdown() {
           )}
         </DropdownMenuContent>
       </DropdownMenu>
-      {collection && importingList && (
-        <RemoteTaskImport
-          open
-          collectionUuid={collection.uuid}
-          target={{
-            platform: "clickup",
-            uuid: importingList.uuid,
-            label: importingList.name || "Untitled list",
-          }}
-          onOpenChange={(open) => {
-            if (!open) setImportingList(undefined);
-          }}
-          onImported={() => void getTasks()}
-        />
-      )}
     </>
   );
 }

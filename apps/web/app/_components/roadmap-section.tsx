@@ -18,33 +18,34 @@ interface RoadmapCard {
 
 const roadmap: RoadmapCard[] = [
   {
-    title: "休息时光",
-    description: "在休息期间获取焕发活力的灵感",
-    badge: "已完成 65%",
-    image: "/images/RkLf9p9z7B04lZvKZBoYc0Gcjg.png",
+    title: "深色 / 浅色模式 和 主题切换",
+    description: "为你的环境选择合适的主题 和 主题切换",
+    kind: "theme",
+    badge: "已完成",
   },
+  // {
+  //   title: "休息时光",
+  //   description: "在休息期间获取焕发活力的灵感",
+  //   badge: "已完成 15%",
+  //   image:
+  //     "https://static.a1ex.online/linkdo/images/RkLf9p9z7B04lZvKZBoYc0Gcjg.png",
+  // },
   {
     title: "AI 创建任务",
     description: "告诉我们你的计划，其余交给 AI",
-    badge: "已上线",
+    // badge: "已上线",
     kind: "ai",
   },
   {
     title: "新增集成",
-    description:
-      "通过更多集成，把工作流集中到一个可执行的列表中",
-    badge: "已完成 24%",
+    description: "通过更多集成，把工作流集中到一个可执行的列表中",
+    // badge: "已完成 24%",
     kind: "integrations",
   },
   {
     title: "艾森豪威尔矩阵",
     description: "按紧急程度与重要性确定工作优先级",
     kind: "matrix",
-  },
-  {
-    title: "深色 / 浅色模式",
-    description: "为你的环境选择合适的主题",
-    kind: "theme",
   },
 ];
 
@@ -60,7 +61,7 @@ function RoadmapArtwork({ card }: { card: RoadmapCard }) {
           className="h-full w-[182px] rounded-xl object-cover object-top opacity-55"
         />
         <Image
-          src="/images/S4LE9Wv2WWiatSe6xzYP5xfqViQ.png"
+          src="https://static.a1ex.online/linkdo/images/S4LE9Wv2WWiatSe6xzYP5xfqViQ.png"
           alt=""
           width={384}
           height={476}
@@ -86,23 +87,19 @@ function RoadmapArtwork({ card }: { card: RoadmapCard }) {
   if (card.kind === "integrations") {
     return (
       <div className="mt-8 space-y-2">
-        {[
-          "ClickUp 任务",
-          "Figma 评论",
-          "Trello 任务",
-          "Asana 任务",
-          "Linear",
-        ].map((item, index) => (
-          <div
-            key={item}
-            className="flex h-9 items-center justify-between rounded-md bg-white/[.07] px-3 text-[13px]"
-          >
-            {item}
-            <span
-              className={`size-5 rounded ${["bg-white", "bg-[#ff766f]", "bg-[#00a5df]", "bg-[#ff7d75]", "bg-[#6759ff]"][index]}`}
-            />
-          </div>
-        ))}
+        {["ClickUp 任务", "Figma 评论", "Trello 任务", "Asana 任务", "..."].map(
+          (item, index) => (
+            <div
+              key={item}
+              className="flex h-9 items-center justify-between rounded-md bg-white/[.07] px-3 text-[13px]"
+            >
+              {item}
+              <span
+                className={`size-5 rounded ${["bg-[#00a5df]", "bg-white", "bg-white", "bg-white", "bg-white]"][index]}`}
+              />
+            </div>
+          ),
+        )}
       </div>
     );
   }
@@ -123,7 +120,7 @@ function RoadmapArtwork({ card }: { card: RoadmapCard }) {
   if (card.kind === "mobile") {
     return (
       <Image
-        src="/images/mDTuItFnKWeNRM28TFR1lW0S69g.png"
+        src="https://static.a1ex.online/linkdo/images/mDTuItFnKWeNRM28TFR1lW0S69g.png"
         alt=""
         width={1500}
         height={1500}

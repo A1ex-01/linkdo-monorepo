@@ -1,6 +1,12 @@
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import {
+  cleanup,
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+} from "@testing-library/react";
 import React from "react";
-import { describe, expect, it, vi } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { RemoteTaskImport } from "./remote-task-import";
 
@@ -14,6 +20,8 @@ const getCandidates = vi.fn().mockResolvedValue({
   ],
 });
 const importTasks = vi.fn().mockResolvedValue({ success: true, data: [] });
+
+afterEach(() => cleanup());
 
 vi.mock("@/services/task", () => ({
   getRemoteImportCandidates: (...args: unknown[]) => getCandidates(...args),
@@ -92,22 +100,68 @@ vi.mock("@linkdo/ui/components/select", () => ({
 }));
 
 describe("RemoteTaskImport", () => {
-  it("loads a source's unfinished items and imports only the checked items into its target column", async () => {
+  it("does not request remote cards until status mapping is complete", () => {
+    const onConfigureStatusMapping = vi.fn();
+    render(
+      <RemoteTaskImport
+        collectionUuid="collection-uuid"
+        target={{ platform: "notion", uuid: "db-1", label: "Roadmap" }}
+        onConfigureStatusMapping={onConfigureStatusMapping}
+        statusMappingComplete={false}
+        onImported={vi.fn()}
+      />,
+    );
+
+    expect(getCandidates).not.toHaveBeenCalled();
+    fireEvent.click(
+      screen.getByRole("button", { name: "Configure status mapping" }),
+    );
+    expect(onConfigureStatusMapping).toHaveBeenCalledOnce();
+  });
+
+  it("loads unfinished items inline without requiring a dialog open state", async () => {
+    render(
+      <RemoteTaskImport
+        collectionUuid="collection-uuid"
+        target={{ platform: "clickup", uuid: "list-1", label: "Sprint" }}
+        onImported={vi.fn()}
+      />,
+    );
+
+    expect(await screen.findByText("Plan launch")).toBeTruthy();
+    expect(screen.queryByText("Import unfinished tasks")).toBeNull();
+  });
+
+  it("groups cards by remote status and filters them by title", async () => {
+    render(
+      <RemoteTaskImport
+        collectionUuid="collection-uuid"
+        target={{ platform: "notion", uuid: "db-1", label: "Roadmap" }}
+        onImported={vi.fn()}
+      />,
+    );
+
+    expect(await screen.findByText("In progress")).toBeTruthy();
+    fireEvent.change(screen.getByPlaceholderText("Search cards"), {
+      target: { value: "announcement" },
+    });
+
+    expect(screen.queryByText("Plan launch")).toBeNull();
+    expect(screen.getByText("Write announcement")).toBeTruthy();
+  });
+
+  it("imports checked cards without asking the user to choose a local column", async () => {
     const onImported = vi.fn();
     render(
       <RemoteTaskImport
-        open
         collectionUuid="collection-uuid"
         target={{ platform: "notion", uuid: "db-1", label: "Roadmap" }}
-        onOpenChange={vi.fn()}
         onImported={onImported}
       />,
     );
 
     expect(await screen.findByText("Plan launch")).toBeTruthy();
-    expect(
-      screen.getByRole("combobox", { name: "Target position" }),
-    ).toBeTruthy();
+    expect(screen.queryByRole("combobox", { name: "Target position" })).toBeNull();
     fireEvent.click(screen.getByRole("checkbox", { name: "Plan launch" }));
     expect(
       screen.getByRole("button", { name: "Add Selected Cards (1)" }),
@@ -121,9 +175,6 @@ describe("RemoteTaskImport", () => {
       expect(importTasks).toHaveBeenCalledWith("collection-uuid", {
         source: "notion",
         notion_database_uuid: "db-1",
-        status: "backlog",
-        prev_rank: "",
-        next_rank: "",
         items: [{ remote_id: "page-1", title: "Plan launch" }],
       }),
     );

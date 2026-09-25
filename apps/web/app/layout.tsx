@@ -5,12 +5,7 @@ import "./globals.css";
 const themeScript = `(() => {
   try {
     const saved = localStorage.getItem("linkdo-theme");
-    const theme = saved === "light" || saved === "dark"
-      ? saved
-      : matchMedia("(prefers-color-scheme: dark)").matches
-        ? "dark"
-        : "light";
-    document.documentElement.dataset.theme = theme;
+    document.documentElement.dataset.theme = saved === "light" ? "light" : "dark";
   } catch {
     document.documentElement.dataset.theme = "dark";
   }
@@ -91,7 +86,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="zh-CN" className="h-full" suppressHydrationWarning>
+    <html lang="zh-CN" className="h-full" data-theme="dark" suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
       </head>
