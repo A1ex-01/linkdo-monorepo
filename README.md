@@ -2,6 +2,9 @@
   <h1>Linkdo</h1>
   <p>面向个人与团队的任务管理和专注工具。</p>
   <p>
+    <a href="https://linkdo.a1ex.online/">🌐 访问项目官网与在线预览：linkdo.a1ex.online</a>
+  </p>
+  <p>
     <a href="https://github.com/A1ex-01/linkdo-monorepo/actions/workflows/desktop-package.yml">
       <img src="https://github.com/A1ex-01/linkdo-monorepo/actions/workflows/desktop-package.yml/badge.svg" alt="Desktop package" />
     </a>
