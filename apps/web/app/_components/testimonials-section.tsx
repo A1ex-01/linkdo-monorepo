@@ -14,7 +14,7 @@ const testimonials: Testimonial[] = [
     quote:
       "这是我至今发现的最佳效率应用！它简单、快速，而且总能把我该做的任务放在眼前。",
     avatar:
-      "http://static.a1ex.online/linkdo/images/PuoEYuuIeepyWwrekieqn8syGks.png",
+      "https://static.a1ex.online/linkdo/images/PuoEYuuIeepyWwrekieqn8syGks.png",
   },
   {
     name: "Jordan B.",
@@ -22,14 +22,14 @@ const testimonials: Testimonial[] = [
     quote:
       "它是完美的自律伙伴。我需要一个帮助自己保持自律的工具，而它大大帮助我始终走在正轨上。",
     avatar:
-      "http://static.a1ex.online/linkdo/images/8AUImYA2E1BlhJ0jbyuOsRNBKw.png",
+      "https://static.a1ex.online/linkdo/images/8AUImYA2E1BlhJ0jbyuOsRNBKw.png",
   },
   {
     name: "Cameron Nimmo",
     quote:
       "这是改变工作方式的产品，创始人也非常重视客户服务。它融入了我的一天，却没有增加任何干扰。",
     avatar:
-      "http://static.a1ex.online/linkdo/images/6hhzTEWqSaB08Vmr352myBXePi8.png",
+      "https://static.a1ex.online/linkdo/images/6hhzTEWqSaB08Vmr352myBXePi8.png",
   },
   {
     name: "Vikas Tiwari",
@@ -37,7 +37,7 @@ const testimonials: Testimonial[] = [
     quote:
       "我喜欢这款产品简洁顺滑的体验，同时没有牺牲使用场景和功能。专注模式现在已成为我的日常习惯。",
     avatar:
-      "http://static.a1ex.online/linkdo/images/J6BR3dKNtxAVdv6O5YoVoiQPKU.jpg",
+      "https://static.a1ex.online/linkdo/images/J6BR3dKNtxAVdv6O5YoVoiQPKU.jpg",
   },
   {
     name: "Christian H.",
@@ -45,7 +45,7 @@ const testimonials: Testimonial[] = [
     quote:
       "它在简洁与强大之间取得了恰到好处的平衡。心流模式隐藏所有干扰，让我能专心完成工作。",
     avatar:
-      "http://static.a1ex.online/linkdo/images/oVUWGFBvQDHJvfOVjEuLjJel9D0.png",
+      "https://static.a1ex.online/linkdo/images/oVUWGFBvQDHJvfOVjEuLjJel9D0.png",
   },
   {
     name: "Brittany McNicholas",
@@ -53,13 +53,13 @@ const testimonials: Testimonial[] = [
     quote:
       "它与我试过的大多数应用都不同。我喜欢它的简洁、对“今天”的关注，以及能随时调整任务顺序的能力。",
     avatar:
-      "http://static.a1ex.online/linkdo/images/AKkdoCVxmQ1GMxay7gVVRObkQ.png",
+      "https://static.a1ex.online/linkdo/images/AKkdoCVxmQ1GMxay7gVVRObkQ.png",
   },
   {
     name: "Char B",
     quote: "这款应用让我保持动力并专注于任务。我非常推荐给每一位需要专注的人。",
     avatar:
-      "http://static.a1ex.online/linkdo/images/I727fO1GyBbCut2CyVa4eRc5sqU.png",
+      "https://static.a1ex.online/linkdo/images/I727fO1GyBbCut2CyVa4eRc5sqU.png",
   },
   {
     name: "George K.",
@@ -67,7 +67,7 @@ const testimonials: Testimonial[] = [
     quote:
       "Linkdo 在整理我的待办清单方面非常有帮助，尤其是追踪每项任务所花时间这一点。",
     avatar:
-      "http://static.a1ex.online/linkdo/images/5afHk04dydj1urP5S6C4klUfPM.jpg",
+      "https://static.a1ex.online/linkdo/images/5afHk04dydj1urP5S6C4klUfPM.jpg",
   },
 ];
 

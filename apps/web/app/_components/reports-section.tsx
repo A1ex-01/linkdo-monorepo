@@ -30,7 +30,7 @@ function GradientLayer() {
   return (
     <Image
       className="absolute -bottom-40 -left-20 w-[720px] max-w-none rotate-[18deg] opacity-45"
-      src="http://static.a1ex.online/linkdo/images/Ev5WadmW4zyn4acFgN2k6Q4rjU.png"
+      src="https://static.a1ex.online/linkdo/images/Ev5WadmW4zyn4acFgN2k6Q4rjU.png"
       alt=""
       width={1004}
       height={764}
@@ -91,7 +91,7 @@ export function ReportsSection() {
           <GradientLayer />
           <Image
             className="absolute bottom-5 left-1/2 w-[960px] max-w-none -translate-x-1/2 rounded-xl border border-white/10 max-[809px]:bottom-0 max-[809px]:left-5 max-[809px]:w-[424px] max-[809px]:translate-x-0"
-            src="http://static.a1ex.online/linkdo/images/q7y0ZjAlnM9R9dJuo20OtPSTkQ.png"
+            src="https://static.a1ex.online/linkdo/images/q7y0ZjAlnM9R9dJuo20OtPSTkQ.png"
             alt="报告概览仪表盘"
             width={1440}
             height={896}

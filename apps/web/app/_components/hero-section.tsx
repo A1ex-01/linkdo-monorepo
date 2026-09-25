@@ -42,11 +42,11 @@ export function HeroSection() {
           <div className="absolute h-screen rounded-full bg-[radial-gradient(circle,rgba(239,130,239,.18),transparent_58%)] blur-2xl" />
           <video
             key={
-              "http://static.a1ex.online/linkdo/videos/how-it-works/step-01.mp4"
+              "https://static.a1ex.online/linkdo/videos/how-it-works/step-01.mp4"
             }
             className=" w-full  drop-shadow-[0_40px_80px_rgba(0,0,0,.65)]"
             src={
-              "http://static.a1ex.online/linkdo/videos/how-it-works/step-01.mp4"
+              "https://static.a1ex.online/linkdo/videos/how-it-works/step-01.mp4"
             }
             autoPlay
             muted

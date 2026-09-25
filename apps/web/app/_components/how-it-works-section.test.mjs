@@ -9,12 +9,12 @@ test("How It Works presents the six recorded Linkdo workflows", async () => {
   );
 
   for (const video of [
-    "http://static.a1ex.online/linkdo/videos/how-it-works/01-categories.mp4",
-    "http://static.a1ex.online/linkdo/videos/how-it-works/02-plan.mp4",
-    "http://static.a1ex.online/linkdo/videos/how-it-works/03-notion.mp4",
-    "http://static.a1ex.online/linkdo/videos/how-it-works/04-focus.mp4",
-    "http://static.a1ex.online/linkdo/videos/how-it-works/05-reports.mp4",
-    "http://static.a1ex.online/linkdo/videos/how-it-works/06-theme.mp4",
+    "https://static.a1ex.online/linkdo/videos/how-it-works/01-categories.mp4",
+    "https://static.a1ex.online/linkdo/videos/how-it-works/02-plan.mp4",
+    "https://static.a1ex.online/linkdo/videos/how-it-works/03-notion.mp4",
+    "https://static.a1ex.online/linkdo/videos/how-it-works/04-focus.mp4",
+    "https://static.a1ex.online/linkdo/videos/how-it-works/05-reports.mp4",
+    "https://static.a1ex.online/linkdo/videos/how-it-works/06-theme.mp4",
   ]) {
     assert.ok(source.includes(video), `missing ${video}`);
   }

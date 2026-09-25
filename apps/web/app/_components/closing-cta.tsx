@@ -7,7 +7,7 @@ export function ClosingCta() {
       <div className="mx-auto max-w-[1080px]">
         <div className="relative w-full overflow-hidden rounded-[24px] border border-white/[.08] max-[809px]:aspect-[350/218]">
           <img
-            src="http://static.a1ex.online/linkdo/images/home-source/mini-focus-card.png"
+            src="https://static.a1ex.online/linkdo/images/home-source/mini-focus-card.png"
             alt="Mini focus card"
             className="object-cover w-full"
           />

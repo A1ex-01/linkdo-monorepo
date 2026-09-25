@@ -74,7 +74,7 @@ export function ReviewBadges() {
         >
           <span className="text-[11px] text-[#858585]">媒体报道</span>
           <Image
-            src="http://static.a1ex.online/linkdo/images/AfLm4itvIQ1i0bDHBQ3jM0R1ZL8.png"
+            src="https://static.a1ex.online/linkdo/images/AfLm4itvIQ1i0bDHBQ3jM0R1ZL8.png"
             alt="Tool Finder"
             width={884}
             height={312}

@@ -106,7 +106,7 @@ export function FeatureGridSection() {
         >
           <Image
             className="absolute bottom-0 right-0 w-[92%] object-cover object-top"
-            src="http://static.a1ex.online/linkdo/images/jyCIvYCVaGFXs51i79AZrnvaoqY.png"
+            src="https://static.a1ex.online/linkdo/images/jyCIvYCVaGFXs51i79AZrnvaoqY.png"
             alt="Linkdo 日程安排"
             width={736}
             height={1056}
@@ -141,7 +141,7 @@ export function FeatureGridSection() {
         >
           <Image
             className="absolute bottom-[-70px] left-1/2 w-[105%] -translate-x-1/2"
-            src="http://static.a1ex.online/linkdo/images/yFesICeLTusjxdesBDiV5an10vk.png"
+            src="https://static.a1ex.online/linkdo/images/yFesICeLTusjxdesBDiV5an10vk.png"
             alt="Linkdo 列表"
             width={736}
             height={1072}
@@ -167,7 +167,7 @@ export function FeatureGridSection() {
           <div className="absolute inset-x-0 bottom-0 h-3/5 bg-[radial-gradient(circle_at_50%_75%,rgba(239,130,239,.45),transparent_54%)]" />
           <Image
             className="absolute bottom-[-20px] left-1/2 w-[220px] -translate-x-1/2"
-            src="http://static.a1ex.online/linkdo/images/AOwdsA2vcPsVJk49vzHnCoSU0.svg"
+            src="https://static.a1ex.online/linkdo/images/AOwdsA2vcPsVJk49vzHnCoSU0.svg"
             alt="Linkdo 主题"
             width={504}
             height={981}
