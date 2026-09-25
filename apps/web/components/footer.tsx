@@ -74,7 +74,7 @@ export function Footer() {
         </div>
 
         <div className="mt-auto flex items-end justify-between gap-8 text-[14px] leading-[22.4px] text-[#858585] max-[809px]:flex-col max-[809px]:items-start">
-          <p>© 2025 Linkdo App Ltd. 保留所有权利。公司编号：14163956。</p>
+          <p>© 2026 Linkdo App Ltd. 保留所有权利。公司编号：14163956。</p>
           <div className="flex gap-8">
             <a href="#" className="transition hover:text-white">
               使用条款

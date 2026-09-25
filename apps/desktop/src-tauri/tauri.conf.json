@@ -1,8 +1,8 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "Linkdo",
-  "version": "0.1.5",
-  "identifier": "com.tauri.linkdo",
+  "productName": "Linkdo-Dev",
+  "version": "0.1.6",
+  "identifier": "com.tauri.linkdodev",
   "build": {
     "beforeDevCommand": "pnpm dev:web",
     "devUrl": "http://localhost:3000",
@@ -13,7 +13,7 @@
     "macOSPrivateApi": true,
     "windows": [
       {
-        "title": "Linkdo",
+        "title": "Linkdo-Dev",
         "width": 1400,
         "height": 850,
         "decorations": false,

@@ -13,8 +13,8 @@ migrate-down:
 	cd services/backend && go run main.go migrate-down
 
 # 启动所有服务（并行）
-dev:
-	make -j4 dev-desktop dev-backend dev-agent dev-mcp
+air:
+	pnpm run dev
 
 # JS/TS 应用
 dev-desktop:

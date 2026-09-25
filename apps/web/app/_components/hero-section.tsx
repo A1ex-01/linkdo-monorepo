@@ -14,7 +14,7 @@ export function HeroSection() {
       id="top"
       className="relative min-h-screen text-foreground overflow-hidden bg-[#111] px-5 pb-[72px] pt-[148px] max-[809px]:min-h-[1337px] max-[809px]:pb-0 max-[809px]:pt-[0]"
     >
-      <div className="mx-auto grid w-full max-w-[1080px] grid-cols-2 gap-6 max-[809px]:grid-cols-1">
+      <div className="mx-auto grid w-full max-w-[1080px] grid-cols-2 gap-0 max-[809px]:grid-cols-1">
         <div className="flex min-h-[676px] flex-col justify-start max-[809px]:min-h-0">
           <h1 className="mt-12 font-heading text-[64px] font-medium leading-[64px] max-[809px]:mt-8 max-[809px]:text-[44px] max-[809px]:leading-[52.8px]">
             A simple to-do
@@ -39,17 +39,18 @@ export function HeroSection() {
           </div>
         </div>
         <div className="relative h-screen animate-[linkdo-fade-up_1.2s_cubic-bezier(.74,.09,.04,.97)_.3s_both]">
-          <div className="absolute inset-x-[-40px] top-[-30px] h-screen rounded-full bg-[radial-gradient(circle,rgba(239,130,239,.18),transparent_58%)] blur-2xl" />
-          <Image
-            className="absolute left-0 top-0 w-full  drop-shadow-[0_40px_80px_rgba(0,0,0,.65)]"
-            src="/images/home-source/home-top-show.gif"
-            alt="Linkdo to-do list & timer app"
-            width={518}
-            height={1234}
-            priority
+          <div className="absolute h-screen rounded-full bg-[radial-gradient(circle,rgba(239,130,239,.18),transparent_58%)] blur-2xl" />
+          <video
+            key={"/videos/how-it-works/step-01.mp4"}
+            className=" w-full  drop-shadow-[0_40px_80px_rgba(0,0,0,.65)]"
+            src={"/videos/how-it-works/step-01.mp4"}
+            autoPlay
+            muted
+            loop
+            playsInline
           />
 
-          <p className="absolute bottom-3 left-1/2 -translate-x-1/2 whitespace-nowrap text-xs text-[#858585]">
+          <p className=" text-center mt-10 whitespace-nowrap text-xs text-[#858585]">
             简单规划任务，认真保持专注。
           </p>
         </div>

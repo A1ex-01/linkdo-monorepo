@@ -46,7 +46,7 @@ export interface FocusModeTransitionReturn {
   enterSidebar: () => Promise<void>;
   exitSidebar: () => Promise<void>;
   enterCapsule: () => Promise<void>;
-  exitCapsule: () => Promise<void>;
+  exitCapsule: () => Promise<boolean>;
 }
 
 export function useFocusModeTransition(): FocusModeTransitionReturn {
@@ -55,15 +55,16 @@ export function useFocusModeTransition(): FocusModeTransitionReturn {
 
   const getCurrentBounds = useCallback(async (): Promise<WindowBounds> => {
     const win = getCurrentWindow();
-    const [pos, size] = await Promise.all([
+    const [pos, size, scaleFactor] = await Promise.all([
       win.outerPosition(),
       win.outerSize(),
+      win.scaleFactor(),
     ]);
     return {
-      x: pos.x,
-      y: pos.y,
-      width: size.width,
-      height: size.height,
+      x: pos.x / scaleFactor,
+      y: pos.y / scaleFactor,
+      width: size.width / scaleFactor,
+      height: size.height / scaleFactor,
     };
   }, []);
 
@@ -166,18 +167,25 @@ export function useFocusModeTransition(): FocusModeTransitionReturn {
   }, [animateWindow, getCurrentBounds]);
 
   const exitCapsule = useCallback(async () => {
-    if (isAnimatingRef.current) return;
+    if (isAnimatingRef.current) return false;
     isAnimatingRef.current = true;
 
-    const current = await getCurrentBounds();
+    try {
+      const current = await getCurrentBounds();
 
-    await animateWindow(current, {
-      targetX: 0,
-      targetY: 0,
-      targetWidth: 343,
-      targetHeight: DEFAULT_HEIGHT,
-    });
-    await setWindowTopmost(false);
+      await animateWindow(current, {
+        targetX: 0,
+        targetY: 0,
+        targetWidth: 343,
+        targetHeight: DEFAULT_HEIGHT,
+      });
+      await setWindowTopmost(false);
+      return true;
+    } catch (error) {
+      isAnimatingRef.current = false;
+      console.error("Failed to exit capsule mode:", error);
+      return false;
+    }
   }, [animateWindow, getCurrentBounds]);
 
   return {

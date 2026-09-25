@@ -2,6 +2,7 @@
 
 "use client";
 import { useFocusModeTransition } from "@/hooks/use-focus-mode-transition";
+import { applyOptimisticTaskMove } from "@/lib/task-move";
 import {
   getCollection as getCollectionService,
   getCollections as getCollectionsService,
@@ -63,7 +64,7 @@ interface IDataContext {
   timerInfo: ITimeSession | undefined;
   setViewMode: (mode: "kanban" | "sidebar" | "capsule") => void;
   enterCapsule: () => void;
-  exitCapsule: () => void;
+  exitCapsule: () => Promise<boolean>;
   toNextTaskStatus: (task: ITask) => void;
   toPrevTaskStatus: (task: ITask) => void;
   markAsDone: (task: ITask) => Promise<void>;
@@ -226,63 +227,21 @@ export const DataProvider = ({ children }: DataProviderProps) => {
     sourceIndex: number;
     sourceStatus: TaskStatus;
   }) => {
-    const previousTasks = tasks;
-    // Reorder + restate locally so the card snaps to the drop position
-    // immediately. destination.index is the post-remove position inside the
-    // destination status column, so we rebuild that column (and remove the
-    // task from the source column when it differs) and stitch them back
-    // into the global task list preserving the original column order.
-    // We use a placeholder sort_order; the real one comes back from the
-    // server.
-    const optimisticTasks = (() => {
-      if (!previousTasks) return previousTasks;
-      const moving = previousTasks.find((t) => t.uuid === params.taskUuid);
-      if (!moving) return previousTasks;
+    const previousTasks = tasksRef.current;
+    const optimisticTasks = previousTasks
+      ? applyOptimisticTaskMove({
+          tasks: previousTasks,
+          taskUuid: params.taskUuid,
+          sourceStatus: params.sourceStatus,
+          destinationStatus: params.newStatus,
+          destinationIndex: params.destinationIndex,
+        })
+      : previousTasks;
 
-      const columnTasks = (status: TaskStatus) =>
-        previousTasks.filter((t) => t.status === status);
-
-      const sameColumn = params.sourceStatus === params.newStatus;
-      const sourceCol = columnTasks(params.sourceStatus).filter(
-        (t) => t.uuid !== params.taskUuid,
-      );
-      const destCol = sameColumn ? sourceCol : columnTasks(params.newStatus);
-      const updatedMoving = { ...moving, status: params.newStatus };
-      const insertIndex = Math.max(
-        0,
-        Math.min(params.destinationIndex, destCol.length),
-      );
-      const rebuiltDest = [
-        ...destCol.slice(0, insertIndex),
-        updatedMoving,
-        ...destCol.slice(insertIndex),
-      ];
-
-      // Rebuild the global list keeping the original status ordering.
-      const seenStatuses = new Set<TaskStatus>();
-      const statusOrder: TaskStatus[] = [];
-      for (const t of previousTasks) {
-        if (!seenStatuses.has(t.status)) {
-          seenStatuses.add(t.status);
-          statusOrder.push(t.status);
-        }
-      }
-      const rebuilt: ITask[] = [];
-      for (const s of statusOrder) {
-        if (sameColumn && s === params.newStatus) {
-          rebuilt.push(...rebuiltDest);
-        } else if (s === params.sourceStatus) {
-          rebuilt.push(...sourceCol);
-        } else if (s === params.newStatus) {
-          rebuilt.push(...rebuiltDest);
-        } else {
-          rebuilt.push(...columnTasks(s));
-        }
-      }
-      return rebuilt;
-    })();
-
-    if (optimisticTasks) setTasks(optimisticTasks);
+    if (optimisticTasks) {
+      tasksRef.current = optimisticTasks;
+      setTasks(optimisticTasks);
+    }
 
     try {
       const res = await moveTaskService(params.taskUuid, {
@@ -291,7 +250,10 @@ export const DataProvider = ({ children }: DataProviderProps) => {
         next_rank: params.nextRank,
       });
       if (!res.success) {
-        if (previousTasks) setTasks(previousTasks);
+        if (previousTasks) {
+          tasksRef.current = previousTasks;
+          setTasks(previousTasks);
+        }
         toast.error(res.message ?? "Failed to move task");
         return false;
       }
@@ -304,11 +266,15 @@ export const DataProvider = ({ children }: DataProviderProps) => {
         const after = current.map((t) =>
           t.uuid === params.taskUuid ? { ...t, sort_order: serverRank } : t,
         );
+        tasksRef.current = after;
         setTasks(after);
       }
       return true;
     } catch (err) {
-      if (previousTasks) setTasks(previousTasks);
+      if (previousTasks) {
+        tasksRef.current = previousTasks;
+        setTasks(previousTasks);
+      }
       toast.error("Failed to move task");
       return false;
     }
