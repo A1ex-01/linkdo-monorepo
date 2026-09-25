@@ -1,253 +1,143 @@
-# Linkdo
-
-> macOS 桌面端任务管理与专注计时工具。通过 Notion 同步实现数据持久化，支持三种窗口形态无缝切换。
-
-**技术栈**: Tauri 2 + React 19 + Next.js App Router + Tailwind CSS + Zustand + Go + Python + MCP
-
----
-
-## 项目结构
-
-```
-.
-├── apps/               # JS/TS 应用（pnpm workspace 管理）
-│   ├── desktop/        # Tauri + Next.js 桌面端
-│   ├── admin/          # Ant Design Pro 管理后台
-│   └── mcp/            # Node.js MCP Server
-├── services/           # 后端服务（各自独立的包管理器）
-│   ├── backend/        # Go 服务
-│   └── agent/          # Python Agent 服务
-├── packages/           # JS/TS 共享包
-│   └── shared/         # 公共类型、工具函数、常量
-├── docs/               # 项目文档
-└── design/             # 设计稿
-```
-
-## 开发指南
-
-### 环境要求
-
-- Node.js >= 18
-- pnpm >= 9
-- Go >= 1.21
-- Python >= 3.11 + uv
-
-### 安装依赖
-
-```bash
-# 安装所有 JS/TS 依赖
-pnpm install
-```
-
-### 启动开发
-
-```bash
-# 启动所有服务
-make dev
-
-# 单独启动
-make dev-desktop     # Tauri 桌面端
-make dev-admin       # 管理后台
-make dev-mcp         # MCP Server
-make dev-backend     # Go 服务
-make dev-agent       # Python Agent
-```
-
----
+<div align="center">
+  <h1>Linkdo</h1>
+  <p>面向个人与团队的任务管理和专注工具。</p>
+  <p>
+    <a href="https://github.com/A1ex-01/linkdo-monorepo/actions/workflows/desktop-package.yml">
+      <img src="https://github.com/A1ex-01/linkdo-monorepo/actions/workflows/desktop-package.yml/badge.svg" alt="Desktop package" />
+    </a>
+    <img src="https://img.shields.io/badge/platform-macOS-000000?logo=apple&logoColor=white" alt="macOS" />
+    <img src="https://img.shields.io/badge/platform-Windows-0078D4?logo=windows&logoColor=white" alt="Windows" />
+    <img src="https://img.shields.io/badge/Tauri-2-24C8DB?logo=tauri&logoColor=white" alt="Tauri 2" />
+    <img src="https://img.shields.io/badge/Next.js-15%20%2F%2016-000000?logo=nextdotjs&logoColor=white" alt="Next.js 15 and 16" />
+    <img src="https://img.shields.io/badge/Go-1.26-00ADD8?logo=go&logoColor=white" alt="Go 1.26" />
+    <img src="https://img.shields.io/badge/FastAPI-009688?logo=fastapi&logoColor=white" alt="FastAPI" />
+  </p>
+  <img src="docs/desktop-app.png" alt="Linkdo 桌面端任务看板" width="1000" />
+</div>
 
 ## 架构概览
 
-```
-┌──────────────────────────────────────────┐
-│           macOS Desktop App               │
-│           (Tauri 2 Runtime)               │
-│  ┌────────────────────────────────────┐  │
-│  │   React 19 + Next.js 15 Desktop UI │  │
-│  │   (窗口状态管理 / 计时器 / 看板)    │  │
-│  └────────────────────────────────────┘  │
-└──────────────────┬───────────────────────┘
-                   │ HTTP API
-                   ▼
-┌──────────────────────────────────────────┐
-│         Go API Server (Iris)              │
-│  Notion OAuth / MySQL / Redis / JWT      │
-└──────────┬─────────────────┬────────────┘
-           │                 │
-           ▼                 ▼
-┌──────────────────┐  ┌──────────────────────┐
-│   Notion API     │  │
-│   (数据持久化)    │  │   Vercel AI SDK      │
-└──────────────────┘  │   DeepSeek Chat API  │
-                     └──────────────────────┘
-
-┌──────────────────────────────────────────┐
-│          MCP Server (TypeScript)          │
-│  Model Context Protocol — AI 工具调用    │
-│  集成到 Cursor / Claude Desktop           │
-└──────────────────┬───────────────────────┘
-                   │ MCP 工具调用
-                   ▼
-┌──────────────────────────────────────────┐
-│         Agent Server (Python)             │
-│  FastAPI / LangChain / DeepSeek           │
-│  AI Agent 智能任务管理与自动执行          │
-└──────────────────────────────────────────┘
+```mermaid
+flowchart TB
+  Desktop["Desktop<br/>Tauri + Next.js"] --> Gateway["Gateway :8080"]
+  Web["Web<br/>Next.js 静态导出"] --> Gateway
+  Admin["Admin<br/>Vite 静态站点"] --> Gateway
+  Gateway --> Base["Base Service :8081"]
+  Gateway --> Link["Link Service :8082"]
+  Gateway --> File["File Service :8083"]
+  Base --> MySQL[(MySQL)]
+  Base --> Redis[(Redis)]
+  Base --> RabbitMQ[(RabbitMQ)]
+  Link --> Integrations["Notion / ClickUp"]
+  Agent["Agent<br/>FastAPI / LangChain"] --> Gateway
 ```
 
----
+## 仓库结构
 
-## 各子模块详情
+```text
+apps/
+  desktop/      Tauri 2 + Next.js 桌面客户端
+  admin/        Vite + React 内部管理后台
+  web/          Next.js 静态导出营销官网
+packages/
+  shared/       共享类型、常量与工具
+  ui/           共享 React UI 组件与样式
+services/
+  backend/      Go 微服务后端
+  agent/        Python FastAPI / LangChain Agent
+deploy/         CCR 镜像与 Docker Compose 生产部署
+docs/           架构、设计与实施文档
+```
 
-### Desktop — `apps/desktop/`
+## 技术栈
 
-macOS 桌面端应用，Tauri 2 + React 19 构建。
+| 范围 | 主要技术 |
+| --- | --- |
+| Desktop | Tauri 2、Next.js 15、React 19、Tailwind CSS |
+| Admin | Vite、React 19、TanStack Router、Tailwind CSS、Radix/shadcn |
+| Web | Next.js 16、React 19、Tailwind CSS；生产环境静态导出 |
+| Backend | Go 1.26、Iris、GORM |
+| Agent | Python 3.13+、FastAPI、LangChain |
+| 基础设施 | MySQL、Redis、RabbitMQ、阿里云 OSS 与 Direct Mail |
+
+## 前置条件
+
+- Node.js `>=18`、pnpm `>=9`（项目使用 pnpm `10.33.0`）；
+- Desktop 开发还需要 Rust 和 Tauri 所需的操作系统依赖；
+- Go `1.26.1`；
+- Python `>=3.13` 和 [uv](https://docs.astral.sh/uv/)；
+- 本地启动后端还需要 MySQL、Redis、RabbitMQ，以及相应的服务配置。
+
+## 快速开始
+
+安装 JavaScript/TypeScript workspace 依赖：
 
 ```bash
-make dev-desktop
-# 或
-pnpm --filter @linkdo/desktop dev
+pnpm install
 ```
 
-**主要依赖**: Next.js 15, Tailwind CSS, Zustand, ahooks, Shadcn UI, Radix UI, React Hook Form + Zod, dayjs, Framer Motion, @tabler/icons-react, Vercel AI SDK
-
-**窗口形态**:
-
-| 形态 | 窗口宽度 | Always on Top | 说明 |
-|------|---------|---------------|------|
-| 标准视图 | ~1440px | 否 | Collection 列表 / 看板 |
-| 计时模式 | 343px | 可选 | 窄屏计时，实时 HH:MM:SS |
-| 胶囊 Focus | ~343×48px | **是** | 胶囊悬浮窗，常驻最前 |
-
-### Backend — `services/backend/`
-
-Go RESTful API 服务，处理业务逻辑、Notion OAuth 同步、JWT 鉴权。
+启动所有 workspace 内的 JS/TS 开发脚本，或按应用单独启动：
 
 ```bash
-make dev-backend
-# 或
-cd services/backend && go run main.go
+# Desktop、Admin 与 Web
+pnpm dev
+
+# 单独启动
+pnpm dev:desktop
+pnpm dev:admin
+pnpm dev:web
 ```
 
-**主要依赖**: Iris v12, GORM, MySQL, Redis, JWT, Notion API SDK, Gomail（邮件）
+- Desktop 会启动 Tauri 原生窗口；
+- Admin 使用 Vite 开发服务器；
+- Web 默认监听 `http://localhost:6001`。
 
-**核心服务**:
+Backend 由 Gateway、Base、Link、File 服务与邮件 Worker 组成；Agent 也需要自身配置和外部依赖。因此它们不提供误导性的“单命令启动”入口。Gateway 的服务边界与本地运行说明见 [Gateway 文档](services/backend/gateway/README.md)。
 
-- `auth` — JWT + Notion OAuth 2.0 登录
-- `collection` — 任务集合管理
-- `task` — 任务 CRUD，与 Notion 双向同步
-- `timer` — 计时会话管理
-- `notion-sync` — Notion 数据库状态映射与同步
-- `email` — 邮件通知
+## 应用与服务
 
-**环境变量**（`.env`）:
+| 模块 | 职责 | 技术 | 开发备注 |
+| --- | --- | --- | --- |
+| `apps/desktop` | 主产品桌面客户端：任务、看板、计时、集成、报告与 AI | Tauri 2 + Next.js | `pnpm dev:desktop` |
+| `apps/admin` | 内部运营与开发管理后台 | Vite + React | `pnpm dev:admin` |
+| `apps/web` | 产品官网与桌面端下载入口 | Next.js 静态导出 | `pnpm dev:web` |
+| `services/backend` | 业务 API、第三方集成、文件和异步邮件处理 | Go 微服务 | Gateway 是唯一对外入口 `:8080`；Base、Link、File 服务与 Worker 独立运行 |
+| `services/agent` | 基于自然语言的任务协作 Agent | FastAPI + LangChain | 通过 `BASE_SERVICE_URL` 与 Gateway 通信 |
 
-| 变量 | 说明 |
-|------|------|
-| `PORT` | 服务端口，默认 `8080` |
-| `MYSQL_DSN` | MySQL 连接字符串 |
-| `REDIS_ADDR` | Redis 地址 |
-| `NOTION_CLIENT_ID` | Notion OAuth Client ID |
-| `NOTION_CLIENT_SECRET` | Notion OAuth Client Secret |
-| `NOTION_TOKEN_ENCRYPTION_KEY` | Base64 编码的 32 字节 AES-256-GCM 密钥；仅放在部署 Secret 中，使用 `openssl rand -base64 32` 生成 |
-| `JWT_SECRET` | JWT 签名密钥 |
+## 质量检查与构建
 
-### Admin — `apps/admin/`
-
-Ant Design Pro 管理后台。
+在仓库根目录运行：
 
 ```bash
-make dev-admin
-# 或
-pnpm --filter @linkdo/admin dev
+# Turbo workspace 任务
+pnpm lint
+pnpm typecheck
+pnpm build
+
+# Makefile 聚合检查
+make lint
+make typecheck
+make format-check
+
+# 单应用验证
+pnpm --filter @linkdo/desktop test
+pnpm --filter @linkdo/admin test
+pnpm --filter @linkdo/web build
 ```
 
-### MCP Server — `apps/mcp/`
+## 生产部署
 
-Model Context Protocol 服务器，将 Linkdo 任务管理能力暴露给 Cursor、Claude Desktop 等 AI 助手。
+Backend、Admin 与 Web 使用同一发布标签构建镜像，并由 Docker Compose 发布。Web 镜像只服务静态导出文件；容器内 Nginx 提供 HTTP，宿主机代理负责域名与 TLS。
 
-```bash
-make dev-mcp
-# 或
-pnpm --filter @linkdo/mcp dev
-```
+环境文件、镜像推送、服务器发布、回滚、备份与反向代理边界见 [部署手册](deploy/README.md)。
 
-**认证**: 通过 Linkdo 后端 OAuth 2.0 完成用户鉴权，无需单独注册 API Token。
+## 文档索引
 
-**可用工具**:
+- [部署手册](deploy/README.md)
+- [Backend Gateway](services/backend/gateway/README.md)
+- [Web 静态部署设计](docs/superpowers/specs/2026-09-25-web-static-deployment-design.md)
+- [Web 静态部署实施计划](docs/superpowers/plans/2026-09-25-web-static-deployment.md)
 
-| 工具 | 说明 |
-|------|------|
-| `get_collections` | 列出所有 Collection |
-| `get_todos` | 获取任务列表（按状态分组，最多 100 条） |
-| `create_todo` | 创建新任务 |
-| `update_todo` | 更新任务标题、时间或状态 |
-| `delete_todo` | 删除任务 |
+## 许可证
 
-**Claude Desktop 配置** 参见 [`apps/mcp/README.md`](apps/mcp/README.md)。
-
-### Agent — `services/agent/`
-
-AI Agent 服务，通过 MCP 工具操作用户任务数据，支持两阶段确认执行、流式 SSE 输出。
-
-```bash
-make dev-agent
-# 或
-cd services/agent && uv run python -m app.main
-```
-
-**主要依赖**: FastAPI, LangChain, DeepSeek SDK, SSE（流式输出）
-
-**环境变量**:
-
-| 变量 | 说明 | 默认值 |
-|------|------|--------|
-| `AGENT_API_KEY` | API 认证密钥（必填） | `""` |
-| `LLM_API_KEY` | LLM API Key | `""` |
-| `LLM_BASE_URL` | LLM API 地址 | `https://api.deepseek.com` |
-| `LLM_MODEL` | 模型名称 | `deepseek-chat` |
-| `AGENT_MCP_SERVER_COMMAND` | MCP Server 启动命令 | `["npx", "-y", "@modelcontextprotocol/server-filesystem", "/tmp"]` |
-| `AGENT_MCP_SERVER_CWD` | MCP 工作目录 | `/tmp` |
-
-**接口**:
-
-| 接口 | 说明 |
-|------|------|
-| `GET /health` | 健康检查 |
-| `POST /v1/chat/stream` | 流式对话（两阶段确认或直接执行） |
-| `POST /v1/chat/confirm` | 两阶段确认第二步：用户确认后继续执行 |
-
-**SSE 事件流（confirm=true 两阶段）**：
-
-1. `confirm` 事件 → 返回执行计划，前端展示给用户确认
-2. 前端调用 `POST /v1/chat/confirm?session_id=xxx` 确认
-3. `execute_start` → `text` → `done` 事件流
-
-**SSE 事件流（confirm=false 直接执行）**：
-
-直接输出 `execute_start` → `text` → `done`
-
----
-
-## 用户核心流程
-
-```
-OAuth 授权 → 创建 Collection → 关联 Notion DB
-→ 设置状态映射 → 创建/管理任务 → 开始计时
-→ 切换窗口形态（标准 → 窄屏 → 胶囊 Focus）
-→ 完成任务 → Notion 自动同步
-```
-
-状态枚举：`backlog` → `this_week` → `today` → `done`
-
----
-
-## 设计资源
-
-- `design/` — 产品界面截图、设计参考图
-- `docs/product-specs/PRD.md` — 完整产品需求文档
-
----
-
-## License
-
-待定
+当前仓库根目录未声明许可证；未经项目维护者书面许可，请勿将其视为已授予开源使用权。
