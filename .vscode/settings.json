@@ -1,0 +1,5 @@
+{
+    "typescript.preferences.includePackageJsonAutoImports": "on",
+    // "python.analysis.typeCheckingMode": "strict",
+    "python.defaultInterpreterPath": "${workspaceFolder}/services/agent/.venv"
+}
