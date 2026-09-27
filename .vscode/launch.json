@@ -74,6 +74,15 @@
         "HTTPS_PROXY": "http://127.0.0.1:7890",
         "NO_PROXY": "localhost,127.0.0.1"
       }
+    },
+    {
+      "name": "Attach to LangGraph",
+      "type": "debugpy",
+      "request": "attach",
+      "connect": {
+        "host": "127.0.0.1",
+        "port": 5678
+      }
     }
   ],
   "compounds": [

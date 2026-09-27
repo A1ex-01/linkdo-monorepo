@@ -5,6 +5,7 @@ import type {
   INotionDatabase,
   IReportQuery,
   IReportSession,
+  IReportInsights,
   IReportSummary,
   IStatusMapping,
   ITimelinePoint,
@@ -60,6 +61,9 @@ const summary: IReportSummary = {
   total_tasks: 1,
   estimated_time_minutes: 30,
   actual_time_minutes: 30,
+  active_tasks: 0,
+  completion_rate: 100,
+  focus_session_count: 1,
 };
 const breakdown: ICollectionBreakdown = {
   collection_uuid: collection.uuid,
@@ -87,4 +91,36 @@ const session: IReportSession = {
   duration: 30,
 };
 
-void [user, database, list, statusMapping, query, summary, breakdown, timeline, session];
+const insights: IReportInsights = {
+  summary: {
+    ...summary,
+  },
+  timeline: [timeline],
+  collection_breakdown: [breakdown],
+  status_breakdown: [{ key: "done", count: 1 }],
+  source_breakdown: [{ key: "local", count: 1 }],
+  top_tasks: [
+    {
+      task_uuid: session.task_uuid,
+      task_title: session.task_title,
+      collection_uuid: session.collection_uuid,
+      collection_name: session.collection_name,
+      status: "done",
+      estimated_minutes: 30,
+      actual_minutes: 30,
+    },
+  ],
+};
+
+void [
+  user,
+  database,
+  list,
+  statusMapping,
+  query,
+  summary,
+  breakdown,
+  timeline,
+  session,
+  insights,
+];

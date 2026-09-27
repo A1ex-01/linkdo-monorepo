@@ -2,8 +2,11 @@
 
 "use client";
 
+import { ReportCollectionTable } from "@/app/reports/_components/report-collection-table";
+import { ReportDistributionCharts } from "@/app/reports/_components/report-distribution-charts";
 import { ReportSummaryCards } from "@/app/reports/_components/report-summary-cards";
 import { ReportTimelineChart } from "@/app/reports/_components/report-timeline-chart";
+import { ReportTopTasks } from "@/app/reports/_components/report-top-tasks";
 import BottomNav from "@/components/bottom-nav";
 import { AIconClickup, AIconNotion } from "@/components/icons/base";
 import { WindowTitleBar } from "@/components/window-title-bar";
@@ -17,17 +20,12 @@ import {
 } from "@/lib/report-view";
 import { cn } from "@/lib/utils";
 import { getCollections } from "@/services/collection";
-import {
-  getReportSessions,
-  getReportSummary,
-  getReportTimeline,
-} from "@/services/report";
+import { getReportInsights, getReportSessions } from "@/services/report";
 import type {
   ICollection,
+  IReportInsights,
   IReportQuery,
   IReportSession,
-  IReportSummary,
-  ITimelinePoint,
 } from "@/types/base";
 import { Button } from "@linkdo/ui/components/button";
 import { Calendar } from "@linkdo/ui/components/calendar";
@@ -111,20 +109,12 @@ export default function ReportsPage() {
     return res.data ?? [];
   });
 
-  const { data: summary, loading: summaryLoading } = useRequest(
+  const { data: insights, loading: insightsLoading } = useRequest(
     async () => {
-      const res = await getReportSummary(query);
-      if (!res.success) throw new Error(res.error ?? "Failed to load summary");
+      const res = await getReportInsights(query);
+      if (!res.success)
+        throw new Error(res.error ?? "Failed to load report insights");
       return res.data;
-    },
-    { refreshDeps: [query] },
-  );
-
-  const { data: timeline, loading: timelineLoading } = useRequest(
-    async () => {
-      const res = await getReportTimeline(query);
-      if (!res.success) throw new Error(res.error ?? "Failed to load timeline");
-      return res.data ?? [];
     },
     { refreshDeps: [query] },
   );
@@ -195,11 +185,7 @@ export default function ReportsPage() {
         </div>
 
         {tab === "overview" ? (
-          <OverviewTab
-            summary={summary}
-            timeline={timeline}
-            loading={summaryLoading || timelineLoading}
-          />
+          <OverviewTab insights={insights} loading={insightsLoading} />
         ) : (
           <SessionsTab
             loading={sessionsLoading}
@@ -291,22 +277,28 @@ function ActionBar({ tab }: { tab: ReportTab }) {
 }
 
 function OverviewTab({
-  summary,
-  timeline,
+  insights,
   loading,
 }: {
-  summary?: IReportSummary;
-  timeline?: ITimelinePoint[];
+  insights?: IReportInsights;
   loading: boolean;
 }) {
-  if (loading && !summary && !timeline) {
-    return <SkeletonBlock className="h-[620px]" />;
+  if (loading && !insights) {
+    return <SkeletonBlock className="h-[780px]" />;
   }
 
   return (
     <div className="space-y-8">
-      <ReportSummaryCards summary={summary} />
-      <ReportTimelineChart data={timeline} />
+      <ReportSummaryCards summary={insights?.summary} />
+      <ReportTimelineChart data={insights?.timeline} />
+      <ReportDistributionCharts
+        statusBreakdown={insights?.status_breakdown ?? []}
+        sourceBreakdown={insights?.source_breakdown ?? []}
+      />
+      <div className="grid gap-6 xl:grid-cols-[minmax(0,1.6fr)_minmax(360px,0.9fr)]">
+        <ReportCollectionTable data={insights?.collection_breakdown} />
+        <ReportTopTasks tasks={insights?.top_tasks ?? []} />
+      </div>
     </div>
   );
 }

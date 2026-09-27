@@ -12,6 +12,8 @@ describe("report color tokens", () => {
       "_components/report-summary-cards.tsx",
       "_components/report-timeline-chart.tsx",
       "_components/report-collection-table.tsx",
+      "_components/report-distribution-charts.tsx",
+      "_components/report-top-tasks.tsx",
     ]) {
       const source = readFileSync(resolve(reportsDirectory, file), "utf8");
 

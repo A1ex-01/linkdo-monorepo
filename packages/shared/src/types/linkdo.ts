@@ -59,6 +59,34 @@ export interface IReportSummary {
   total_tasks: number;
   estimated_time_minutes: number;
   actual_time_minutes: number;
+  active_tasks: number;
+  completion_rate: number;
+  focus_session_count: number;
+}
+
+export interface IReportSegment {
+  key: string;
+  count: number;
+}
+
+export interface IReportTopTask {
+  task_uuid: string;
+  task_title: string;
+  collection_uuid: string;
+  collection_name: string;
+  collection_icon?: string;
+  status: string;
+  estimated_minutes: number;
+  actual_minutes: number;
+}
+
+export interface IReportInsights {
+  summary: IReportSummary;
+  timeline: ITimelinePoint[];
+  collection_breakdown: ICollectionBreakdown[];
+  status_breakdown: IReportSegment[];
+  source_breakdown: IReportSegment[];
+  top_tasks: IReportTopTask[];
 }
 
 export interface ICollectionBreakdown {
