@@ -3,7 +3,6 @@
 "use client";
 
 import { WorkHeader } from "@/app/work/_components/header";
-import AIChat from "@/components/ai-chat";
 import BottomNav from "@/components/bottom-nav";
 import { LoadingScreen } from "@/components/motion/loading-screen";
 import { WindowTitleBar } from "@/components/window-title-bar";
@@ -90,7 +89,7 @@ export default function Content() {
           <CapsuleBoard />
         )}
       </main>
-      <AIChat />
+      {/* <AIChat /> */}
       {viewMode === "kanban" && <BottomNav />}
     </div>
   );
