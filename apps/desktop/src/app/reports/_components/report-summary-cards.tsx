@@ -16,15 +16,22 @@ export function ReportSummaryCards({ summary }: ReportSummaryCardsProps) {
   const actualMinutes = summary?.actual_time_minutes ?? 0;
   const averageMinutes =
     completedTasks > 0 ? Math.round(actualMinutes / completedTasks) : 0;
+  const completionRate = summary?.completion_rate ?? 0;
+  const focusSessions = summary?.focus_session_count ?? 0;
 
   return (
-    <div className="grid grid-cols-4 gap-8">
+    <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
       <SummaryCard title="Total work days" value={String(totalWorkDays)} />
       <SummaryCard title="Total tasks done" value={String(completedTasks)} />
+      <SummaryCard
+        title="Completion rate"
+        value={`${Math.round(completionRate)}%`}
+      />
       <SummaryCard
         title="Total time worked"
         value={formatReportMinutes(actualMinutes)}
       />
+      <SummaryCard title="Focus sessions" value={String(focusSessions)} />
       <SummaryCard
         title="Avg. Time per task"
         value={formatReportMinutes(averageMinutes)}
@@ -37,7 +44,7 @@ function SummaryCard({ title, value }: { title: string; value: string }) {
   return (
     <div
       className={cn(
-        "border-border bg-card flex h-[124px] flex-col justify-center rounded-lg border px-6 py-5",
+        "border-border bg-card flex min-h-[124px] flex-col justify-center rounded-xl border px-6 py-5",
       )}
     >
       <div className="text-muted-foreground text-lg font-semibold">{title}</div>

@@ -89,6 +89,7 @@ export default function Content() {
           <CapsuleBoard />
         )}
       </main>
+      {/* <AIChat /> */}
       {viewMode === "kanban" && <BottomNav />}
     </div>
   );

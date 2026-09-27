@@ -2,15 +2,22 @@
 
 import { useData } from "@/app/work/data-provider";
 import {
-  type AgentEvent,
+  answerAgentQuestion,
   confirmAgentPlan,
   isCancelledMutation,
   sendAgentMessage,
+  type AgentEvent,
   type SSEEvent,
 } from "@/services/agent";
 import { IconAi, IconCheck, IconX } from "@tabler/icons-react";
 import { AnimatePresence, motion } from "framer-motion";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { ReasoningText } from "../agents/loading-states/reasoning-text";
 import {
   Message,
@@ -39,6 +46,7 @@ type MessageKind =
   | "delete_task"
   | "chitchat"
   | "confirm"
+  | "question"
   | "error";
 
 interface MessageBase {
@@ -84,6 +92,12 @@ interface ConfirmMessage extends MessageBase {
   status: ToolApprovalStatus;
 }
 
+interface QuestionMessage extends MessageBase {
+  kind: "question";
+  conversationId: string;
+  operationId: string;
+}
+
 interface ErrorMessage extends MessageBase {
   kind: "error";
 }
@@ -95,6 +109,7 @@ type AIChatMessage =
   | TasksMessage
   | GenericNodeMessage
   | ConfirmMessage
+  | QuestionMessage
   | ErrorMessage;
 
 // ---------------------------------------------------------------------------
@@ -219,6 +234,8 @@ function classifyActionStarted(
   if (!action) return null;
   const data = event.payload;
 
+  if (action === "ask_user_question") return null;
+
   if (action === "intent-classify") {
     return {
       id,
@@ -268,7 +285,52 @@ function classifyActionStarted(
   };
 }
 
+function completedMessageKind(action: string | undefined): MessageKind {
+  switch (action) {
+    case "intent-classify":
+      return "intent_classify";
+    case "get_tasks":
+      return "tasks";
+    case "create_task":
+    case "update_task":
+    case "delete_task":
+    case "chitchat":
+      return action;
+    default:
+      return "chitchat";
+  }
+}
+
+function enrichCompletionPayload(
+  payload: Record<string, unknown>,
+  approvalPayload: Record<string, unknown> | undefined,
+): Record<string, unknown> {
+  const preview = asRecord(approvalPayload?.preview);
+  const before = asRecord(preview.before);
+  const title = readOptionalString(before, "title");
+  const taskUuid = readOptionalString(preview, "task_uuid");
+  const collectionName = readOptionalString(preview, "collection_name");
+
+  return {
+    ...payload,
+    ...(title ? { title } : {}),
+    ...(taskUuid ? { task_uuid: taskUuid } : {}),
+    ...(collectionName ? { collection_name: collectionName } : {}),
+  };
+}
+
 function classifyEvent(event: AgentEvent): AIChatMessage | null {
+  if (event.type === "question_required" && event.operationId) {
+    return {
+      id: genId(),
+      role: "assistant",
+      kind: "question",
+      conversationId: event.conversationId,
+      operationId: event.operationId,
+      data: event.payload,
+    };
+  }
+
   if (event.type === "assistant_message") {
     return {
       id: genId(),
@@ -326,6 +388,9 @@ export default function AIChat() {
   // Tracks action cards by operation+action. A resumed HITL action can replay
   // its start event, so node name alone is not a safe key.
   const runningIds = useRef<Map<string, string>>(new Map());
+  const approvalPayloads = useRef<Map<string, Record<string, unknown>>>(
+    new Map(),
+  );
 
   // Dedupe refreshes for the same node name within a short window. When the
   // backend emits `start` + `end` for a task we just hit `getTasks()` once.
@@ -372,6 +437,29 @@ export default function AIChat() {
     [],
   );
 
+  const updateConfirmStatus = useCallback(
+    (operationId: string, status: ToolApprovalStatus) => {
+      setMessages((prev) => {
+        const idx = [...prev]
+          .reverse()
+          .findIndex(
+            (m) => m.kind === "confirm" && m.operationId === operationId,
+          );
+        if (idx === -1) return prev;
+        const realIdx = prev.length - 1 - idx;
+        const target = prev[realIdx];
+        if (target.kind !== "confirm") return prev;
+        if (target.status === "denied" && status === "approved") return prev;
+        return [
+          ...prev.slice(0, realIdx),
+          { ...target, status },
+          ...prev.slice(realIdx + 1),
+        ];
+      });
+    },
+    [],
+  );
+
   // -------------------------------------------------------------------------
   // Stream consumer for the versioned event envelope.
   // -------------------------------------------------------------------------
@@ -404,6 +492,7 @@ export default function AIChat() {
       if (event.type === "approval_required") {
         if (event.operationId) {
           setPendingOperationId(event.operationId);
+          approvalPayloads.current.set(event.operationId, event.payload);
           if (actionKey) {
             const id = runningIds.current.get(actionKey);
             if (id) {
@@ -416,31 +505,45 @@ export default function AIChat() {
         return;
       }
 
+      if (event.type === "question_required") {
+        if (event.operationId) setPendingOperationId(event.operationId);
+        const msg = classifyEvent(event);
+        if (msg) append(msg);
+        return;
+      }
+
       if (event.type === "action_completed") {
+        if (event.action === "ask_user_question") return;
         if (!actionKey) return;
+        const completionPayload = enrichCompletionPayload(
+          event.payload,
+          event.operationId
+            ? approvalPayloads.current.get(event.operationId)
+            : undefined,
+        );
         const id = runningIds.current.get(actionKey);
         runningIds.current.delete(actionKey);
 
         if (id) {
           updateStatusAwareById(id, {
             status: "done",
-            data: event.payload,
+            data: completionPayload,
           });
         } else {
-          const kind: MessageKind =
-            event.action === "intent-classify"
-              ? "intent_classify"
-              : event.action === "get_tasks"
-                ? "tasks"
-                : (event.action as MessageKind);
+          const kind = completedMessageKind(event.action);
           append({
             id: genId(),
             role: "assistant",
             kind,
             nodeName: event.action ?? "chitchat",
             status: "done",
-            data: event.payload,
+            data: completionPayload,
           } as AIChatMessage);
+        }
+
+        if (event.operationId) {
+          updateConfirmStatus(event.operationId, "approved");
+          approvalPayloads.current.delete(event.operationId);
         }
 
         if (
@@ -448,7 +551,7 @@ export default function AIChat() {
           event.action === "update_task" ||
           event.action === "delete_task"
         ) {
-          if (event.payload.approved !== false) {
+          if (completionPayload.approved !== false) {
             refreshKanbanFor(event.action);
           }
         }
@@ -475,7 +578,7 @@ export default function AIChat() {
       const msg = classifyEvent(event);
       if (msg) append(msg);
     },
-    [append, refreshKanbanFor, updateStatusAwareById],
+    [append, refreshKanbanFor, updateConfirmStatus, updateStatusAwareById],
   );
 
   // -------------------------------------------------------------------------
@@ -523,28 +626,6 @@ export default function AIChat() {
   // Confirm / deny
   // -------------------------------------------------------------------------
 
-  const updateConfirmStatus = useCallback(
-    (operationId: string, status: ToolApprovalStatus) => {
-      setMessages((prev) => {
-        const idx = [...prev]
-          .reverse()
-          .findIndex(
-            (m) => m.kind === "confirm" && m.operationId === operationId,
-          );
-        if (idx === -1) return prev;
-        const realIdx = prev.length - 1 - idx;
-        const target = prev[realIdx];
-        if (target.kind !== "confirm") return prev;
-        return [
-          ...prev.slice(0, realIdx),
-          { ...target, status },
-          ...prev.slice(realIdx + 1),
-        ];
-      });
-    },
-    [],
-  );
-
   const handleConfirmResponse = useCallback(
     async (confirmMsg: ConfirmMessage, approved: boolean) => {
       setStreaming(true);
@@ -576,6 +657,31 @@ export default function AIChat() {
     [append, handleEvent, updateConfirmStatus],
   );
 
+  const handleQuestionResponse = useCallback(
+    async (questionMsg: QuestionMessage, answer: string) => {
+      setStreaming(true);
+      try {
+        await answerAgentQuestion({
+          conversationId: questionMsg.conversationId,
+          operationId: questionMsg.operationId,
+          answer,
+          onEvent: handleEvent,
+          onError: (code, message) => {
+            append({
+              id: genId(),
+              role: "assistant",
+              kind: "error",
+              data: { code, message },
+            });
+          },
+        });
+      } finally {
+        setStreaming(false);
+      }
+    },
+    [append, handleEvent],
+  );
+
   // -------------------------------------------------------------------------
   // Render
   // -------------------------------------------------------------------------
@@ -595,10 +701,14 @@ export default function AIChat() {
         node: renderMessage(m, {
           onApprove: (msg) => handleConfirmResponse(msg, true),
           onDeny: (msg) => handleConfirmResponse(msg, false),
+          onAnswer: (msg, answer) => handleQuestionResponse(msg, answer),
         }),
       })),
-    [messages, handleConfirmResponse],
+    [messages, handleConfirmResponse, handleQuestionResponse],
   );
+  const lastUserMessageId = [...messages]
+    .reverse()
+    .find((message) => message.kind === "user")?.id;
 
   return (
     <>
@@ -658,42 +768,44 @@ export default function AIChat() {
                 >
                   <MessageGroup spacing="default">
                     {renderedMessages.map(({ m, node }) => (
-                      <Message key={m.id} from={m.role} animateIn>
-                        <MessageAvatar>
-                          {m.role === "user" ? "Ax" : "AI"}
-                        </MessageAvatar>
-                        <MessageContent>
-                          <MessageBubble
-                            variant={m.role === "user" ? "solid" : "outline"}
-                          >
-                            <MessageBubbleContent>{node}</MessageBubbleContent>
-                          </MessageBubble>
-                        </MessageContent>
-                      </Message>
+                      <React.Fragment key={m.id}>
+                        <Message from={m.role} animateIn>
+                          <MessageAvatar>
+                            {m.role === "user" ? "Ax" : "AI"}
+                          </MessageAvatar>
+                          <MessageContent>
+                            <MessageBubble
+                              variant={m.role === "user" ? "solid" : "outline"}
+                            >
+                              <MessageBubbleContent>
+                                {node}
+                              </MessageBubbleContent>
+                            </MessageBubble>
+                          </MessageContent>
+                        </Message>
+                        {streaming && m.id === lastUserMessageId ? (
+                          <Message from="assistant" animateIn>
+                            <MessageAvatar>AI</MessageAvatar>
+                            <MessageContent>
+                              <div className="max-w-[80%] rounded-2xl bg-[#2a2830] px-4 py-2 text-sm text-[#e5e2e3]">
+                                <ReasoningText
+                                  variant="swap"
+                                  phrases={[
+                                    "Thinking",
+                                    "Reading the request",
+                                    "Working through the details",
+                                    "Preparing the answer",
+                                  ]}
+                                  className="text-sm"
+                                />
+                              </div>
+                            </MessageContent>
+                          </Message>
+                        ) : null}
+                      </React.Fragment>
                     ))}
                   </MessageGroup>
                 </MessageScroller>
-
-                {streaming && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="mb-3 flex justify-start"
-                  >
-                    <div className="max-w-[80%] rounded-2xl bg-[#2a2830] px-4 py-2 text-sm text-[#e5e2e3]">
-                      <ReasoningText
-                        variant="swap"
-                        phrases={[
-                          "Thinking",
-                          "Reading the request",
-                          "Working through the details",
-                          "Preparing the answer",
-                        ]}
-                        className="text-sm"
-                      />
-                    </div>
-                  </motion.div>
-                )}
               </div>
             )}
 
@@ -742,6 +854,7 @@ export default function AIChat() {
 interface RenderHandlers {
   onApprove: (msg: ConfirmMessage) => void;
   onDeny: (msg: ConfirmMessage) => void;
+  onAnswer: (msg: QuestionMessage, answer: string) => void;
 }
 
 function renderMessage(
@@ -835,6 +948,14 @@ function renderMessage(
         />
       );
 
+    case "question":
+      return (
+        <QuestionCard
+          data={msg.data}
+          onSelect={(answer) => handlers.onAnswer(msg, answer)}
+        />
+      );
+
     case "error": {
       const code = readString(msg.data, "code") || "internal";
       const message = readString(msg.data, "message");
@@ -851,6 +972,46 @@ function renderMessage(
       return _exhaustive;
     }
   }
+}
+
+function QuestionCard({
+  data,
+  onSelect,
+}: {
+  data: Record<string, unknown>;
+  onSelect: (answer: string) => void;
+}) {
+  const question = readString(data, "question") || "请选择一个选项";
+  const options = Array.isArray(data.options)
+    ? data.options.map(asRecord).filter((option) => readString(option, "title"))
+    : [];
+
+  return (
+    <section className="w-full rounded-xl border border-violet-400/25 bg-violet-500/5 p-3 text-sm">
+      <div className="font-medium text-white/95">{question}</div>
+      <div className="mt-3 grid gap-2">
+        {options.map((option) => {
+          const title = readString(option, "title");
+          const description = readString(option, "description");
+          return (
+            <button
+              key={title}
+              type="button"
+              onClick={() => onSelect(title)}
+              className="rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-left transition hover:border-violet-300/40 hover:bg-violet-400/10 focus-visible:ring-2 focus-visible:ring-violet-300"
+            >
+              <div className="text-xs font-medium text-white/95">{title}</div>
+              {description ? (
+                <div className="mt-0.5 text-[11px] text-white/55">
+                  {description}
+                </div>
+              ) : null}
+            </button>
+          );
+        })}
+      </div>
+    </section>
+  );
 }
 
 function asRecord(v: unknown): Record<string, unknown> {
@@ -1001,13 +1162,17 @@ function UpdateTaskDoneCard({ data }: { data: Record<string, unknown> }) {
 
 function DeleteCard({ data }: { data: Record<string, unknown> }) {
   const collectionName = readString(data, "collection_name");
+  const title =
+    readOptionalString(data, "title") ?? readOptionalString(data, "name");
   const taskUuid =
     readOptionalString(data, "task_uuid") ?? readOptionalString(data, "uuid");
   return (
     <div className="rounded-lg border border-rose-500/30 bg-rose-500/10 px-3 py-2 text-xs text-rose-100">
       <div className="font-medium">已删除任务</div>
       <div className="mt-0.5 text-rose-100/80">
-        集合「{collectionName || "—"}」{taskUuid ? ` · ${taskUuid}` : ""}
+        {title ? `任务《${title}》` : "任务"}
+        {taskUuid ? ` · ${taskUuid}` : ""}
+        {collectionName ? ` · 集合「${collectionName}」` : ""}
       </div>
     </div>
   );
@@ -1041,6 +1206,7 @@ function ConfirmPreviewCard({
   const fields = asRecord(preview.fields);
   const before = asRecord(preview.before);
   const after = asRecord(preview.after);
+  const taskTitle = readOptionalString(before, "title");
 
   const parameters: { id: string; label: string; value: React.ReactNode }[] = [
     {
@@ -1063,6 +1229,13 @@ function ConfirmPreviewCard({
       value: (
         <span className="font-mono text-[11px] text-white/70">{taskUuid}</span>
       ),
+    });
+  }
+  if (taskTitle) {
+    parameters.push({
+      id: "task-title",
+      label: "任务标题",
+      value: <span>{taskTitle}</span>,
     });
   }
 

@@ -2,6 +2,7 @@
 
 import type {
   ICollectionBreakdown,
+  IReportInsights,
   IReportQuery,
   IReportSession,
   IReportSummary,
@@ -31,6 +32,13 @@ function toQueryString(q?: IReportQuery): string {
 export function getReportSummary(query?: IReportQuery) {
   return request<IReportSummary>({
     url: `/api/reports/summary${toQueryString(query)}`,
+    method: "get",
+  });
+}
+
+export function getReportInsights(query?: IReportQuery) {
+  return request<IReportInsights>({
+    url: `/api/reports/insights${toQueryString(query)}`,
     method: "get",
   });
 }

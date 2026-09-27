@@ -23,6 +23,7 @@ export type AgentEventType =
   | "action_started"
   | "assistant_message"
   | "approval_required"
+  | "question_required"
   | "action_completed"
   | "error"
   | "run_completed";
@@ -57,6 +58,12 @@ export interface AgentConfirmationRequest {
   decision: "approve" | "deny";
 }
 
+export interface AgentQuestionAnswerRequest {
+  conversation_id: string;
+  operation_id: string;
+  answer: string;
+}
+
 export interface SendMessageOptions {
   conversationId: string;
   requestId: string;
@@ -74,11 +81,20 @@ export interface ConfirmOptions {
   onError?: (code: string, message: string) => void;
 }
 
+export interface AnswerQuestionOptions {
+  conversationId: string;
+  operationId: string;
+  answer: string;
+  onEvent?: (event: SSEEvent) => void;
+  onError?: (code: string, message: string) => void;
+}
+
 const EVENT_TYPES = new Set<AgentEventType>([
   "run_started",
   "action_started",
   "assistant_message",
   "approval_required",
+  "question_required",
   "action_completed",
   "error",
   "run_completed",
@@ -124,6 +140,19 @@ export function buildAgentConfirmationRequest(
     conversation_id: input.conversationId,
     operation_id: input.operationId,
     decision: input.decision,
+  };
+}
+
+export function buildAgentQuestionAnswerRequest(
+  input: Pick<
+    AnswerQuestionOptions,
+    "conversationId" | "operationId" | "answer"
+  >,
+): AgentQuestionAnswerRequest {
+  return {
+    conversation_id: input.conversationId,
+    operation_id: input.operationId,
+    answer: input.answer,
   };
 }
 
@@ -219,13 +248,34 @@ export async function sendAgentMessage(
 
 export async function confirmAgentPlan(options: ConfirmOptions): Promise<void> {
   const token = getToken();
-  const response = await fetch(`${AGENT_URL}/api/chat/confirm-message`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: token ? `Bearer ${token}` : "",
+  const response = await fetch(
+    `${AGENT_URL}/api/chat/interrupt-human-in-the-loop`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: token ? `Bearer ${token}` : "",
+      },
+      body: JSON.stringify(buildAgentConfirmationRequest(options)),
     },
-    body: JSON.stringify(buildAgentConfirmationRequest(options)),
-  });
+  );
+  await readSSEStream(response, options);
+}
+
+export async function answerAgentQuestion(
+  options: AnswerQuestionOptions,
+): Promise<void> {
+  const token = getToken();
+  const response = await fetch(
+    `${AGENT_URL}/api/chat/answer-human-in-the-loop`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: token ? `Bearer ${token}` : "",
+      },
+      body: JSON.stringify(buildAgentQuestionAnswerRequest(options)),
+    },
+  );
   await readSSEStream(response, options);
 }
