@@ -1,4 +1,5 @@
 import { Tabs } from "expo-router";
+import { LiquidGlassTabBar } from "@/components/liquid-glass-tab-bar";
 import {
   BarChart3Icon,
   FolderKanbanIcon,
@@ -9,7 +10,13 @@ import {
 
 export default function AppLayout() {
   return (
-    <Tabs screenOptions={{ headerTitleStyle: { fontWeight: "700" } }}>
+    <Tabs
+      tabBar={(props) => <LiquidGlassTabBar {...props} />}
+      screenOptions={{
+        headerTitleStyle: { fontWeight: "700" },
+        sceneStyle: { backgroundColor: "transparent" },
+      }}
+    >
       <Tabs.Screen
         name="collections"
         options={{

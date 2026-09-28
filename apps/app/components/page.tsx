@@ -18,7 +18,7 @@ export function Page({
   return (
     <ScrollView
       className="flex-1 bg-background"
-      contentContainerClassName="gap-4 px-5 pt-5 pb-10"
+      contentContainerClassName="gap-4 px-5 pt-5 pb-32"
       refreshControl={
         onRefresh ? (
           <RefreshControl
