@@ -1,6 +1,14 @@
-> 没错它是一款 todolist + 番茄时钟 + 多端集成同步工具，让你不再在任务工具之间来回切换。**前端开发转 AI 全栈中的卑微崽** 详细介绍看项目地址：https://github.com/A1ex-01/linkdo-monorepo 官网：https://linkdo.a1ex.online/ 欢迎学习交流
+> Linkdo 是一款 Todo List + 番茄时钟 + 悬浮球 + 多平台任务同步的桌面工具。
 
-## 为什么做 Linkdo - 不想再在任务之间来回切换
+> 它想解决的事很简单：让你不必在 Notion、ClickUp、飞书等各种任务工具之间反复切换。
+
+> **前端开发转 AI 全栈中的卑微崽** \
+> 项目地址：[GitHub](https://github.com/A1ex-01/linkdo-monorepo)  
+官网：[linkdo.a1ex.online](https://linkdo.a1ex.online/)
+
+
+
+## 为什么做 Linkdo：不想再在任务工具之间来回切换
 
 起点很简单，日报，bug 反馈，需求整理，日程管理。这几个内容是一天下来最高频访问的内容。但是它总是会坐落于 N 个不同的软件或文档中，要自己管理任务进度，时间，deadline，等等等等。这是我过往的在推进任务上的痛点。所以我做了这款应用。能将 Notion Clickup 等第三方应用内容同步到 Linkdo 中，并且能从开始到结束，跟踪知道已完成，中间的所有状态流转，文档内容更新、时间更改，都能实时的同步到对应的集成，如果你想，飞书/jira 等等应用，都可以集成到 Linkdo。
 
