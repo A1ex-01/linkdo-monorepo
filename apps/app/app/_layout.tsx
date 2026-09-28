@@ -1,96 +1,46 @@
-import '@/global.css';
+import "@/global.css";
 
-import { NAV_THEME } from '@/lib/theme';
-import { ClerkProvider, useAuth } from '@clerk/expo';
-import { tokenCache } from '@clerk/expo/token-cache';
-import { ThemeProvider } from 'expo-router/react-navigation';
-import { PortalHost } from '@rn-primitives/portal';
-import { Stack } from 'expo-router';
-import * as SplashScreen from 'expo-splash-screen';
-import { StatusBar } from 'expo-status-bar';
-import { useColorScheme } from 'nativewind';
-import * as React from 'react';
-
-const publishableKey = getPublishableKey();
-
-export {
-  // Catch any errors thrown by the Layout component.
-  ErrorBoundary,
-} from 'expo-router';
-
-export default function RootLayout() {
-  const { colorScheme } = useColorScheme();
-
-  return (
-    <ClerkProvider publishableKey={publishableKey} tokenCache={tokenCache}>
-      <ThemeProvider value={NAV_THEME[colorScheme ?? 'light']}>
-        <StatusBar style={colorScheme === 'dark' ? 'light' : 'dark'} />
-        <Routes />
-        <PortalHost />
-      </ThemeProvider>
-    </ClerkProvider>
-  );
-}
-
-function getPublishableKey() {
-  const key = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY;
-
-  if (!key) {
-    throw new Error('Missing EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY');
-  }
-
-  return key;
-}
+import { AuthProvider, useLinkdoAuth } from "@/lib/auth";
+import { NAV_THEME } from "@/lib/theme";
+import { ThemeProvider } from "expo-router/react-navigation";
+import { Stack } from "expo-router";
+import * as SplashScreen from "expo-splash-screen";
+import { StatusBar } from "expo-status-bar";
+import { useColorScheme } from "nativewind";
+import * as React from "react";
 
 SplashScreen.preventAutoHideAsync();
 
-function Routes() {
-  const { isSignedIn, isLoaded } = useAuth();
+export { ErrorBoundary } from "expo-router";
 
-  React.useEffect(() => {
-    if (isLoaded) {
-      SplashScreen.hideAsync();
-    }
-  }, [isLoaded]);
-
-  if (!isLoaded) {
-    return null;
-  }
-
+export default function RootLayout() {
+  const { colorScheme } = useColorScheme();
   return (
-    <Stack>
-      {/* Screens only shown when the user is NOT signed in */}
-      <Stack.Protected guard={!isSignedIn}>
-        <Stack.Screen name="(auth)/sign-in" options={SIGN_IN_SCREEN_OPTIONS} />
-        <Stack.Screen name="(auth)/sign-up" options={SIGN_UP_SCREEN_OPTIONS} />
-        <Stack.Screen name="(auth)/reset-password" options={DEFAULT_AUTH_SCREEN_OPTIONS} />
-        <Stack.Screen name="(auth)/forgot-password" options={DEFAULT_AUTH_SCREEN_OPTIONS} />
-      </Stack.Protected>
-
-      {/* Screens only shown when the user IS signed in */}
-      <Stack.Protected guard={isSignedIn}>
-        <Stack.Screen name="index" />
-      </Stack.Protected>
-
-      {/* Screens outside the guards are accessible to everyone (e.g. not found) */}
-    </Stack>
+    <AuthProvider>
+      <ThemeProvider value={NAV_THEME[colorScheme ?? "light"]}>
+        <StatusBar style={colorScheme === "dark" ? "light" : "dark"} />
+        <Routes />
+      </ThemeProvider>
+    </AuthProvider>
   );
 }
 
-const SIGN_IN_SCREEN_OPTIONS = {
-  headerShown: false,
-  title: 'Sign in',
-};
+function Routes() {
+  const { token, isLoading } = useLinkdoAuth();
 
-const SIGN_UP_SCREEN_OPTIONS = {
-  presentation: 'modal',
-  title: '',
-  headerTransparent: true,
-  gestureEnabled: false,
-} as const;
+  React.useEffect(() => {
+    if (!isLoading) void SplashScreen.hideAsync();
+  }, [isLoading]);
 
-const DEFAULT_AUTH_SCREEN_OPTIONS = {
-  title: '',
-  headerShadowVisible: false,
-  headerTransparent: true,
-};
+  if (isLoading) return null;
+  return (
+    <Stack>
+      <Stack.Protected guard={!token}>
+        <Stack.Screen name="(auth)/sign-in" options={{ headerShown: false }} />
+      </Stack.Protected>
+      <Stack.Protected guard={Boolean(token)}>
+        <Stack.Screen name="(app)" options={{ headerShown: false }} />
+      </Stack.Protected>
+    </Stack>
+  );
+}

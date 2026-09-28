@@ -1,16 +1,15 @@
 {
   "expo": {
-    "name": "app",
-    "slug": "app",
+    "name": "Linkdo",
+    "slug": "linkdo",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "app",
+    "scheme": "linkdo",
     "userInterfaceStyle": "automatic",
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
+      "bundleIdentifier": "online.a1ex.linkdo",
       "supportsTablet": true
     },
     "android": {
@@ -36,7 +35,22 @@
           "backgroundColor": "#ffffff"
         }
       ],
-      "expo-status-bar"
+      "expo-status-bar",
+      [
+        "expo-widgets",
+        {
+          "widgets": [
+            {
+              "name": "LinkdoTaskList",
+              "displayName": "Linkdo 任务",
+              "description": "查看今天和本周的 Linkdo 任务",
+              "ios": {
+                "supportedFamilies": ["systemMedium", "systemLarge"]
+              }
+            }
+          ]
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true

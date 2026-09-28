@@ -1,6 +1,6 @@
-# Clerk Auth Template
+# Linkdo mobile (read-only)
 
-This is a [React Native](https://reactnative.dev) project built with [Expo](https://expo.dev), [Clerk](https://go.clerk.com/gjgxNgT), and [React Native Reusables](https://reactnativereusables.com).
+This is the Linkdo mobile companion, built with [Expo](https://expo.dev) and [React Native Reusables](https://reactnativereusables.com). It uses the same email-code login and API as `apps/desktop`.
 
 It was initialized using the following command, then the `Clerk auth (Nativewind)` template was selected when prompted:
 
@@ -12,10 +12,9 @@ npx @react-native-reusables/cli@latest init
 
 Before running the app, make sure to:
 
-1. [Set up your Clerk account](https://go.clerk.com/blVsQlm)
-2. In the instance setup, leave the default option selected: **Email, phone, username**
-3. Enable Apple, GitHub, and Google as sign-in options under SSO Connections
-4. Rename `.env.example` to `.env.local` and paste your `EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY` from [your API keys](https://go.clerk.com/u8KAui7)
+1. Copy `.env.example` to `.env.local`.
+2. Set `EXPO_PUBLIC_LINKDO_API_URL` to the Linkdo API base URL. The production default is `https://api.a1ex.online`.
+3. Run the app with one of the commands below and sign in with the same email used in Linkdo desktop.
 
 Then start the development server:
 
@@ -37,47 +36,33 @@ This will launch the Expo Go Server. You can open the app with:
 
 Or scan the QR code with the [Expo Go](https://expo.dev/go) app to test on your device.
 
-## Expo Go and Clerk
+## Read-only boundary
 
-This template uses Clerk's JavaScript custom flows so it can run in Expo Go. Clerk's native components and native sign-in hooks require a development build. See Clerk's [Expo quickstart](https://clerk.com/docs/expo/getting-started/quickstart) for the current Expo Go and development build options.
+The app deliberately has no create, update, move, import, focus-timer, authorization, or delete API calls. It can read:
 
-Android Expo Go does not include Clerk's native `ClerkExpo` module. To keep the JavaScript-only flow working in Expo Go, this template includes:
+- Lists, task cards, descriptions, status, schedules, and time totals
+- Notion and ClickUp connection indicators
+- Seven-day report summary, top tasks, and focus sessions
+- Account identity
 
-- `shims/clerk-expo-native-module.js`, which exports `null` for Clerk's optional native module.
-- The Android-only `resolveRequest` block in `metro.config.js`, which points Clerk's internal `NativeClerkModule` import to that shim.
+## iOS task widget
 
-If you switch this template to a development build, you can remove the Expo Go shim:
+The iOS `Linkdo 任务` home-screen widget shows a snapshot of today, this week, and backlog tasks. It is refreshed when the list screen loads or is pulled to refresh.
 
-1. Delete `shims/clerk-expo-native-module.js`.
-2. Remove the `path` import, `expoGoClerkNativeModuleShim`, `resolveRequest`, and `config.resolver.resolveRequest` block from `metro.config.js`.
-3. Add Clerk's config plugin to `app.json` if you plan to use Clerk native components or native sign-in APIs:
+It requires an iOS development build because `expo-widgets` is not available in Expo Go. The widget has medium and large layouts and is registered in `app.json`.
 
-```json
-"plugins": [
-  "expo-router",
-  "expo-secure-store",
-  "expo-web-browser",
-  "expo-splash-screen",
-  "expo-status-bar",
-  "@clerk/expo"
-]
-```
+## Included screens
 
-## Included Screens and Features
-
-- Protected routes using Clerk authentication
-- Sign in screen
-- OAuth with Apple, GitHub, and Google
-- Forgot password screen
-- Reset password screen
-- Verify email screen
-- User profile button
-- Sign out screen
+- Email-code sign in and secure token persistence
+- List overview and read-only task board
+- Reports and focus sessions
+- Account and integration overview
+- iOS task-list widget
 
 ## Project Features
 
 - ⚛️ Built with [Expo Router](https://expo.dev/router)
-- 🔐 Authentication powered by [Clerk](https://go.clerk.com/Q1MKAz0)
+- 🔐 Email-code authentication shared with Linkdo desktop
 - 🎨 Styled with [Tailwind CSS](https://tailwindcss.com/) via [Nativewind](https://www.nativewind.dev/)
 - 📦 UI powered by [React Native Reusables](https://github.com/founded-labs/react-native-reusables)
 - 🚀 New Architecture enabled
@@ -86,9 +71,9 @@ If you switch this template to a development build, you can remove the Expo Go s
 
 ## Learn More
 
-- [Clerk Docs](https://go.clerk.com/Q1MKAz0)
 - [React Native Docs](https://reactnative.dev/docs/getting-started)
 - [Expo Docs](https://docs.expo.dev/)
+- [Expo Widgets](https://docs.expo.dev/versions/latest/sdk/widgets/)
 - [Nativewind Docs](https://www.nativewind.dev/)
 - [React Native Reusables](https://reactnativereusables.com)
 
