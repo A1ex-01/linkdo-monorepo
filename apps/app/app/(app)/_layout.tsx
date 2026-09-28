@@ -13,6 +13,7 @@ export default function AppLayout() {
     <Tabs
       tabBar={(props) => <LiquidGlassTabBar {...props} />}
       screenOptions={{
+        headerShown: false,
         headerTitleStyle: { fontWeight: "700" },
         sceneStyle: { backgroundColor: "transparent" },
       }}

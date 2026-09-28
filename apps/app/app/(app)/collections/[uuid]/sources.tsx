@@ -14,6 +14,25 @@ import { ExternalLinkIcon } from "lucide-react-native";
 import * as React from "react";
 import { Linking, View } from "react-native";
 
+function getStatusMapping(value?: Record<string, string> | string) {
+  if (!value) return [] as Array<[string, string]>;
+  if (typeof value === "string") {
+    try {
+      const parsed: unknown = JSON.parse(value);
+      if (!parsed || typeof parsed !== "object" || Array.isArray(parsed))
+        return [] as Array<[string, string]>;
+      return Object.entries(parsed).filter(
+        (entry): entry is [string, string] => typeof entry[1] === "string",
+      );
+    } catch {
+      return [] as Array<[string, string]>;
+    }
+  }
+  return Object.entries(value).filter(
+    (entry): entry is [string, string] => typeof entry[1] === "string",
+  );
+}
+
 export default function SourcesPage() {
   const { uuid } = useLocalSearchParams<{ uuid: string }>();
   const api = useLinkdoApi();
@@ -75,25 +94,49 @@ export default function SourcesPage() {
           </CardHeader>
           <CardContent className="gap-3">
             {group.entries.length ? (
-              group.entries.map((source) => (
-                <View key={source.uuid} className="gap-2">
-                  <Text>{source.title || source.name}</Text>
-                  <Text className="text-xs text-muted-foreground">
-                    {source.status_mapping
-                      ? Object.entries(source.status_mapping)
-                          .map(([from, to]) => `${from} → ${to}`)
-                          .join(" · ")
-                      : "状态映射由桌面端管理"}
-                  </Text>
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    onPress={() => void inspect(group.platform, source)}
+              group.entries.map((source) => {
+                const mappings = getStatusMapping(source.status_mapping);
+                return (
+                  <View
+                    key={source.uuid}
+                    className="gap-3 rounded-2xl bg-secondary/45 p-3"
                   >
-                    <Text>查看远程任务</Text>
-                  </Button>
-                </View>
-              ))
+                    <Text className="font-semibold">
+                      {source.title || source.name}
+                    </Text>
+                    {mappings.length ? (
+                      <View className="flex-row flex-wrap gap-1.5">
+                        {mappings.slice(0, 3).map(([from, to]) => (
+                          <View
+                            className="rounded-full bg-background px-2 py-1"
+                            key={from}
+                          >
+                            <Text className="text-[11px] text-muted-foreground">
+                              {from} → {to}
+                            </Text>
+                          </View>
+                        ))}
+                        {mappings.length > 3 ? (
+                          <Text className="self-center text-[11px] text-muted-foreground">
+                            +{mappings.length - 3}
+                          </Text>
+                        ) : null}
+                      </View>
+                    ) : (
+                      <Text className="text-xs text-muted-foreground">
+                        未配置状态映射
+                      </Text>
+                    )}
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onPress={() => void inspect(group.platform, source)}
+                    >
+                      <Text>查看远程任务</Text>
+                    </Button>
+                  </View>
+                );
+              })
             ) : (
               <Text className="text-sm text-muted-foreground">未连接</Text>
             )}

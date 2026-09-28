@@ -2,7 +2,7 @@
 
 This is the Linkdo mobile companion, built with [Expo](https://expo.dev) and [React Native Reusables](https://reactnativereusables.com). It uses the same email-code login and API as `apps/desktop`.
 
-It was initialized using the following command, then the `Clerk auth (Nativewind)` template was selected when prompted:
+It was initialized using the following command and uses the React Native Reusables component library:
 
 ```bash
 npx @react-native-reusables/cli@latest init
@@ -16,25 +16,24 @@ Before running the app, make sure to:
 2. Set `EXPO_PUBLIC_LINKDO_API_URL` to the Linkdo API base URL. The production default is `https://api.a1ex.online`.
 3. Run the app with one of the commands below and sign in with the same email used in Linkdo desktop.
 
-Then start the development server:
+This project includes an iOS home-screen widget, so it must run in a local iOS
+development build rather than Expo Go. Build and launch it with:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+pnpm --filter @linkdo/app ios:build
 ```
 
-This will launch the Expo Go Server. You can open the app with:
+Expo will generate the iOS project when needed, install the Linkdo development
+app in the simulator, and start Metro. For later JavaScript-only changes, start
+Metro for that installed app with:
 
-- **iOS**: press `i` to launch in the iOS simulator (Mac only)
-- **Android**: press `a` to launch in the Android emulator
-- **Web**: press `w` to run in a browser
+```bash
+pnpm --filter @linkdo/app dev
+```
 
-Or scan the QR code with the [Expo Go](https://expo.dev/go) app to test on your device.
+Do not launch this project from Expo Go: `expo-widgets` is a native extension
+and Expo Go cannot include it. Re-run `ios:build` after modifying `app.json`,
+adding a native Expo library, or updating a widget.
 
 ## Read-only boundary
 

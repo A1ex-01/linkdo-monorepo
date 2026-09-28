@@ -1,61 +1,66 @@
-import { DarkTheme, DefaultTheme, type Theme } from 'expo-router/react-navigation';
+import {
+  DarkTheme,
+  DefaultTheme,
+  type Theme,
+} from "expo-router/react-navigation";
+import type { StyleTheme } from "@/lib/appearance";
 
 export const THEME = {
   light: {
-    background: 'hsl(0 0% 100%)',
-    foreground: 'hsl(0 0% 3.9%)',
-    card: 'hsl(0 0% 100%)',
-    cardForeground: 'hsl(0 0% 3.9%)',
-    popover: 'hsl(0 0% 100%)',
-    popoverForeground: 'hsl(0 0% 3.9%)',
-    primary: 'hsl(0 0% 9%)',
-    primaryForeground: 'hsl(0 0% 98%)',
-    secondary: 'hsl(0 0% 96.1%)',
-    secondaryForeground: 'hsl(0 0% 9%)',
-    muted: 'hsl(0 0% 96.1%)',
-    mutedForeground: 'hsl(0 0% 45.1%)',
-    accent: 'hsl(0 0% 96.1%)',
-    accentForeground: 'hsl(0 0% 9%)',
-    destructive: 'hsl(0 84.2% 60.2%)',
-    border: 'hsl(0 0% 89.8%)',
-    input: 'hsl(0 0% 89.8%)',
-    ring: 'hsl(0 0% 63%)',
-    radius: '0.625rem',
-    chart1: 'hsl(12 76% 61%)',
-    chart2: 'hsl(173 58% 39%)',
-    chart3: 'hsl(197 37% 24%)',
-    chart4: 'hsl(43 74% 66%)',
-    chart5: 'hsl(27 87% 67%)',
+    background: "hsl(0 0% 100%)",
+    foreground: "hsl(0 0% 3.9%)",
+    card: "hsl(0 0% 100%)",
+    cardForeground: "hsl(0 0% 3.9%)",
+    popover: "hsl(0 0% 100%)",
+    popoverForeground: "hsl(0 0% 3.9%)",
+    primary: "hsl(0 0% 9%)",
+    primaryForeground: "hsl(0 0% 98%)",
+    secondary: "hsl(0 0% 96.1%)",
+    secondaryForeground: "hsl(0 0% 9%)",
+    muted: "hsl(0 0% 96.1%)",
+    mutedForeground: "hsl(0 0% 45.1%)",
+    accent: "hsl(0 0% 96.1%)",
+    accentForeground: "hsl(0 0% 9%)",
+    destructive: "hsl(0 84.2% 60.2%)",
+    border: "hsl(0 0% 89.8%)",
+    input: "hsl(0 0% 89.8%)",
+    ring: "hsl(0 0% 63%)",
+    radius: "0.625rem",
+    chart1: "hsl(12 76% 61%)",
+    chart2: "hsl(173 58% 39%)",
+    chart3: "hsl(197 37% 24%)",
+    chart4: "hsl(43 74% 66%)",
+    chart5: "hsl(27 87% 67%)",
   },
   dark: {
-    background: 'hsl(0 0% 3.9%)',
-    foreground: 'hsl(0 0% 98%)',
-    card: 'hsl(0 0% 3.9%)',
-    cardForeground: 'hsl(0 0% 98%)',
-    popover: 'hsl(0 0% 3.9%)',
-    popoverForeground: 'hsl(0 0% 98%)',
-    primary: 'hsl(0 0% 98%)',
-    primaryForeground: 'hsl(0 0% 9%)',
-    secondary: 'hsl(0 0% 14.9%)',
-    secondaryForeground: 'hsl(0 0% 98%)',
-    muted: 'hsl(0 0% 14.9%)',
-    mutedForeground: 'hsl(0 0% 63.9%)',
-    accent: 'hsl(0 0% 14.9%)',
-    accentForeground: 'hsl(0 0% 98%)',
-    destructive: 'hsl(0 70.9% 59.4%)',
-    border: 'hsl(0 0% 14.9%)',
-    input: 'hsl(0 0% 14.9%)',
-    ring: 'hsl(300 0% 45%)',
-    radius: '0.625rem',
-    chart1: 'hsl(220 70% 50%)',
-    chart2: 'hsl(160 60% 45%)',
-    chart3: 'hsl(30 80% 55%)',
-    chart4: 'hsl(280 65% 60%)',
-    chart5: 'hsl(340 75% 55%)',
+    background: "hsl(0 0% 3.9%)",
+    foreground: "hsl(0 0% 98%)",
+    card: "hsl(0 0% 3.9%)",
+    cardForeground: "hsl(0 0% 98%)",
+    popover: "hsl(0 0% 3.9%)",
+    popoverForeground: "hsl(0 0% 98%)",
+    primary: "hsl(0 0% 98%)",
+    primaryForeground: "hsl(0 0% 9%)",
+    secondary: "hsl(0 0% 14.9%)",
+    secondaryForeground: "hsl(0 0% 98%)",
+    muted: "hsl(0 0% 14.9%)",
+    mutedForeground: "hsl(0 0% 63.9%)",
+    accent: "hsl(0 0% 14.9%)",
+    accentForeground: "hsl(0 0% 98%)",
+    destructive: "hsl(0 70.9% 59.4%)",
+    border: "hsl(0 0% 14.9%)",
+    input: "hsl(0 0% 14.9%)",
+    ring: "hsl(300 0% 45%)",
+    radius: "0.625rem",
+    chart1: "hsl(220 70% 50%)",
+    chart2: "hsl(160 60% 45%)",
+    chart3: "hsl(30 80% 55%)",
+    chart4: "hsl(280 65% 60%)",
+    chart5: "hsl(340 75% 55%)",
   },
 };
 
-export const NAV_THEME: Record<'light' | 'dark', Theme> = {
+export const NAV_THEME: Record<"light" | "dark", Theme> = {
   light: {
     ...DefaultTheme,
     colors: {
@@ -79,3 +84,56 @@ export const NAV_THEME: Record<'light' | 'dark', Theme> = {
     },
   },
 };
+
+const navigationStyleOverrides: Record<
+  Exclude<StyleTheme, "default">,
+  Record<"light" | "dark", Partial<Theme["colors"]>>
+> = {
+  twitter: {
+    light: {
+      background: "hsl(0 0% 100%)",
+      border: "hsl(207 43% 93%)",
+      card: "hsl(197 14% 98%)",
+      primary: "hsl(203 89% 53%)",
+      text: "hsl(211 28% 13%)",
+    },
+    dark: {
+      background: "hsl(0 0% 0%)",
+      border: "hsl(215 10% 27%)",
+      card: "hsl(225 12% 21%)",
+      primary: "hsl(203 89% 53%)",
+      text: "hsl(210 20% 93%)",
+    },
+  },
+  vercel: {
+    light: {
+      background: "hsl(0 0% 99%)",
+      border: "hsl(0 0% 92%)",
+      card: "hsl(0 0% 100%)",
+      primary: "hsl(0 0% 0%)",
+      text: "hsl(0 0% 0%)",
+    },
+    dark: {
+      background: "hsl(0 0% 0%)",
+      border: "hsl(0 0% 26%)",
+      card: "hsl(0 0% 14%)",
+      primary: "hsl(0 0% 100%)",
+      text: "hsl(0 0% 100%)",
+    },
+  },
+};
+
+export function getNavigationTheme(
+  colorScheme: "light" | "dark",
+  styleTheme: StyleTheme,
+): Theme {
+  if (styleTheme === "default") return NAV_THEME[colorScheme];
+
+  return {
+    ...NAV_THEME[colorScheme],
+    colors: {
+      ...NAV_THEME[colorScheme].colors,
+      ...navigationStyleOverrides[styleTheme][colorScheme],
+    },
+  };
+}

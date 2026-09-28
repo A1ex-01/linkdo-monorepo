@@ -1,4 +1,5 @@
 import { BlurView } from "expo-blur";
+import { useAppAppearance } from "@/lib/appearance";
 import type { BottomTabBarProps } from "expo-router/build/react-navigation/bottom-tabs";
 import {
   BarChart3Icon,
@@ -7,8 +8,7 @@ import {
   TimerIcon,
   UserRoundIcon,
 } from "lucide-react-native";
-import { useColorScheme } from "nativewind";
-import { Platform, Pressable, Text, View } from "react-native";
+import { Platform, Pressable, StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const tabMeta = {
@@ -24,9 +24,9 @@ export function LiquidGlassTabBar({
   descriptors,
   navigation,
 }: BottomTabBarProps) {
-  const { colorScheme } = useColorScheme();
+  const { resolvedColorScheme } = useAppAppearance();
   const insets = useSafeAreaInsets();
-  const isDark = colorScheme === "dark";
+  const isDark = resolvedColorScheme === "dark";
   const tint = isDark
     ? "systemUltraThinMaterialDark"
     : "systemUltraThinMaterialLight";
@@ -35,18 +35,19 @@ export function LiquidGlassTabBar({
   return (
     <View
       pointerEvents="box-none"
-      className="absolute bottom-0 left-0 right-0 px-4"
-      style={{ paddingBottom: Math.max(insets.bottom, 12) }}
+      style={[styles.container, { paddingBottom: Math.max(insets.bottom, 12) }]}
     >
       <BlurView
         intensity={Platform.OS === "android" ? 80 : 64}
         tint={tint}
-        className="flex-row overflow-hidden rounded-[28px] border border-white/35 shadow-2xl shadow-black/25"
-        style={{
-          backgroundColor: isDark
-            ? "rgba(24, 24, 27, 0.72)"
-            : "rgba(255, 255, 255, 0.72)",
-        }}
+        style={[
+          styles.dock,
+          {
+            backgroundColor: isDark
+              ? "rgba(24, 24, 27, 0.72)"
+              : "rgba(255, 255, 255, 0.72)",
+          },
+        ]}
       >
         {routes.map((route) => {
           const index = state.routes.findIndex(
@@ -78,14 +79,17 @@ export function LiquidGlassTabBar({
               onLongPress={() =>
                 navigation.emit({ type: "tabLongPress", target: route.key })
               }
-              className="flex-1 items-center py-2"
+              style={styles.tabPressable}
             >
               <View
-                className={
-                  focused
-                    ? "min-w-14 items-center rounded-2xl bg-white/50 px-2 py-1.5 dark:bg-white/15"
-                    : "min-w-14 items-center px-2 py-1.5"
-                }
+                style={[
+                  styles.tabContent,
+                  focused && {
+                    backgroundColor: isDark
+                      ? "rgba(255, 255, 255, 0.14)"
+                      : "rgba(255, 255, 255, 0.58)",
+                  },
+                ]}
               >
                 <Icon
                   size={19}
@@ -118,3 +122,39 @@ export function LiquidGlassTabBar({
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    bottom: 0,
+    left: 0,
+    paddingHorizontal: 16,
+    position: "absolute",
+    right: 0,
+  },
+  dock: {
+    alignItems: "center",
+    borderColor: "rgba(255, 255, 255, 0.38)",
+    borderRadius: 28,
+    borderWidth: StyleSheet.hairlineWidth,
+    flexDirection: "row",
+    minHeight: 68,
+    overflow: "hidden",
+    shadowColor: "#000",
+    shadowOffset: { height: 10, width: 0 },
+    shadowOpacity: 0.14,
+    shadowRadius: 20,
+  },
+  tabContent: {
+    alignItems: "center",
+    borderRadius: 16,
+    minWidth: 48,
+    paddingHorizontal: 8,
+    paddingVertical: 6,
+  },
+  tabPressable: {
+    alignItems: "center",
+    flex: 1,
+    justifyContent: "center",
+    paddingVertical: 8,
+  },
+});

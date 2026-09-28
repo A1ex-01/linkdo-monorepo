@@ -6,11 +6,11 @@
     "dev": "expo start -c",
     "android": "expo start -c --android",
     "ios": "expo start -c --ios",
+    "ios:build": "expo run:ios",
     "web": "expo start -c --web",
     "clean": "rm -rf .expo node_modules"
   },
   "dependencies": {
-    "@clerk/expo": "3.5.2",
     "@rn-primitives/avatar": "^1.5.2",
     "@rn-primitives/label": "^1.5.2",
     "@rn-primitives/popover": "^1.5.2",

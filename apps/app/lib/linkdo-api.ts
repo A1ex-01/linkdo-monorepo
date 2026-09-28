@@ -26,7 +26,7 @@ export interface ConnectedSource {
   title?: string;
   icon?: string;
   notion_options?: string[];
-  status_mapping?: Record<string, string>;
+  status_mapping?: Record<string, string> | string;
 }
 
 export interface RemoteTaskCandidate {
